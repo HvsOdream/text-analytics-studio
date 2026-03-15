@@ -473,45 +473,37 @@ const WEEKS = [
   },
   {
     week: 2,
-    title: '나의 첫 텍스트 분석',
-    subtitle: '생성형 AI로 텍스트 다루기 — 도구 세팅과 첫 분석',
+    title: '같은 질문, 세 개의 렌즈',
+    subtitle: '베럴슨의 원칙으로 연구 질문을 세우고, 3개 AI 도구로 비교 분석하기',
     color: 'coral',
     content: `
       <div class="assignment-section">
         <h4><span class="icon">&#x1F4CB;</span> 과제 내용</h4>
-        <p>1주차에서 찾은 텍스트 데이터 중 하나를 선택하여, AI 도구로 실제 분석을 시도합니다.</p>
+        <p>1주차 텍스트 지도에서 분석 대상을 고르고, 베럴슨의 3원칙(객관적·체계적·수량적)을 점검하며 연구 질문을 세운 뒤, <strong>같은 프롬프트를 ChatGPT·Claude·Gemini 3개에 각각 입력</strong>하여 결과를 비교합니다.</p>
       </div>
       <div class="assignment-section">
-        <h4><span class="icon">&#x1F527;</span> 방법</h4>
+        <h4><span class="icon">&#x1F527;</span> 4단계 방법</h4>
         <ul>
-          <li>AI 도구 1개를 선택 (ChatGPT, Claude, Gemini 중 자유)</li>
-          <li>프롬프트를 <strong>최소 3회 수정</strong>하며 분석 시도</li>
-          <li>각 버전의 프롬프트와 결과를 기록</li>
-        </ul>
-      </div>
-      <div class="assignment-section">
-        <h4><span class="icon">&#x1F4DD;</span> 포함 항목</h4>
-        <ul>
-          <li>선택한 텍스트 데이터 설명 (어떤 데이터인지, 왜 골랐는지)</li>
-          <li>프롬프트 3개 버전 (1차 → 2차 → 3차)과 각 결과 요약</li>
-          <li>프롬프트를 어떻게, 왜 수정했는지 한 줄 메모</li>
-          <li>느낀 점 (AI 분석이 유용했는지, 한계는 뭐였는지)</li>
+          <li><strong>Step 1</strong> — 1주차 '텍스트 지도'에서 가장 분석하고 싶은 텍스트 1종 선택</li>
+          <li><strong>Step 2</strong> — 베럴슨 3원칙 점검하며 기술적 질문(Level 1) 세우기</li>
+          <li><strong>Step 3</strong> — 같은 프롬프트를 ChatGPT·Claude·Gemini에 각각 입력, 응답 기록</li>
+          <li><strong>Step 4</strong> — 비교 소감: 어떤 도구가 유용했는가? 놓친 것은? 후속 질문은?</li>
         </ul>
       </div>
       <div class="highlight-box">
-        <strong>분량:</strong> A4 1~2장 (자유 양식)
+        <strong>분량:</strong> A4 2~3장 | 다음 주 수업 전까지 제출
       </div>
       <div class="highlight-box coral-border">
-        <strong>핵심:</strong> 처음부터 잘 쓰는 사람은 없습니다. 프롬프트를 고쳐가면서 배우는 겁니다. 실패한 프롬프트도 소중한 기록입니다.
+        <strong>&#x1F4BB; 과제 작성 도우미:</strong> 아래 링크에서 단계별로 작성하고 HTML 파일로 내보낼 수 있습니다.<br>
+        <a href="https://hvsodream.github.io/text-analytics-studio/week2-helper.html" target="_blank" style="color:var(--coral); font-weight:700;">&#x1F449; 2주차 과제 작성 도우미 열기</a>
       </div>
       <div class="assignment-section" style="margin-top:1rem">
-        <h4><span class="icon">&#x1F4A1;</span> 프롬프트 4요소 복습</h4>
+        <h4><span class="icon">&#x1F4A1;</span> 베럴슨 3원칙 복습</h4>
       </div>
       <div class="highlight-box">
-        <strong>역할(Role)</strong> — "너는 10년차 초등교사야"<br>
-        <strong>맥락(Context)</strong> — "아래는 학생 성찰일지 30개야"<br>
-        <strong>지시(Instruction)</strong> — "주제별로 분류하고 빈도순으로 정리해줘"<br>
-        <strong>출력형식(Format)</strong> — "표 형식으로, 각 주제에 대표 문장 1개씩 포함"
+        <strong>객관적(Objective)</strong> — 분류 기준이 명시되어, 누가 해도 같은 결과가 나오는가?<br>
+        <strong>체계적(Systematic)</strong> — 일부가 아닌 전체 데이터를 대상으로 하는가?<br>
+        <strong>수량적(Quantitative)</strong> — 결과가 숫자(빈도, 비율 등)로 표현되는가?
       </div>
       <p class="tip-text" style="margin-top:0.8rem">&#x26A0;&#xFE0F; 학생 개인정보(이름, 학번 등)는 반드시 익명화한 뒤 AI에 입력하세요.</p>
     `
