@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3주차 — 프롬프트 엔지니어링 심화</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.25;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--teal);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-label {
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+  .header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0.8rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .progress-bar-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .progress-label {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--purple));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: var(--teal);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills {
+    max-width: 860px;
+    margin: 1.2rem auto 0;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .nav-pill {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .nav-pill:hover { border-color: var(--teal); color: var(--teal); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    margin-bottom: 2rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .section-number {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+  .section-title-group p {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+  }
+
+  /* ===== INTRO / NOTICE ===== */
+  .intro-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block {
+    background: var(--gray-50);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--teal);
+  }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--navy);
+  }
+  .concept-block p, .concept-block li {
+    font-size: 0.86rem;
+    color: var(--gray-600);
+    line-height: 1.8;
+  }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+  }
+  .example-box.bad {
+    background: #FFF0EC;
+    border: 1px solid #FECDC2;
+  }
+  .example-box.good {
+    background: #E6F7F5;
+    border: 1px solid #B2DFDB;
+  }
+  .example-box .label {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template {
+    background: var(--navy-deep);
+    color: #E0E0E0;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    position: relative;
+  }
+  .prompt-template pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn {
+    position: absolute;
+    top: 0.6rem; right: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area {
+    background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%);
+    border: 2px solid #E8E0FF;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .practice-area h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .practice-area .guide-text {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 0.8rem;
+  }
+  .practice-area textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .practice-area textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+  .practice-area textarea::placeholder {
+    color: var(--gray-400);
+  }
+
+  .practice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .char-count {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+  }
+  .save-indicator {
+    font-size: 0.75rem;
+    color: var(--teal);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    margin-top: 0.8rem;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+  }
+  .checklist-item input[type="checkbox"] {
+    margin-top: 0.25rem;
+    accent-color: var(--purple);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .checklist-item.checked { color: var(--gray-400); text-decoration: line-through; }
+
+  /* ===== TABS ===== */
+  .tab-group {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--gray-200);
+    margin-bottom: 1rem;
+  }
+  .tab-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--gray-800); }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    font-size: 0.84rem;
+    align-items: flex-start;
+  }
+  .tip-callout.info { background: #EDF4FF; border: 1px solid #C6DBFF; }
+  .tip-callout.warning { background: var(--gold-bg); border: 1px solid #FFE082; }
+  .tip-callout.success { background: var(--teal-bg); border: 1px solid #B2DFDB; }
+  .tip-callout .tip-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-callout .tip-text { line-height: 1.7; color: var(--gray-800); }
+
+  /* ===== COMPARISON TABLE ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+  }
+  .compare-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .compare-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible {
+    margin: 0.8rem 0;
+  }
+  .collapsible-trigger {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .collapsible-trigger:hover { background: var(--gray-100); }
+  .collapsible-trigger .arrow { transition: transform 0.3s; }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-content {
+    padding: 1rem;
+    border: 1px solid var(--gray-200);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* ===== FINAL ASSIGNMENT ===== */
+  .final-box {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, #2A1B5E 100%);
+    border-radius: var(--radius);
+    padding: 2rem;
+    color: var(--white);
+    margin-top: 2rem;
+  }
+  .final-box h3 {
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: var(--gold);
+  }
+  .final-box p {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 1rem;
+  }
+  .final-box textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    background: rgba(255,255,255,0.06);
+    color: var(--white);
+  }
+  .final-box textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(233,196,106,0.15);
+  }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+  .btn-purple { background: var(--purple); color: var(--white); }
+  .btn-purple:hover { background: #6D28D9; transform: translateY(-1px); }
+  .btn-gold { background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover { background: #D4A843; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--gray-600);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-outline:hover { border-color: var(--gray-400); color: var(--gray-800); }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .student-info-bar label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .student-info-bar input {
+    padding: 0.45rem 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    min-width: 120px;
+  }
+  .student-info-bar input:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .header { padding: 2rem 1rem; }
+    .header h1 { font-size: 1.4rem; }
+    .main { padding: 1rem 1rem 3rem; }
+    .card-body { padding: 1.2rem; }
+    .practice-area { padding: 1rem; }
+    .final-box { padding: 1.2rem; }
+    .nav-pills { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · 3주차</div>
+    <h1>프롬프트 엔지니어링 심화</h1>
+    <p>분석의 질은 질문의 질이다 — 역할, 형식, 체이닝, Few-shot</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 6</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">✓ </span>시작</a>
+  <a class="nav-pill" href="#sec-role" data-section="role"><span class="pill-check">✓ </span>역할 지정</a>
+  <a class="nav-pill" href="#sec-format" data-section="format"><span class="pill-check">✓ </span>출력 형식</a>
+  <a class="nav-pill" href="#sec-chain" data-section="chain"><span class="pill-check">✓ </span>체이닝</a>
+  <a class="nav-pill" href="#sec-fewshot" data-section="fewshot"><span class="pill-check">✓ </span>Few-shot</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">✓ </span>최종 과제</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>3주차 과제 안내</strong><br><br>
+      2주차에 같은 프롬프트를 3개 AI에 넣어봤습니다. 결과가 달랐죠?<br>
+      이번 주에는 <strong>"왜 달랐는지"</strong>를 이해하고, <strong>"어떻게 하면 원하는 답을 받을 수 있는지"</strong>를 배웁니다.<br><br>
+      <strong>프롬프트 엔지니어링 4가지 핵심 기법</strong>을 하나씩 학습하고, 각각 실습한 뒤, 마지막에 4가지를 조합한 프롬프트를 완성합니다.<br>
+      <div class="subtitle">예상 소요 시간: 60~90분 | 각 섹션의 실습을 모두 완료해야 합니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 배울 4가지 기법</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:25%">기법</th>
+              <th style="width:35%">핵심 아이디어</th>
+              <th>교육 현장 예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>① 역할 지정</strong><br>(Role Prompting)</td>
+              <td>AI에게 전문가 역할을 부여하면 답변의 관점과 깊이가 바뀐다</td>
+              <td>"너는 20년 경력 중학교 국어 교사야"</td>
+            </tr>
+            <tr>
+              <td><strong>② 출력 형식</strong><br>(Format Control)</td>
+              <td>원하는 구조를 명시하면 정리된 결과를 받는다</td>
+              <td>"표 형식으로 / JSON으로 / 루브릭 형태로"</td>
+            </tr>
+            <tr>
+              <td><strong>③ 단계적 분석</strong><br>(Chain-of-Thought)</td>
+              <td>복잡한 작업을 단계별로 나누면 정확도가 올라간다</td>
+              <td>"1단계: 학생 답안 읽기 → 2단계: 핵심 개념 추출 → 3단계: 채점"</td>
+            </tr>
+            <tr>
+              <td><strong>④ Few-shot 예시</strong><br>(Few-shot Prompting)</td>
+              <td>원하는 출력의 예시를 보여주면 AI가 패턴을 학습한다</td>
+              <td>"예시 1: 이 답안은 4점 / 예시 2: 이 답안은 2점 / 그러면 이건?"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: ROLE PROMPTING -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-role">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>역할 지정 (Role Prompting)</h2>
+        <p>AI에게 "누구로서" 대답할지를 알려준다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block">
+          <h4>왜 역할을 지정하면 결과가 달라지는가?</h4>
+          <p>AI는 방대한 텍스트 데이터에서 학습했기 때문에, "누구의 관점"으로 답해야 하는지를 알려주면 그 분야의 어휘·깊이·관점이 활성화됩니다.</p>
+          <ul>
+            <li>역할 없이 질문 → 일반적이고 피상적인 답변</li>
+            <li>역할 지정 후 질문 → 해당 전문가의 어조, 프레임, 전문 용어가 등장</li>
+          </ul>
+        </div>
+
+        <h4 style="font-size:0.92rem; font-weight:700; margin:1rem 0 0.5rem;">비교: 역할 없음 vs 역할 있음</h4>
+
+        <div class="example-box bad">
+          <span class="label">❌ 역할 없음</span>
+          <pre>학생들의 글쓰기 능력을 분석하고 싶어. 방법을 알려줘.</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">✅ 역할 지정</span>
+          <pre>너는 20년 경력의 초등학교 국어 교사이자, 서술형 평가 전문가야.
+내가 6학년 학생 30명의 독서감상문을 줄 거야.
+이 글에서 학생들의 글쓰기 역량을 분석하는 방법을 알려줘.</pre>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">💡</span>
+          <span class="tip-text"><strong>역할 지정의 3요소:</strong> ① 직함/경력 ("20년 경력 국어 교사") + ② 전문 분야 ("서술형 평가 전문가") + ③ 맥락 ("6학년 학생 30명")</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>🔍 역할 지정이 특히 효과적인 교육 상황 5가지</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <table class="compare-table">
+                <thead>
+                  <tr><th>상황</th><th>추천 역할</th><th>기대 효과</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>학생 답안 분석</td><td>교과 전문 교사 + 평가 전문가</td><td>교과 특성을 반영한 구체적 채점 기준</td></tr>
+                  <tr><td>수업 피드백 분석</td><td>교육과정 전문가 + 데이터 분석가</td><td>패턴 발견 + 구조화된 인사이트</td></tr>
+                  <tr><td>학생 상담 기록 분류</td><td>상담 심리사 + 학교사회복지사</td><td>정서적 뉘앙스를 놓치지 않는 분류</td></tr>
+                  <tr><td>교육과정 문서 비교</td><td>교육과정 연구자 + 비교교육학자</td><td>학술적 관점의 정밀 비교</td></tr>
+                  <tr><td>학부모 만족도 분석</td><td>마케팅 리서처 + 교육 정책 분석가</td><td>양적 패턴 + 질적 해석의 균형</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📝 역할 지정 프롬프트 템플릿</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 <span class="placeholder">[직함/경력]</span>이자, <span class="placeholder">[전문 분야]</span> 전문가야.
+
+나는 <span class="placeholder">[교육 현장의 맥락]</span>에서 근무하는 교사/교수야.
+
+내가 <span class="placeholder">[분석 대상 텍스트의 설명]</span>을 줄 거야.
+
+<span class="placeholder">[구체적인 분석 요청]</span>을 해줘.
+
+<span class="highlight">[선택]</span> 분석할 때 다음을 유의해줘:
+- <span class="placeholder">[유의사항 1]</span>
+- <span class="placeholder">[유의사항 2]</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div class="practice-area">
+          <h4>✏️ 실습 1: 역할 지정 프롬프트 작성</h4>
+          <p class="guide-text">본인의 교육 현장에 맞는 역할 지정 프롬프트를 작성해보세요. 위 템플릿을 참고하되, 자유롭게 변형해도 됩니다.</p>
+          <textarea id="practice-role" placeholder="예: 너는 15년 경력의 고등학교 영어 교사이자, 수행평가 설계 전문가야..."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="count-role">0자</span>
+            <span class="save-indicator" id="save-role">자동 저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item"><input type="checkbox" data-section="role" data-idx="0" onchange="updateChecklist(this)"> 직함/경력이 포함되어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="role" data-idx="1" onchange="updateChecklist(this)"> 전문 분야가 명시되어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="role" data-idx="2" onchange="updateChecklist(this)"> 교육 현장 맥락이 설명되어 있는가?</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: FORMAT CONTROL -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-format">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>출력 형식 지정 (Format Control)</h2>
+        <p>AI의 답변 구조를 직접 설계한다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>왜 형식을 지정해야 하는가?</h4>
+          <p>같은 질문도 "자유롭게 답해줘"와 "표 형식으로 정리해줘"는 완전히 다른 결과를 만듭니다. 형식을 지정하면:</p>
+          <ul>
+            <li>필요한 정보만 깔끔하게 추출 가능</li>
+            <li>다른 도구(엑셀, DB)에 바로 넣을 수 있는 구조화된 데이터</li>
+            <li>채점 루브릭, 피드백 양식 등 일관된 포맷 확보</li>
+          </ul>
+        </div>
+
+        <h4 style="font-size:0.92rem; font-weight:700; margin:1rem 0 0.5rem;">교육 현장에서 자주 쓰는 출력 형식 8가지</h4>
+
+        <div class="tab-group" id="formatTabs">
+          <button class="tab-btn active" onclick="switchTab('formatTabs', 'formatContent', 0)">표(Table)</button>
+          <button class="tab-btn" onclick="switchTab('formatTabs', 'formatContent', 1)">목록(List)</button>
+          <button class="tab-btn" onclick="switchTab('formatTabs', 'formatContent', 2)">루브릭</button>
+          <button class="tab-btn" onclick="switchTab('formatTabs', 'formatContent', 3)">JSON</button>
+        </div>
+        <div id="formatContent">
+          <div class="tab-content active">
+            <div class="prompt-template">
+              <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+              <pre><span class="highlight">[표 형식]</span>
+아래 학생 답안을 분석하고, 다음 표 형식으로 정리해줘:
+
+| 학생번호 | 핵심 키워드 | 강점 | 개선점 | 점수(10점) |
+|---------|----------|------|--------|-----------|
+
+<span class="placeholder">[학생 답안 텍스트]</span></pre>
+            </div>
+            <div class="tip-callout success">
+              <span class="tip-icon">✅</span>
+              <span class="tip-text">표 형식은 <strong>비교 분석, 채점, 분류</strong>에 가장 강력합니다. 특히 엑셀에 바로 복사-붙이기할 수 있어 실용적입니다.</span>
+            </div>
+          </div>
+          <div class="tab-content">
+            <div class="prompt-template">
+              <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+              <pre><span class="highlight">[구조화된 목록]</span>
+아래 수업 피드백을 분석하고, 다음 형식으로 정리해줘:
+
+## 긍정 피드백
+- (의견 요약) — 빈도: N건
+
+## 개선 요청
+- (의견 요약) — 빈도: N건
+
+## 교수자 행동 제안
+1. (구체적 행동)
+2. (구체적 행동)
+
+<span class="placeholder">[피드백 텍스트]</span></pre>
+            </div>
+          </div>
+          <div class="tab-content">
+            <div class="prompt-template">
+              <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+              <pre><span class="highlight">[루브릭 형식]</span>
+아래 기준으로 채점 루브릭을 만들어줘:
+
+평가 항목: <span class="placeholder">[예: 논리적 구성, 근거 제시, 표현력]</span>
+척도: 4단계 (매우 우수 / 우수 / 보통 / 미흡)
+
+각 항목별로 4단계의 구체적인 기술(description)을 작성해줘.
+표 형식으로 출력해줘:
+
+| 항목 | 매우 우수(4) | 우수(3) | 보통(2) | 미흡(1) |</pre>
+            </div>
+          </div>
+          <div class="tab-content">
+            <div class="prompt-template">
+              <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+              <pre><span class="highlight">[JSON 형식]</span>
+아래 학생 성찰일지를 분석하고, JSON 형식으로 출력해줘:
+
+{
+  "student_id": "익명번호",
+  "main_topic": "주요 주제",
+  "sentiment": "긍정/부정/중립",
+  "keywords": ["키워드1", "키워드2"],
+  "depth_score": 1~5,
+  "summary": "한 줄 요약"
+}
+
+<span class="placeholder">[성찰일지 텍스트]</span></pre>
+            </div>
+            <div class="tip-callout info">
+              <span class="tip-icon">💡</span>
+              <span class="tip-text">JSON은 프로그래밍/자동화와 연결할 때 강력합니다. 대량 분석 후 DB에 저장하거나 시각화할 때 유용합니다.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapsible" style="margin-top:1rem">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📋 추가 형식 4가지: 마크다운/CSV/비교문/요약</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <table class="compare-table">
+                <thead><tr><th>형식</th><th>프롬프트 키워드</th><th>적합한 상황</th></tr></thead>
+                <tbody>
+                  <tr><td>마크다운</td><td>"마크다운으로 제목, 소제목, 본문 구분해서"</td><td>보고서, 문서 초안</td></tr>
+                  <tr><td>CSV</td><td>"CSV 형식으로, 쉼표로 구분해서"</td><td>대량 데이터 → 엑셀 가공</td></tr>
+                  <tr><td>비교문</td><td>"A안과 B안을 장단점 비교표로"</td><td>교육과정 비교, 교재 비교</td></tr>
+                  <tr><td>요약문</td><td>"3문장으로 요약 / 100자 이내로"</td><td>빠른 파악, 브리핑</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div class="practice-area">
+          <h4>✏️ 실습 2: 출력 형식을 지정한 프롬프트 작성</h4>
+          <p class="guide-text">실습 1에서 작성한 역할 지정 프롬프트에 출력 형식 지정을 추가해보세요. 위 8가지 중 본인의 분석 목적에 맞는 형식을 선택하세요.</p>
+          <textarea id="practice-format" placeholder="예: 위 분석 결과를 다음 표 형식으로 정리해줘:&#10;| 학생번호 | 주제 | 감정 톤 | 핵심 문장 | 깊이 점수(5점) |"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="count-format">0자</span>
+            <span class="save-indicator" id="save-format">자동 저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item"><input type="checkbox" data-section="format" data-idx="0" onchange="updateChecklist(this)"> 구체적인 출력 형식이 명시되어 있는가? (표, 목록, JSON 등)</label>
+            <label class="checklist-item"><input type="checkbox" data-section="format" data-idx="1" onchange="updateChecklist(this)"> 각 열/항목의 이름이 정의되어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="format" data-idx="2" onchange="updateChecklist(this)"> 분석 결과를 바로 활용할 수 있는 형태인가?</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: CHAIN OF THOUGHT -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-chain">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>단계적 분석 (Chain-of-Thought)</h2>
+        <p>복잡한 작업을 쪼개서 정확도를 높인다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>왜 한 번에 시키면 틀릴까?</h4>
+          <p>"이 30개 답안을 읽고, 분류하고, 채점하고, 피드백까지 작성해줘"라고 하면 — AI는 중간 과정을 건너뛰거나, 앞뒤가 안 맞는 결과를 줍니다.</p>
+          <p style="margin-top:0.5rem"><strong>Chain-of-Thought(CoT)</strong>는 AI에게 "생각하는 과정"을 단계별로 밟게 해서, 복잡한 작업의 정확도를 높이는 기법입니다.</p>
+        </div>
+
+        <h4 style="font-size:0.92rem; font-weight:700; margin:1rem 0 0.5rem;">비교: 한 번에 vs 단계별</h4>
+
+        <div class="example-box bad">
+          <span class="label">❌ 한 번에 모든 것을 요청</span>
+          <pre>아래 학생 에세이를 읽고 채점하고 피드백을 작성해줘.
+채점 기준은 논리성, 근거, 표현력이야.</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">✅ 단계별 분석 지시</span>
+          <pre>아래 학생 에세이를 분석해줘. 다음 단계를 순서대로 수행해:
+
+[1단계] 먼저 에세이의 핵심 주장을 한 문장으로 요약해줘.
+[2단계] 핵심 주장을 뒷받침하는 근거를 모두 추출해줘.
+[3단계] 다음 3개 항목으로 채점해줘 (각 10점 만점):
+  - 논리적 구성
+  - 근거의 적절성
+  - 표현력
+[4단계] 각 항목별로 구체적인 피드백을 작성해줘.
+  - 잘한 점 1가지, 개선할 점 1가지씩.
+[5단계] 학생에게 전달할 종합 코멘트를 3문장으로 작성해줘.</pre>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">⚠️</span>
+          <span class="tip-text"><strong>핵심 원칙:</strong> 단계 번호를 [1단계], [2단계]로 명시하세요. AI가 순서를 건너뛰는 것을 방지합니다. 각 단계의 결과를 다음 단계의 입력으로 쓸 때 가장 효과적입니다.</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>🔗 교육 분석에 유용한 체이닝 패턴 4가지</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div style="margin-bottom:1rem">
+                <strong style="color:var(--purple)">패턴 A: 읽기 → 추출 → 분류 → 해석</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">텍스트를 먼저 읽고, 핵심 요소를 추출한 뒤, 카테고리별로 분류하고, 의미를 해석</p>
+                <p style="font-size:0.82rem; color:var(--gray-400); margin-top:0.3rem">적합: 성찰일지, 수업 피드백, 상담 기록</p>
+              </div>
+              <div style="margin-bottom:1rem">
+                <strong style="color:var(--purple)">패턴 B: 기준 설정 → 적용 → 채점 → 피드백</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">먼저 채점 기준을 확인하고, 답안에 적용한 뒤, 점수를 매기고, 피드백 작성</p>
+                <p style="font-size:0.82rem; color:var(--gray-400); margin-top:0.3rem">적합: 서술형 채점, 포트폴리오 평가</p>
+              </div>
+              <div style="margin-bottom:1rem">
+                <strong style="color:var(--purple)">패턴 C: 비교 대상 정리 → 차이점 → 공통점 → 시사점</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">두 개 이상의 텍스트를 비교할 때, 각각 정리 → 차이점 → 공통점 → 종합</p>
+                <p style="font-size:0.82rem; color:var(--gray-400); margin-top:0.3rem">적합: 교육과정 비교, 교재 비교, 전후 비교</p>
+              </div>
+              <div>
+                <strong style="color:var(--purple)">패턴 D: 전체 요약 → 세부 분석 → 패턴 발견 → 제안</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">큰 그림부터 보고, 세부를 파고, 패턴을 찾고, 행동 제안으로 마무리</p>
+                <p style="font-size:0.82rem; color:var(--gray-400); margin-top:0.3rem">적합: 대량 설문 분석, 학기 전체 데이터 분석</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div class="practice-area">
+          <h4>✏️ 실습 3: 단계적 분석 프롬프트 작성</h4>
+          <p class="guide-text">본인의 분석 과제를 3단계 이상으로 나눠서 프롬프트를 작성해보세요. [1단계], [2단계] 형식을 사용하세요.</p>
+          <textarea id="practice-chain" placeholder="예:&#10;아래 학생 성찰일지를 분석해줘. 다음 단계를 순서대로 수행해:&#10;&#10;[1단계] 각 성찰일지의 핵심 주제를 한 줄로 요약해줘.&#10;[2단계] 주제별로 분류해줘 (학습 내용/감정/행동 계획).&#10;[3단계] 가장 빈번한 주제 상위 3개를 뽑고, 교육적 시사점을 써줘."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="count-chain">0자</span>
+            <span class="save-indicator" id="save-chain">자동 저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item"><input type="checkbox" data-section="chain" data-idx="0" onchange="updateChecklist(this)"> 3단계 이상으로 나뉘어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="chain" data-idx="1" onchange="updateChecklist(this)"> 각 단계가 [N단계] 형식으로 번호가 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="chain" data-idx="2" onchange="updateChecklist(this)"> 앞 단계의 결과가 다음 단계에 연결되는가?</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: FEW-SHOT -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-fewshot">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>Few-shot 예시 제공</h2>
+        <p>원하는 답의 샘플을 보여주고 "이런 식으로 해줘"</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>Few-shot이 강력한 이유</h4>
+          <p>"이렇게 해줘"라고 설명하는 것보다, "이게 예시야, 이런 식으로 해줘"가 훨씬 정확합니다.</p>
+          <ul>
+            <li><strong>Zero-shot:</strong> 예시 없이 지시만 → 일반적인 결과</li>
+            <li><strong>One-shot:</strong> 예시 1개 → 패턴을 어느 정도 파악</li>
+            <li><strong>Few-shot (2~5개):</strong> 예시 여러 개 → 패턴을 정확히 학습</li>
+          </ul>
+        </div>
+
+        <h4 style="font-size:0.92rem; font-weight:700; margin:1rem 0 0.5rem;">비교: Zero-shot vs Few-shot</h4>
+
+        <div class="example-box bad">
+          <span class="label">❌ Zero-shot (예시 없음)</span>
+          <pre>아래 학생 답안의 깊이를 1~5점으로 채점해줘.
+
+[학생 답안]
+"인공지능은 미래에 중요할 것 같습니다."</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">✅ Few-shot (예시 3개 제공)</span>
+          <pre>아래 학생 답안의 깊이를 1~5점으로 채점해줘.
+채점 기준은 다음 예시를 참고해:
+
+[예시 1]
+답안: "인공지능은 좋은 것 같습니다."
+점수: 1점
+이유: 구체적 근거 없이 막연한 느낌만 표현
+
+[예시 2]
+답안: "인공지능은 교육에서 개인화 학습을 가능하게 한다. 하지만 데이터 편향 문제를 해결해야 한다."
+점수: 4점
+이유: 구체적 활용 사례 + 한계점을 함께 제시
+
+[예시 3]
+답안: "인공지능의 자연어처리 기술은 학생의 서술형 답안을 분석하여 교사의 채점 부담을 줄일 수 있다. 다만 2023년 UNESCO 보고서에 따르면..."
+점수: 5점
+이유: 구체적 기술명 + 실증적 근거 + 출처 제시
+
+이제 아래 답안을 같은 방식으로 채점해줘:
+[학생 답안]
+"인공지능은 미래에 중요할 것 같습니다."</pre>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">💡</span>
+          <span class="tip-text"><strong>Few-shot 황금 규칙:</strong> ① 예시는 2~5개가 최적 (너무 많으면 혼란) ② 좋은 예시와 나쁜 예시를 섞어라 ③ 채점 이유를 반드시 포함하라</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>🎯 Few-shot 예시를 만드는 3단계 방법</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div style="margin-bottom:0.8rem">
+                <strong>Step 1: 앵커 포인트 설정</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">채점 척도의 양 끝(최고점/최저점)에 해당하는 답안을 먼저 예시로 만든다.</p>
+              </div>
+              <div style="margin-bottom:0.8rem">
+                <strong>Step 2: 중간 지점 추가</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">중간 점수(3점 등)에 해당하는 예시를 1~2개 추가한다. AI가 "경계선"을 학습하는 데 도움.</p>
+              </div>
+              <div>
+                <strong>Step 3: 이유 명시</strong>
+                <p style="font-size:0.84rem; color:var(--gray-600)">각 예시에 왜 그 점수인지 이유를 써준다. 이유가 없으면 AI는 점수 패턴만 따라하고 논리를 모방하지 못한다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📝 Few-shot 프롬프트 템플릿</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre><span class="placeholder">[분석/채점 지시]</span>
+
+다음 예시를 참고해서 동일한 방식으로 수행해줘:
+
+<span class="highlight">[예시 1]</span>
+입력: <span class="placeholder">[샘플 텍스트 1]</span>
+결과: <span class="placeholder">[기대 출력 1]</span>
+이유: <span class="placeholder">[왜 이런 결과인지]</span>
+
+<span class="highlight">[예시 2]</span>
+입력: <span class="placeholder">[샘플 텍스트 2]</span>
+결과: <span class="placeholder">[기대 출력 2]</span>
+이유: <span class="placeholder">[왜 이런 결과인지]</span>
+
+이제 아래 텍스트를 같은 방식으로 분석해줘:
+<span class="placeholder">[실제 분석 대상 텍스트]</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div class="practice-area">
+          <h4>✏️ 실습 4: Few-shot 프롬프트 작성</h4>
+          <p class="guide-text">본인의 분석 과제에 맞는 예시를 2개 이상 만들어 Few-shot 프롬프트를 완성하세요. 각 예시에 반드시 "이유"를 포함하세요.</p>
+          <textarea id="practice-fewshot" placeholder="예:&#10;아래 학생 답안의 성찰 깊이를 1~5점으로 채점해줘.&#10;&#10;[예시 1]&#10;답안: &quot;오늘 수업은 재미있었다.&quot;&#10;점수: 1점&#10;이유: 감상만 있고, 배운 내용이나 자기 변화에 대한 언급이 없음&#10;&#10;[예시 2]&#10;답안: &quot;오늘 그룹 토론에서 내 의견이 틀렸다는 걸 알았다. 다음에는...&quot;&#10;점수: 4점&#10;이유: 구체적 상황 + 인지적 변화 + 행동 계획 포함" style="min-height:200px"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="count-fewshot">0자</span>
+            <span class="save-indicator" id="save-fewshot">자동 저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item"><input type="checkbox" data-section="fewshot" data-idx="0" onchange="updateChecklist(this)"> 예시가 2개 이상 포함되어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="fewshot" data-idx="1" onchange="updateChecklist(this)"> 각 예시에 "이유"가 포함되어 있는가?</label>
+            <label class="checklist-item"><input type="checkbox" data-section="fewshot" data-idx="2" onchange="updateChecklist(this)"> 좋은 예시와 나쁜 예시가 섞여 있는가?</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 5: FINAL ASSIGNMENT -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="section-header">
+      <div class="section-number gold">★</div>
+      <div class="section-title-group">
+        <h2>최종 과제: 4가지 기법 통합 프롬프트</h2>
+        <p>실습 1~4를 조합해서 완성형 프롬프트를 만든다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block" style="border-left-color: var(--gold);">
+          <h4>4가지를 하나로 조합하면?</h4>
+          <p>각 기법은 따로 써도 효과가 있지만, <strong>4가지를 조합하면 전문가 수준의 프롬프트</strong>가 됩니다.</p>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre><span class="highlight">[조합 예시 — 학생 에세이 분석 프롬프트]</span>
+
+<span class="highlight">① 역할 지정</span>
+너는 15년 경력의 고등학교 사회 교사이자, 서술형 평가 전문가야.
+논술 채점 경험이 풍부하고, 학생 개인별 피드백 작성에 능숙해.
+
+<span class="highlight">② 단계적 분석</span>
+아래 학생 에세이를 다음 단계로 분석해줘:
+[1단계] 핵심 주장을 한 문장으로 요약
+[2단계] 근거로 제시된 내용을 모두 추출
+[3단계] 3개 항목으로 채점 (각 10점 만점)
+[4단계] 항목별 피드백 작성
+[5단계] 학생용 종합 코멘트 3문장
+
+<span class="highlight">③ 출력 형식</span>
+채점 결과는 다음 표 형식으로 출력해줘:
+| 항목 | 점수(/10) | 근거 | 피드백 |
+
+<span class="highlight">④ Few-shot 예시</span>
+채점 수준 참고:
+[예시-높은점수] "민주주의의 핵심은 시민 참여에 있다. OECD 보고서에 따르면..."  → 논리성 9점
+[예시-낮은점수] "민주주의는 좋은 것이다." → 논리성 2점
+
+<span class="highlight">[분석 대상]</span>
+<span class="placeholder">(여기에 학생 에세이를 붙여넣으세요)</span></pre>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">🎯</span>
+          <span class="tip-text"><strong>순서 권장:</strong> ① 역할 → ② 단계적 분석 → ③ 출력 형식 → ④ Few-shot → ⑤ 실제 데이터. 이 순서가 가장 안정적입니다.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINAL WRITING AREA -->
+    <div class="final-box">
+      <h3>✍️ 최종 과제 작성</h3>
+      <p>위 4가지 기법을 모두 포함하여, 본인의 교육 현장에서 사용할 완성형 프롬프트를 작성하세요.</p>
+      <textarea id="practice-final" placeholder="① 역할 지정 — 누구로서 답변할 것인지&#10;② 단계적 분석 — 3단계 이상의 분석 과정&#10;③ 출력 형식 — 표, 목록, 루브릭 등&#10;④ Few-shot 예시 — 2개 이상의 예시와 이유&#10;&#10;위 4가지를 모두 포함한 통합 프롬프트를 작성하세요." style="min-height:300px"></textarea>
+      <div class="practice-meta" style="margin-top:0.5rem">
+        <span class="char-count" id="count-final" style="color:rgba(255,255,255,0.5)">0자</span>
+        <span class="save-indicator" id="save-final" style="color:var(--gold)">자동 저장됨</span>
+      </div>
+      <div class="checklist" style="margin-top:0.8rem">
+        <label class="checklist-item" style="color:rgba(255,255,255,0.8)"><input type="checkbox" data-section="final" data-idx="0" onchange="updateChecklist(this)"> ① 역할 지정이 포함되어 있는가?</label>
+        <label class="checklist-item" style="color:rgba(255,255,255,0.8)"><input type="checkbox" data-section="final" data-idx="1" onchange="updateChecklist(this)"> ② 출력 형식이 지정되어 있는가?</label>
+        <label class="checklist-item" style="color:rgba(255,255,255,0.8)"><input type="checkbox" data-section="final" data-idx="2" onchange="updateChecklist(this)"> ③ 3단계 이상의 단계적 분석이 있는가?</label>
+        <label class="checklist-item" style="color:rgba(255,255,255,0.8)"><input type="checkbox" data-section="final" data-idx="3" onchange="updateChecklist(this)"> ④ Few-shot 예시가 2개 이상 있는가?</label>
+        <label class="checklist-item" style="color:rgba(255,255,255,0.8)"><input type="checkbox" data-section="final" data-idx="4" onchange="updateChecklist(this)"> 본인의 교육 현장에 맞춤화되어 있는가?</label>
+      </div>
+    </div>
+
+    <!-- REFLECTION -->
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-body">
+        <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:0.5rem;">📝 성찰 질문</h4>
+        <p style="font-size:0.86rem; color:var(--gray-600); margin-bottom:0.8rem;">아래 두 질문에 답해주세요. (각 2~3문장)</p>
+        <p style="font-size:0.86rem; font-weight:600; margin-bottom:0.5rem;">Q1. 4가지 기법 중 본인의 분석 과제에 가장 효과적이라고 생각하는 기법은? 이유는?</p>
+        <textarea id="practice-reflect1" placeholder="예: 저는 Few-shot이 가장 효과적이라고 생각합니다. 왜냐하면..." style="width:100%; min-height:80px; padding:0.8rem; border:1.5px solid var(--gray-200); border-radius:10px; font-family:inherit; font-size:0.88rem; line-height:1.7; resize:vertical;"></textarea>
+        <div class="practice-meta">
+          <span class="char-count" id="count-reflect1">0자</span>
+          <span class="save-indicator" id="save-reflect1">자동 저장됨</span>
+        </div>
+        <p style="font-size:0.86rem; font-weight:600; margin:1rem 0 0.5rem;">Q2. 2주차에 작성한 프롬프트를 이번 주에 배운 기법으로 개선한다면, 어떤 점이 달라지겠는가?</p>
+        <textarea id="practice-reflect2" placeholder="예: 2주차에는 역할 지정 없이 바로 질문했는데, 이번에 배운 역할 지정을 적용하면..." style="width:100%; min-height:80px; padding:0.8rem; border:1.5px solid var(--gray-200); border-radius:10px; font-family:inherit; font-size:0.88rem; line-height:1.7; resize:vertical;"></textarea>
+        <div class="practice-meta">
+          <span class="char-count" id="count-reflect2">0자</span>
+          <span class="save-indicator" id="save-reflect2">자동 저장됨</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="card" style="margin-top:1rem">
+      <div class="card-body" style="text-align:center; padding:2rem;">
+        <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.5rem;">과제 내보내기</h4>
+        <p style="font-size:0.84rem; color:var(--gray-600); margin-bottom:1rem;">작성한 내용을 HTML 파일로 내보내서 포탈에 제출하세요.</p>
+        <div class="btn-group" style="justify-content:center">
+          <button class="btn btn-purple" onclick="exportHTML()">📄 HTML로 내보내기</button>
+          <button class="btn btn-outline" onclick="printPage()">🖨️ 인쇄 / PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 3주차 프롬프트 엔지니어링 심화 · 김민철
+</div>
+
+<script>
+// ===== STATE =====
+const STORAGE_KEY = 'ta_week3_';
+const textareas = ['practice-role','practice-format','practice-chain','practice-fewshot','practice-final','practice-reflect1','practice-reflect2'];
+const sections = ['intro','role','format','chain','fewshot','final'];
+const sectionCompletionRules = {
+  intro: () => true, // always done after viewing
+  role: () => getVal('practice-role').length >= 30 && getChecked('role') >= 2,
+  format: () => getVal('practice-format').length >= 30 && getChecked('format') >= 2,
+  chain: () => getVal('practice-chain').length >= 30 && getChecked('chain') >= 2,
+  fewshot: () => getVal('practice-fewshot').length >= 50 && getChecked('fewshot') >= 2,
+  final: () => getVal('practice-final').length >= 100 && getChecked('final') >= 3
+};
+
+function getVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function getChecked(section) {
+  const cbs = document.querySelectorAll(`input[data-section="${section}"]`);
+  return [...cbs].filter(c => c.checked).length;
+}
+
+// ===== SAVE / LOAD =====
+function saveAll() {
+  textareas.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) localStorage.setItem(STORAGE_KEY + id, el.value);
+  });
+  // Save checkboxes
+  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(cb => {
+    const key = STORAGE_KEY + 'cb_' + cb.dataset.section + '_' + cb.dataset.idx;
+    localStorage.setItem(key, cb.checked);
+  });
+  // Save student info
+  localStorage.setItem('ta_student_name', document.getElementById('studentName').value);
+  localStorage.setItem('ta_student_id', document.getElementById('studentId').value);
+}
+
+function loadAll() {
+  textareas.forEach(id => {
+    const el = document.getElementById(id);
+    const saved = localStorage.getItem(STORAGE_KEY + id);
+    if (el && saved) el.value = saved;
+  });
+  document.querySelectorAll('input[type="checkbox"][data-section]').forEach(cb => {
+    const key = STORAGE_KEY + 'cb_' + cb.dataset.section + '_' + cb.dataset.idx;
+    const saved = localStorage.getItem(key);
+    if (saved === 'true') cb.checked = true;
+  });
+  document.getElementById('studentName').value = localStorage.getItem('ta_student_name') || '';
+  document.getElementById('studentId').value = localStorage.getItem('ta_student_id') || '';
+}
+
+// ===== AUTO-SAVE =====
+let saveTimeout;
+function autoSave(id) {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    saveAll();
+    const indicator = document.getElementById('save-' + id.replace('practice-',''));
+    if (indicator) {
+      indicator.classList.add('show');
+      setTimeout(() => indicator.classList.remove('show'), 1500);
+    }
+  }, 500);
+}
+
+// ===== CHAR COUNT =====
+function updateCount(id) {
+  const el = document.getElementById(id);
+  const countId = 'count-' + id.replace('practice-','');
+  const countEl = document.getElementById(countId);
+  if (el && countEl) countEl.textContent = el.value.length + '자';
+}
+
+// ===== PROGRESS =====
+function updateProgress() {
+  let done = 0;
+  sections.forEach(s => {
+    const pill = document.querySelector(`[data-section="${s}"]`);
+    if (sectionCompletionRules[s]()) {
+      done++;
+      if (pill) pill.classList.add('done');
+    } else {
+      if (pill) pill.classList.remove('done');
+    }
+  });
+  const total = sections.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' / ' + total;
+}
+
+// ===== CHECKLIST =====
+function updateChecklist(cb) {
+  const item = cb.closest('.checklist-item');
+  if (cb.checked) item.classList.add('checked');
+  else item.classList.remove('checked');
+  saveAll();
+  updateProgress();
+}
+
+// ===== TABS =====
+function switchTab(tabGroupId, contentGroupId, idx) {
+  const group = document.getElementById(tabGroupId);
+  const content = document.getElementById(contentGroupId);
+  group.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  content.querySelectorAll('.tab-content').forEach((c, i) => {
+    c.classList.toggle('active', i === idx);
+  });
+}
+
+// ===== COLLAPSIBLE =====
+function toggleCollapsible(trigger) {
+  trigger.closest('.collapsible').classList.toggle('open');
+}
+
+// ===== COPY =====
+function copyTemplate(btn) {
+  const pre = btn.closest('.prompt-template').querySelector('pre');
+  const text = pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '복사됨!';
+    setTimeout(() => btn.textContent = '복사', 1500);
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '복사됨!';
+    setTimeout(() => btn.textContent = '복사', 1500);
+  });
+}
+
+// ===== EXPORT =====
+function exportHTML() {
+  const name = document.getElementById('studentName').value || '미입력';
+  const sid = document.getElementById('studentId').value || '미입력';
+  const now = new Date().toLocaleString('ko-KR');
+
+  const fields = [
+    { label: '실습 1: 역할 지정 프롬프트', id: 'practice-role' },
+    { label: '실습 2: 출력 형식 프롬프트', id: 'practice-format' },
+    { label: '실습 3: 단계적 분석 프롬프트', id: 'practice-chain' },
+    { label: '실습 4: Few-shot 프롬프트', id: 'practice-fewshot' },
+    { label: '최종 과제: 4가지 통합 프롬프트', id: 'practice-final' },
+    { label: '성찰 Q1: 가장 효과적인 기법', id: 'practice-reflect1' },
+    { label: '성찰 Q2: 2주차 대비 개선점', id: 'practice-reflect2' },
+  ];
+
+  let body = fields.map(f => {
+    const val = document.getElementById(f.id)?.value || '(미작성)';
+    return `<div style="margin-bottom:2rem">
+      <h3 style="color:#2C3E6B; font-size:1rem; border-bottom:2px solid #E8E8E8; padding-bottom:0.3rem; margin-bottom:0.5rem;">${f.label}</h3>
+      <pre style="white-space:pre-wrap; font-family:'Noto Sans KR',sans-serif; font-size:0.9rem; line-height:1.8; background:#F7F7F7; padding:1rem; border-radius:8px;">${escapeHtml(val)}</pre>
+    </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>3주차 과제 — ${name}</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+body{font-family:'Noto Sans KR',sans-serif;max-width:800px;margin:2rem auto;padding:0 1.5rem;color:#333;line-height:1.8}
+h1{font-size:1.3rem;color:#2C3E6B}h2{font-size:1rem;color:#666;font-weight:400;margin-bottom:2rem}
+.info{display:flex;gap:2rem;margin-bottom:1.5rem;font-size:0.9rem;color:#666}</style></head>
+<body><h1>텍스트어날리틱스스튜디오 — 3주차 프롬프트 엔지니어링 심화</h1>
+<h2>과제 제출물</h2>
+<div class="info"><span><strong>이름:</strong> ${escapeHtml(name)}</span><span><strong>학번:</strong> ${escapeHtml(sid)}</span><span><strong>제출일:</strong> ${now}</span></div>
+${body}</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `3주차_프롬프트엔지니어링_${name}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function printPage() { window.print(); }
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  loadAll();
+
+  textareas.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    updateCount(id);
+    el.addEventListener('input', () => {
+      updateCount(id);
+      autoSave(id);
+      updateProgress();
+    });
+  });
+
+  // Student info save
+  ['studentName','studentId'].forEach(id => {
+    document.getElementById(id).addEventListener('blur', saveAll);
+  });
+
+  // Nav pill smooth scroll
+  document.querySelectorAll('.nav-pill').forEach(pill => {
+    pill.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(pill.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Scroll spy for active pill
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id.replace('sec-','');
+        document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+        const active = document.querySelector(`[data-section="${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => {
+    const el = document.getElementById('sec-' + s);
+    if (el) observer.observe(el);
+  });
+
+  updateProgress();
+});
+</script>
+</body>
+</html>
