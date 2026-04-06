@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5주차 — 감성 분석</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--coral);
+    border-radius: 50%;
+    opacity: 0.25;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--teal);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-label {
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+  .header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0.8rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .progress-bar-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .progress-label {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--coral), var(--purple));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: var(--coral);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills {
+    max-width: 860px;
+    margin: 1.2rem auto 0;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .nav-pill {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .nav-pill:hover { border-color: var(--teal); color: var(--teal); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    margin-bottom: 2rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .section-number {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+  .section-title-group p {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+  }
+
+  /* ===== INTRO / NOTICE ===== */
+  .intro-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block {
+    background: var(--gray-50);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--teal);
+  }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--navy);
+  }
+  .concept-block p, .concept-block li {
+    font-size: 0.86rem;
+    color: var(--gray-600);
+    line-height: 1.8;
+  }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+  }
+  .example-box.bad {
+    background: #FFF0EC;
+    border: 1px solid #FECDC2;
+  }
+  .example-box.good {
+    background: #E6F7F5;
+    border: 1px solid #B2DFDB;
+  }
+  .example-box .label {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template {
+    background: var(--navy-deep);
+    color: #E0E0E0;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    position: relative;
+  }
+  .prompt-template pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn {
+    position: absolute;
+    top: 0.6rem; right: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area {
+    background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%);
+    border: 2px solid #E8E0FF;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .practice-area h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .practice-area .guide-text {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 0.8rem;
+  }
+  .practice-area textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .practice-area textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+  .practice-area textarea::placeholder {
+    color: var(--gray-400);
+  }
+
+  .practice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .char-count {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+  }
+  .save-indicator {
+    font-size: 0.75rem;
+    color: var(--teal);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    margin-top: 0.8rem;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+  }
+  .checklist-item input[type="checkbox"] {
+    margin-top: 0.25rem;
+    accent-color: var(--purple);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .checklist-item.checked { color: var(--gray-400); text-decoration: line-through; }
+
+  /* ===== TABS ===== */
+  .tab-group {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--gray-200);
+    margin-bottom: 1rem;
+  }
+  .tab-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--gray-800); }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    font-size: 0.84rem;
+    align-items: flex-start;
+  }
+  .tip-callout.info { background: #EDF4FF; border: 1px solid #C6DBFF; }
+  .tip-callout.warning { background: var(--gold-bg); border: 1px solid #FFE082; }
+  .tip-callout.success { background: var(--teal-bg); border: 1px solid #B2DFDB; }
+  .tip-callout .tip-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-callout .tip-text { line-height: 1.7; color: var(--gray-800); }
+
+  /* ===== COMPARISON TABLE ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+  }
+  .compare-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .compare-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible {
+    margin: 0.8rem 0;
+  }
+  .collapsible-trigger {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .collapsible-trigger:hover { background: var(--gray-100); }
+  .collapsible-trigger .arrow { transition: transform 0.3s; }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-content {
+    padding: 1rem;
+    border: 1px solid var(--gray-200);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* ===== FINAL ASSIGNMENT ===== */
+  .final-box {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, #2A1B5E 100%);
+    border-radius: var(--radius);
+    padding: 2rem;
+    color: var(--white);
+    margin-top: 2rem;
+  }
+  .final-box h3 {
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: var(--gold);
+  }
+  .final-box p {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 1rem;
+  }
+  .final-box textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    background: rgba(255,255,255,0.06);
+    color: var(--white);
+  }
+  .final-box textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(233,196,106,0.15);
+  }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.3); }
+
+  /* ===== REFLECTION CARD ===== */
+  .reflection-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border-left: 4px solid var(--purple);
+    box-shadow: var(--shadow);
+  }
+  .reflection-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+  .reflection-card textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+  }
+  .reflection-card textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+
+  /* ===== EXPORT CARD ===== */
+  .export-card {
+    background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%);
+    border: 2px solid #E8E0FF;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  .export-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 1rem;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+  .btn-purple { background: var(--purple); color: var(--white); }
+  .btn-purple:hover { background: #6D28D9; transform: translateY(-1px); }
+  .btn-gold { background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover { background: #D4A843; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--gray-600);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-outline:hover { border-color: var(--gray-400); color: var(--gray-800); }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .student-info-bar label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .student-info-bar input {
+    padding: 0.45rem 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    min-width: 120px;
+  }
+  .student-info-bar input:focus {
+    outline: none;
+    border-color: var(--teal);
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .header { padding: 2rem 1rem; }
+    .header h1 { font-size: 1.4rem; }
+    .main { padding: 1rem 1rem 3rem; }
+    .card-body { padding: 1.2rem; }
+    .practice-area { padding: 1rem; }
+    .final-box { padding: 1.2rem; }
+    .nav-pills { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · 5주차</div>
+    <h1>감성 분석</h1>
+    <p>텍스트에서 감정과 태도를 읽어내는 AI 분석법</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 6</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">✓ </span>시작</a>
+  <a class="nav-pill" href="#sec-basic" data-section="basic"><span class="pill-check">✓ </span>감성 분석 기초</a>
+  <a class="nav-pill" href="#sec-lexicon" data-section="lexicon"><span class="pill-check">✓ </span>감성 사전 구축</a>
+  <a class="nav-pill" href="#sec-analysis" data-section="analysis"><span class="pill-check">✓ </span>분석 실습</a>
+  <a class="nav-pill" href="#sec-interpret" data-section="interpret"><span class="pill-check">✓ </span>해석과 시각화</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">✓ </span>최종 과제</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>5주차 과제 안내</strong><br><br>
+      4주차에서 텍스트 분류를 배웠습니다. 이번 주에는 한 단계 더 나아가, <strong>텍스트에 담긴 감정과 태도를 분석</strong>합니다.<br>
+      학생들은 <strong>본인의 교육 현장 데이터</strong>를 자유 AI 도구로 감성 분석하고, 실제 수업 개선에 활용할 수 있는 인사이트를 도출합니다.<br><br>
+      <strong>감성 사전 구축 → 분석 프롬프트 설계 → 실행 → 결과 해석</strong>의 전체 파이프라인을 경험합니다.<br>
+      <div class="subtitle">예상 소요 시간: 약 75분 | 각 섹션의 실습을 모두 완료해야 합니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 배울 핵심 개념</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:25%">개념</th>
+              <th style="width:35%">핵심 아이디어</th>
+              <th>교육 현장 예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>감성 분석</strong><br>(Sentiment Analysis)</td>
+              <td>텍스트에서 긍정/부정/중립의 감정 방향을 파악</td>
+              <td>강의평가에서 학생들의 만족/불만족 비율 파악</td>
+            </tr>
+            <tr>
+              <td><strong>감정 강도</strong><br>(Intensity)</td>
+              <td>감정의 세기를 수치화</td>
+              <td>"좋았다" vs "정말 최고였다"의 차이 측정</td>
+            </tr>
+            <tr>
+              <td><strong>감성 사전</strong><br>(Sentiment Lexicon)</td>
+              <td>감정 표현 단어와 극성(+/-)을 정의한 목록</td>
+              <td>교육 맥락에 맞는 감성 단어 커스터마이징</td>
+            </tr>
+            <tr>
+              <td><strong>맥락적 감성</strong><br>(Contextual Sentiment)</td>
+              <td>같은 단어도 맥락에 따라 감성이 달라짐</td>
+              <td>"어렵다" = 부정(불만) vs "어렵지만 보람있다" = 긍정(성취감)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: 감성 분석 기초 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-basic">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>감성 분석의 기초</h2>
+        <p>텍스트에 담긴 감정을 읽어내는 방법</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block">
+          <h4>감성 분석이란?</h4>
+          <p>텍스트에 담긴 감정의 방향(긍정/부정/중립)과 강도를 파악하는 분석 방법입니다. 단순한 분류를 넘어, 글쓴이의 태도와 감정 상태까지 읽어냅니다.</p>
+        </div>
+
+        <div class="concept-block coral-border">
+          <h4>감성 분석의 3단계</h4>
+          <ul>
+            <li><strong>Level 1 — 극성 분류:</strong> 긍정/부정/중립 (가장 기본)</li>
+            <li><strong>Level 2 — 감정 라벨링:</strong> 기쁨/분노/슬픔/불안/놀라움/기대 등 세분화</li>
+            <li><strong>Level 3 — 관점 기반 감성:</strong> "수업 내용은 좋았는데(+) 과제가 너무 많았다(-)" 처럼 항목별 감성 분리</li>
+          </ul>
+        </div>
+
+        <h4 style="font-size:0.92rem; font-weight:700; margin:1rem 0 0.5rem;">비교: 좋은 vs 나쁜 프롬프트</h4>
+
+        <div class="example-box bad">
+          <span class="label">❌ 부족한 프롬프트</span>
+          <pre>이 텍스트의 감성을 분석해줘</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">✅ 좋은 프롬프트</span>
+          <pre>너는 교육 평가 전문가야.
+아래 강의평가 응답에서 감성을 분석해줘.
+
+분석 기준:
+- 극성: 긍정(+) / 부정(-) / 중립(0) / 혼합(±)
+- 감정 라벨: 만족/기대/성취감/불만/불안 중 택1
+- 강도: 1(약) ~ 5(강)
+- 관련 주제: 수업내용/교수법/평가/환경
+
+"교수님 설명이 정말 이해하기 쉬워서 기대돼요" →
+극성: +, 감정: 만족/기대, 강도: 5, 주제: 교수법</pre>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">⚠️</span>
+          <span class="tip-text">감성 분석은 개인의 감정을 다루므로 윤리적 주의가 필요합니다. 개인을 판단하는 도구가 아닌, 전체 패턴을 파악하는 도구로 활용하세요.</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>🔍 교육 현장에서 감성 분석이 유용한 상황 5가지</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <table class="compare-table">
+                <thead>
+                  <tr><th>상황</th><th>분석 대상</th><th>기대 인사이트</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>수업 만족도 파악</td><td>강의평가 서술형 응답</td><td>수업 요소별 감성 분포</td></tr>
+                  <tr><td>학습 경험 이해</td><td>학생 성찰일지</td><td>학습 동기/좌절 패턴</td></tr>
+                  <tr><td>교우관계 모니터링</td><td>학생 상담 기록</td><td>정서적 위험 신호 탐지</td></tr>
+                  <tr><td>학부모 소통 개선</td><td>가정통신문 반응</td><td>불만/요청 주제 파악</td></tr>
+                  <tr><td>온라인 수업 피드백</td><td>LMS 게시판 글</td><td>참여도/만족도 변화 추적</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>✍️ 실습 1: 감성 분석 대상 선정</h4>
+          <div class="guide-text">본인의 교육 현장에서 감성 분석하고 싶은 데이터를 구체적으로 정의하세요.</div>
+          <textarea id="practice-target" placeholder="예:&#10;분석 대상: 2025-2학기 '교육심리학' 강의평가 서술형 응답 (약 40건)&#10;&#10;분석 목적: 학생들이 수업의 어떤 부분에 만족/불만족하는지, 감정의 강도와 구체적 주제를 파악하여 다음 학기 수업 개선에 반영&#10;&#10;분석 수준: Level 3 (관점 기반 감성 — 수업내용/교수법/평가/환경별로 감성 분리)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-target-count">0자</span>
+            <span class="save-indicator" id="practice-target-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="basic" data-index="0" class="section-check" />
+              <span>분석 대상 텍스트가 명시되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="basic" data-index="1" class="section-check" />
+              <span>분석 목적이 구체적인가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="basic" data-index="2" class="section-check" />
+              <span>분석 수준(Level 1/2/3)이 선택되어 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: 감성 사전 구축 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-lexicon">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>감성 사전 구축</h2>
+        <p>교육 맥락에 맞는 감성 사전 만들기</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>교육 맥락의 감성 사전이 필요한 이유</h4>
+          <ul>
+            <li>일반 감성 사전은 "어렵다"를 부정으로 분류하지만, 교육 맥락에서는 "어렵지만 성장했다"는 긍정일 수 있습니다.</li>
+            <li>교육 현장 특유의 표현("멘붕", "꿀잼", "갓교수", "노잼" 등)은 일반 사전에 없습니다.</li>
+            <li>커스텀 감성 사전을 만들면 분석 정확도가 크게 올라갑니다.</li>
+          </ul>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📝 감성 사전 구축 프롬프트 템플릿</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육학 전문가이자 텍스트 분석가야.
+
+[교육 현장]에서 사용되는 감성 표현을 정리해줘.
+
+다음 표 형식으로 작성해줘:
+
+| 표현 | 극성(+/-/중립) | 감정 라벨 | 강도(1~5) | 맥락 설명 |
+
+[포함할 범주]
+1. 수업 내용에 대한 감성 표현 (10개)
+2. 교수법에 대한 감성 표현 (10개)
+3. 평가/과제에 대한 감성 표현 (10개)
+4. 학습 경험에 대한 감성 표현 (10개)
+
+[교육 현장 맥락]
+(여기에 본인의 교육 환경을 설명하세요. 예: 초등 6학년, 수학, 온라인 강의 등)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>✍️ 실습 2: 나의 감성 사전 만들기</h4>
+          <div class="guide-text">AI를 활용하여 본인의 교육 현장에 맞는 감성 사전을 구축하세요. AI의 결과에 본인의 판단을 더해 수정하세요.</div>
+          <textarea id="practice-lexicon" placeholder="(AI 결과 또는 본인이 작성한 감성 사전을 여기에 붙여넣으세요)&#10;&#10;| 표현 | 극성 | 감정 라벨 | 강도 | 맥락 설명 |&#10;|------|------|----------|------|----------|&#10;| 예: 재미있었어요 | + | 기쁨/만족 | 4 | 수업 내용이 흥미로울 때 |"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-lexicon-count">0자</span>
+            <span class="save-indicator" id="practice-lexicon-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="lexicon" data-index="0" class="section-check" />
+              <span>최소 15개 이상의 감성 표현이 포함되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="lexicon" data-index="1" class="section-check" />
+              <span>극성(+/-/중립)과 강도가 모두 표시되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="lexicon" data-index="2" class="section-check" />
+              <span>교육 맥락에 맞게 AI 결과를 수정한 부분이 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: 분석 실습 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-analysis">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>감성 분석 실습</h2>
+        <p>프롬프트 설계와 실행</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>감성 분석 프롬프트 설계</h4>
+          <p>3주차의 프롬프트 기법 + 4주차의 분류 기법 + 감성 사전을 조합하여 강력한 분석 프롬프트를 만듭니다.</p>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📝 감성 분석 프롬프트 템플릿</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 [직함]이자 감성 분석 전문가야.
+
+아래 텍스트에서 감성을 분석해줘.
+
+[분석 기준]
+- 극성: 긍정(+) / 부정(-) / 중립(0) / 혼합(±)
+- 감정 라벨: 만족/기대/성취감/불만/불안/좌절/무관심 중 택 1~2
+- 강도: 1(약) ~ 5(강)
+- 관련 주제: 수업내용/교수법/평가/환경/기타
+
+[감성 판단 참고]
+- "어렵다" → 맥락 확인 필요 (부정적 불만 vs 긍정적 도전)
+- "괜찮다" → 중립 (적극적 긍정 아님)
+- "~하면 좋겠다" → 부정(현 상태 불만) + 제안
+
+[출력 형식]
+| 번호 | 원문(요약) | 극성 | 감정 라벨 | 강도 | 관련 주제 | 판단 근거 |
+
+[Few-shot 예시]
+"교수님 설명이 정말 이해하기 쉬워서 수업이 기다려졌어요" → +, 만족/기대, 5, 교수법, "정말 이해하기 쉬워서"+"기다려졌어요"가 강한 긍정
+
+"과제가 많아서 힘들었지만, 실력이 늘었다는 건 느꼈어요" → ±, 좌절/성취감, 3, 평가, 부정(과제 부담)+긍정(성장) 혼합
+
+[분석 대상]
+(텍스트를 여기에 붙여넣으세요. 최소 5건 이상의 응답)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">💡</span>
+          <span class="tip-text"><strong>핵심:</strong> 감성 분석의 '혼합' 범주가 중요합니다. 교육 현장의 텍스트는 '힘들었지만 좋았다' 같은 복합 감정이 많습니다.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>✍️ 실습 3: 감성 분석 실행</h4>
+          <div class="guide-text">위 템플릿을 참고하여 감성 분석 프롬프트를 작성하고, 본인의 데이터(최소 5건)를 AI로 분석하세요.</div>
+          <textarea id="practice-analysis" placeholder="(프롬프트와 분석 결과를 여기에 붙여넣으세요)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-analysis-count">0자</span>
+            <span class="save-indicator" id="practice-analysis-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="analysis" data-index="0" class="section-check" />
+              <span>최소 5건 이상의 텍스트를 감성 분석했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="analysis" data-index="1" class="section-check" />
+              <span>극성, 감정 라벨, 강도가 모두 기록되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="analysis" data-index="2" class="section-check" />
+              <span>혼합(±) 감성 사례가 1건 이상 포함되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="analysis" data-index="3" class="section-check" />
+              <span>사용한 AI 도구가 명시되어 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: 해석과 시각화 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-interpret">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>해석과 시각화</h2>
+        <p>결과에서 인사이트 도출하기</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>분석 결과를 해석하는 3가지 관점</h4>
+          <ul>
+            <li><strong>분포 관점:</strong> 긍정/부정/중립의 비율은? → "70% 긍정이면 양호, 30% 이상 부정이면 주의"</li>
+            <li><strong>주제별 관점:</strong> 어떤 주제에서 부정이 집중되는가? → "교수법은 긍정적인데 평가에서 부정이 많다"</li>
+            <li><strong>변화 관점:</strong> 시간에 따라 감성이 어떻게 변하는가? → "학기 초 불안 → 중반 적응 → 말 만족"</li>
+          </ul>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>📝 감성 분석 결과 해석 프롬프트</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 데이터 분석 전문가야.
+
+아래 감성 분석 결과를 해석하고, 교수자를 위한 인사이트를 도출해줘.
+
+[분석해줄 것]
+1. 전체 감성 분포 (긍정/부정/중립/혼합 비율)
+2. 주제별 감성 비교 (어떤 주제가 가장 긍정적/부정적인지)
+3. 주요 불만 사항 TOP 3과 개선 제안
+4. 주요 강점 TOP 3과 유지 방안
+
+[출력 형식]
+- 각 항목별로 구조화하여 작성
+- 숫자/비율을 반드시 포함
+- 교수자가 바로 행동할 수 있는 구체적 제안 포함
+
+[감성 분석 결과]
+(여기에 실습 3의 결과를 붙여넣으세요)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>✍️ 실습 4: 결과 해석</h4>
+          <div class="guide-text">감성 분석 결과를 AI로 해석하고, 핵심 인사이트를 정리하세요.</div>
+          <textarea id="practice-interpret" placeholder="(AI 해석 결과를 여기에 붙여넣으세요)&#10;&#10;① 전체 감성 분포 (비율)&#10;② 주제별 감성 차이&#10;③ 주요 불만 TOP 3과 개선 제안&#10;④ 주요 강점 TOP 3과 유지 방안&#10;⑤ 교육 현장에서의 시사점"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-interpret-count">0자</span>
+            <span class="save-indicator" id="practice-interpret-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="interpret" data-index="0" class="section-check" />
+              <span>감성 분포(비율)가 정리되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="interpret" data-index="1" class="section-check" />
+              <span>주제별 감성 차이가 분석되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="interpret" data-index="2" class="section-check" />
+              <span>교육 현장에서의 시사점/행동 제안이 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 5: 최종 과제 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="final-box">
+      <h3>✍️ 최종 과제 작성</h3>
+      <p>실습 1~4를 종합하여, 본인의 감성 분석 프로젝트를 정리하세요.</p>
+
+      <textarea id="practice-final" placeholder="① 분석 대상과 목적&#10;② 감성 사전 (주요 표현 + 극성 + 강도)&#10;③ 사용한 프롬프트 (최종 버전)&#10;④ 감성 분석 결과 요약 (분포, 주제별 감성)&#10;⑤ 해석과 시사점&#10;⑥ 4주차 '분류'와 5주차 '감성 분석'을 비교했을 때의 차이점&#10;&#10;위 6가지를 포함하여 정리하세요."></textarea>
+
+      <div class="practice-meta">
+        <span class="char-count" id="practice-final-count">0자</span>
+        <span class="save-indicator" id="practice-final-save">저장됨</span>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem; margin-top: 1.5rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem;">최종 과제 체크리스트</h4>
+        <div class="checklist" style="background: transparent;">
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="0" class="section-check" />
+            <span>① 분석 대상과 목적이 명확한가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="1" class="section-check" />
+            <span>② 감성 사전이 교육 맥락에 맞게 구축되어 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="2" class="section-check" />
+            <span>③ 프롬프트에 분석 기준과 Few-shot이 포함되어 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="3" class="section-check" />
+            <span>④ 최소 5건 이상의 감성 분석 결과가 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="4" class="section-check" />
+            <span>⑤ 결과 해석과 시사점이 구체적인가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="5" class="section-check" />
+            <span>⑥ 분류(4주차)와 감성 분석(5주차)의 차이를 설명했는가?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>🤔 성찰 질문 1</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">감성 분석에서 가장 어려웠던 점은? 특히 '혼합' 감성을 판단할 때 어떤 기준을 세웠는가?</p>
+      <textarea id="practice-reflect1" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect1-count">0자</span>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>🤔 성찰 질문 2</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">감성 분석 결과를 실제 수업 개선에 활용한다면, 가장 먼저 바꾸고 싶은 것은 무엇인가?</p>
+      <textarea id="practice-reflect2" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect2-count">0자</span>
+      </div>
+    </div>
+
+    <div class="export-card">
+      <h4>📄 결과 내보내기</h4>
+      <div class="btn-group" style="justify-content: center;">
+        <button class="btn btn-primary" onclick="exportHTML()">📄 HTML로 내보내기</button>
+        <button class="btn btn-outline" onclick="printPage()">🖨️ 인쇄 / PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 5주차 감성 분석 · 김민철
+</div>
+
+<script>
+  // ===== CONFIGURATION =====
+  const STORAGE_KEY = 'ta_week5_';
+  const textareas = [
+    'practice-target', 'practice-lexicon', 'practice-analysis',
+    'practice-interpret', 'practice-final', 'practice-reflect1', 'practice-reflect2'
+  ];
+  const sections = ['intro', 'basic', 'lexicon', 'analysis', 'interpret', 'final'];
+
+  // ===== SECTION COMPLETION RULES =====
+  function getSectionCompletionRules() {
+    return {
+      basic: { textarea: 'practice-target', checkboxCount: 3 },
+      lexicon: { textarea: 'practice-lexicon', checkboxCount: 3 },
+      analysis: { textarea: 'practice-analysis', checkboxCount: 4 },
+      interpret: { textarea: 'practice-interpret', checkboxCount: 3 },
+      final: { textarea: 'practice-final', checkboxCount: 6 }
+    };
+  }
+
+  // ===== SAVE ALL =====
+  function saveAll() {
+    localStorage.setItem(STORAGE_KEY + 'name', document.getElementById('studentName').value);
+    localStorage.setItem(STORAGE_KEY + 'id', document.getElementById('studentId').value);
+    textareas.forEach(id => {
+      localStorage.setItem(STORAGE_KEY + id, document.getElementById(id).value);
+    });
+  }
+
+  // ===== LOAD ALL =====
+  function loadAll() {
+    const name = localStorage.getItem(STORAGE_KEY + 'name');
+    const id = localStorage.getItem(STORAGE_KEY + 'id');
+    if (name) document.getElementById('studentName').value = name;
+    if (id) document.getElementById('studentId').value = id;
+    textareas.forEach(id => {
+      const value = localStorage.getItem(STORAGE_KEY + id);
+      if (value) document.getElementById(id).value = value;
+    });
+  }
+
+  // ===== AUTO SAVE =====
+  function autoSave() {
+    saveAll();
+    updateCount();
+    updateProgress();
+  }
+
+  // ===== UPDATE CHARACTER COUNT =====
+  function updateCount() {
+    textareas.forEach(id => {
+      const elem = document.getElementById(id);
+      const count = elem.value.length;
+      const countElem = document.getElementById(id + '-count');
+      if (countElem) countElem.textContent = count + '자';
+    });
+  }
+
+  // ===== UPDATE PROGRESS =====
+  function updateProgress() {
+    const rules = getSectionCompletionRules();
+    let completedCount = 0;
+    sections.forEach(sec => {
+      const isComplete = isSectionComplete(sec, rules[sec]);
+      const pill = document.querySelector(`.nav-pill[data-section="${sec}"]`);
+      if (pill) {
+        if (isComplete) {
+          pill.classList.add('done');
+          completedCount++;
+        } else {
+          pill.classList.remove('done');
+        }
+      }
+    });
+    const total = sections.length;
+    const percent = (completedCount / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').textContent = completedCount + ' / ' + total;
+  }
+
+  // ===== CHECK SECTION COMPLETE =====
+  function isSectionComplete(section, rule) {
+    if (!rule) return false;
+    const textareaValue = document.getElementById(rule.textarea).value.trim();
+    if (textareaValue.length < 10) return false;
+    const checkboxes = document.querySelectorAll(`.section-check[data-section="${section}"]:checked`);
+    return checkboxes.length >= rule.checkboxCount;
+  }
+
+  // ===== UPDATE CHECKLIST DISPLAY =====
+  function updateChecklist() {
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      const item = cb.closest('.checklist-item');
+      if (cb.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  }
+
+  // ===== TOGGLE COLLAPSIBLE =====
+  function toggleCollapsible(btn) {
+    const collapsible = btn.closest('.collapsible');
+    collapsible.classList.toggle('open');
+  }
+
+  // ===== COPY TEMPLATE =====
+  function copyTemplate(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = '복사됨!';
+      setTimeout(() => { btn.textContent = originalText; }, 1500);
+    });
+  }
+
+  // ===== EXPORT HTML =====
+  function exportHTML() {
+    const name = document.getElementById('studentName').value || '이름미입력';
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const filename = '5주차_감성분석_' + name + '_' + dateStr + '.html';
+
+    let html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>5주차 과제 — 감성 분석</title>';
+    html += '<style>body { font-family: "Noto Sans KR", sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f0e8; } h1 { color: #2C3E6B; } .section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; } .meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; } table { width: 100%; border-collapse: collapse; margin: 1rem 0; } th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; } th { background: #2C3E6B; color: white; }</style></head><body>';
+    html += '<h1>5주차 감성 분석 과제</h1>';
+    html += '<p class="meta">이름: ' + escapeHtml(name) + ' | 학번: ' + escapeHtml(document.getElementById('studentId').value) + ' | 작성일: ' + dateStr + '</p>';
+
+    html += '<div class="section"><h2>① 분석 대상과 목적</h2><p>' + escapeHtml(document.getElementById('practice-target').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>② 감성 사전</h2><p>' + escapeHtml(document.getElementById('practice-lexicon').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>③ 분석 프롬프트 및 결과</h2><p>' + escapeHtml(document.getElementById('practice-analysis').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>④ 결과 해석</h2><p>' + escapeHtml(document.getElementById('practice-interpret').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>⑤ 최종 과제</h2><p>' + escapeHtml(document.getElementById('practice-final').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>📝 성찰</h2>';
+    html += '<h3>질문 1: 어려웠던 점</h3><p>' + escapeHtml(document.getElementById('practice-reflect1').value).replace(/\n/g, '<br>') + '</p>';
+    html += '<h3>질문 2: 실제 활용</h3><p>' + escapeHtml(document.getElementById('practice-reflect2').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '</body></html>';
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  // ===== ESCAPE HTML =====
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ===== PRINT PAGE =====
+  function printPage() {
+    window.print();
+  }
+
+  // ===== DOM CONTENT LOADED =====
+  document.addEventListener('DOMContentLoaded', function() {
+    loadAll();
+    updateCount();
+    updateProgress();
+
+    // Auto-save on change
+    document.getElementById('studentName').addEventListener('change', autoSave);
+    document.getElementById('studentId').addEventListener('change', autoSave);
+    textareas.forEach(id => {
+      document.getElementById(id).addEventListener('input', autoSave);
+    });
+
+    // Checkbox listeners
+    document.querySelectorAll('.section-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateChecklist();
+        updateProgress();
+        saveAll();
+      });
+    });
+
+    // Nav pill clicks
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        const target = document.getElementById('sec-' + section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // IntersectionObserver for nav pill active state
+    const observerOptions = { threshold: 0.3 };
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const section = id.replace('sec-', '');
+          document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+          const activePill = document.querySelector(`.nav-pill[data-section="${section}"]`);
+          if (activePill) activePill.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => {
+      const elem = document.getElementById('sec-' + sec);
+      if (elem) observer.observe(elem);
+    });
+  });
+</script>
+
+</body>
+</html>
