@@ -205,6 +205,7 @@
   .week-status.open { background: #E6F7F5; color: var(--teal); }
   .week-status.submitted { background: #FFF3E0; color: #E65100; }
   .week-status.locked { background: var(--gray-200); color: var(--gray-400); }
+  .week-status.no-submit { background: var(--coral-bg, #FFF0EC); color: var(--coral, #E76F51); }
 
   .week-arrow {
     font-size: 1.2rem;
@@ -666,7 +667,30 @@ const WEEKS = [
       <p class="tip-text" style="margin-top:0.8rem">&#x26A0;&#xFE0F; 학생 개인정보(이름, 학번 등)는 반드시 익명화한 뒤 AI에 입력하세요.</p>
     `
   },
-  { week: 8, title: '중간고사', subtitle: 'AI 분석 저널 포트폴리오 중간 점검 및 피드백', color: 'coral', content: null },
+  {
+    week: 8,
+    title: '중간고사',
+    subtitle: 'AI 분석 저널 포트폴리오 중간 점검 및 피드백',
+    color: 'coral',
+    isNoSubmission: true,
+    content: `
+      <div class="assignment-section">
+        <h4><span class="icon">&#x1F4DD;</span> 중간고사 안내</h4>
+        <p><strong>이번 주차는 별도의 파일 제출이 없습니다.</strong> 1~7주차에 작성하신 AI 분석 저널 포트폴리오를 강의 시간 내에 함께 점검하고 개별 피드백을 드립니다.</p>
+      </div>
+      <div class="assignment-section">
+        <h4><span class="icon">&#x2705;</span> 점검 대상</h4>
+        <ul>
+          <li>1~7주차 학습 페이지 작성물 (이미 제출된 것 기준)</li>
+          <li>본인 교육 현장 데이터의 분석 흐름 (수집 → 분류 → 감성 → 키워드 → 요약·비교)</li>
+          <li>분석 결과의 실제 활용 가능성과 개선 제안</li>
+        </ul>
+      </div>
+      <div class="highlight-box coral-border">
+        <strong>&#x1F4AA; 미제출 주차가 있는 분:</strong> 7주차 페이지 4번 섹션의 <strong>"이전 주차 빠르게 따라잡기 30분 루트"</strong>를 활용해서 중간고사 전까지 보충해 주시면 함께 점검할 수 있습니다.
+      </div>
+    `
+  },
   { week: 9, title: '루브릭 기반 자동 채점', subtitle: 'AI로 서술형 답안 채점하기', color: 'navy', content: null },
   { week: 10, title: '피드백 생성', subtitle: '학생 맞춤형 피드백 자동 작성', color: 'teal', content: null },
   { week: 11, title: '수업 개선 연결', subtitle: '분석 결과를 교수법 개선에 적용', color: 'coral', content: null },
@@ -737,6 +761,8 @@ function renderWeeks() {
     let statusHtml = '';
     if (!isOpen) {
       statusHtml = '<span class="week-status locked">준비 중</span>';
+    } else if (w.isNoSubmission || isNoUpload) {
+      statusHtml = '<span class="week-status no-submit">제출 없음</span>';
     } else if (isSubmitted) {
       statusHtml = '<span class="week-status submitted">제출 완료</span>';
     } else {
