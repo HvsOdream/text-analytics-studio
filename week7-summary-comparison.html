@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7주차 — 요약과 비교 분석</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--coral);
+    border-radius: 50%;
+    opacity: 0.22;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-label {
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+  .header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0.8rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .progress-bar-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .progress-label {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--coral), var(--navy));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: var(--navy);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills {
+    max-width: 860px;
+    margin: 1.2rem auto 0;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .nav-pill {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .nav-pill:hover { border-color: var(--coral); color: var(--coral); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+  }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    padding: 0.8rem 1rem;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+  .student-info-bar label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .student-info-bar input {
+    padding: 0.4rem 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    width: 120px;
+    transition: border-color 0.2s;
+  }
+  .student-info-bar input:focus {
+    outline: none;
+    border-color: var(--navy);
+  }
+
+  /* ===== SECTION ===== */
+  .section { margin-bottom: 2rem; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .section-number {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 { font-size: 1.2rem; font-weight: 900; }
+  .section-title-group p { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* ===== INTRO / NOTICE ===== */
+  .intro-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  /* ===== RECOVERY NOTICE (미제출 안내) ===== */
+  .recovery-notice {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFF4ED 100%);
+    border: 1.5px dashed var(--gold);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.86rem;
+    color: var(--gray-800);
+    line-height: 1.8;
+  }
+  .recovery-notice strong { color: var(--coral); }
+
+  /* ===== PDF SUBMIT NOTICE (PDF 잘림 안내) ===== */
+  .submit-notice {
+    background: var(--coral-bg);
+    border-left: 4px solid var(--coral);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.84rem;
+    color: var(--gray-800);
+    line-height: 1.7;
+  }
+  .submit-notice strong { color: var(--coral); font-weight: 700; }
+
+  /* ===== REVIEW BOX (6주차 복습) ===== */
+  .review-box {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFF0EC 100%);
+    border: 2px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .review-box h3 {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--coral);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .review-box p, .review-box li {
+    font-size: 0.86rem;
+    color: var(--gray-800);
+    line-height: 1.8;
+  }
+  .review-box ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+  .review-box li { margin-bottom: 0.3rem; }
+
+  /* ===== DECISION TREE ===== */
+  .decision-tree {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+    border: 1.5px solid var(--gray-200);
+  }
+  .decision-tree h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+  .dt-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    min-width: 90px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .dt-label.teal { background: var(--teal-bg); color: var(--teal); }
+  .dt-label.coral { background: var(--coral-bg); color: var(--coral); }
+  .dt-label.purple { background: var(--purple-bg); color: var(--purple); }
+  .dt-label.gold { background: var(--gold-bg); color: #B8860B; }
+  .dt-example { font-size: 0.84rem; color: var(--gray-600); line-height: 1.7; }
+  .dt-example strong { color: var(--gray-800); }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block {
+    background: var(--gray-50);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--teal);
+  }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block.gold-border { border-left-color: var(--gold); }
+  .concept-block h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--navy);
+  }
+  .concept-block p, .concept-block li {
+    font-size: 0.86rem;
+    color: var(--gray-600);
+    line-height: 1.8;
+  }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== COMPARE TABLE ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+  }
+  .compare-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: 500;
+  }
+  .compare-table td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== AXIS GRID (4축 카드) ===== */
+  .axis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+  .axis-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    transition: all 0.2s;
+  }
+  .axis-card:hover { border-color: var(--coral); box-shadow: var(--shadow); }
+  .axis-card .axis-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .axis-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .axis-card p { font-size: 0.8rem; color: var(--gray-600); line-height: 1.65; }
+  .axis-card .axis-example {
+    font-size: 0.78rem;
+    color: var(--coral);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--gray-200);
+  }
+  @media (max-width: 600px) {
+    .axis-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible { margin: 0.8rem 0; }
+  .collapsible-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--gray-50);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gray-800);
+    transition: all 0.2s;
+  }
+  .collapsible-trigger:hover { border-color: var(--coral); }
+  .collapsible-trigger .arrow {
+    transition: transform 0.2s;
+    font-size: 0.8rem;
+  }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .collapsible.open .collapsible-body { max-height: 4000px; }
+  .collapsible-content { padding: 1rem 0; }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template {
+    background: var(--navy-deep);
+    color: #E0E0E0;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    position: relative;
+  }
+  .prompt-template pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn {
+    position: absolute;
+    top: 0.6rem; right: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+  .tip-callout.info { background: var(--teal-bg); }
+  .tip-callout.success { background: var(--gold-bg); }
+  .tip-callout.warning { background: var(--coral-bg); }
+  .tip-callout.purple { background: var(--purple-bg); }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-text { color: var(--gray-800); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area {
+    background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%);
+    border: 2px solid #E8E0FF;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .practice-area h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .practice-area .guide-text {
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    margin-bottom: 0.8rem;
+  }
+  .practice-area textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 1rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .practice-area textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+  .practice-area textarea::placeholder { color: var(--gray-400); }
+
+  .practice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.4rem;
+    padding: 0 0.2rem;
+  }
+  .char-count {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+  }
+  .save-indicator {
+    font-size: 0.75rem;
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .checklist-item.checked { color: var(--teal); text-decoration: line-through; }
+  .checklist-item input[type="checkbox"] {
+    accent-color: var(--teal);
+    width: 16px; height: 16px;
+  }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+    line-height: 1.8;
+  }
+  .example-box.bad { background: #FFF0EC; border: 1px solid #FECDC2; }
+  .example-box.good { background: #E6F7F5; border: 1px solid #B2DFDB; }
+  .example-box .label {
+    font-weight: 700;
+    font-size: 0.78rem;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre {
+    font-family: 'Noto Sans KR', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ===== ACTION FRAME (5W1H 행동안) ===== */
+  .action-frame {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+  }
+  .action-frame .af-row {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 0.84rem;
+  }
+  .action-frame .af-row:last-child { border-bottom: none; }
+  .action-frame .af-key {
+    min-width: 80px;
+    font-weight: 700;
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .action-frame .af-val { color: var(--gray-600); line-height: 1.7; }
+
+  /* ===== TIME-AXIS BADGES ===== */
+  .time-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    margin-right: 0.3rem;
+  }
+  .time-badge.now { background: var(--coral-bg); color: var(--coral); }
+  .time-badge.short { background: var(--gold-bg); color: #B8860B; }
+  .time-badge.long { background: var(--teal-bg); color: var(--teal); }
+
+  /* ===== FINAL BOX ===== */
+  .final-box {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .final-box h3 {
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+  .final-box p {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 1rem;
+  }
+  .final-box textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 1rem;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    resize: vertical;
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+  }
+  .final-box textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(233,196,106,0.2);
+  }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.35); }
+
+  /* ===== REFLECTION ===== */
+  .reflection-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .reflection-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+  .reflection-card textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.8rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    line-height: 1.7;
+    resize: vertical;
+  }
+  .reflection-card textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(44,62,107,0.1);
+  }
+
+  /* ===== EXPORT ===== */
+  .export-card {
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .export-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1rem;
+  }
+  .export-card .export-tip {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+  .btn-group {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-outline {
+    background: var(--white);
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+  }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+  }
+
+  /* ===== PRINT MIRROR (PDF 잘림 방지) ===== */
+  .print-mirror { display: none; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .progress-bar-container, .nav-pills, .student-info-bar, .copy-btn, .btn-group, .export-card, .footer, .submit-notice, .recovery-notice { display: none !important; }
+    .collapsible-body { max-height: none !important; }
+    .collapsible.open .collapsible-body, .collapsible-body { max-height: none !important; overflow: visible !important; }
+    body { background: white; }
+    .main { padding: 0; }
+    .print-hide { display: none !important; }
+    .print-mirror {
+      display: block !important;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      padding: 0.8rem 1rem;
+      border: 1px solid #999;
+      border-radius: 8px;
+      background: white !important;
+      color: #222 !important;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      page-break-inside: auto;
+      min-height: 1.6em;
+    }
+    .final-box .print-mirror { color: #fff !important; background: rgba(0,0,0,0.5) !important; border-color: #888 !important; }
+    .section, .card, .practice-area, .reflection-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · Week 7</div>
+    <h1>요약과 비교 분석</h1>
+    <p>긴 문서를 빠르게 파악하고, 의미 있는 비교축으로 인사이트 뽑아내기</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 7</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">&#10003; </span>시작</a>
+  <a class="nav-pill" href="#sec-review" data-section="review"><span class="pill-check">&#10003; </span>6주차 복습</a>
+  <a class="nav-pill" href="#sec-digest" data-section="digest"><span class="pill-check">&#10003; </span>긴 문서 처리</a>
+  <a class="nav-pill" href="#sec-compare" data-section="compare"><span class="pill-check">&#10003; </span>비교 분석</a>
+  <a class="nav-pill" href="#sec-verify" data-section="verify"><span class="pill-check">&#10003; </span>결과 검증</a>
+  <a class="nav-pill" href="#sec-action" data-section="action"><span class="pill-check">&#10003; </span>행동안 도출</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">&#10003; </span>최종 과제</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ===== PDF SUBMIT NOTICE ===== -->
+  <div class="submit-notice">
+    <strong>&#x1F4DD; 제출 안내</strong> — 지난 주차에 PDF로 제출하신 분들 일부에서 답안 일부가 잘려 보이는 이슈가 있었어요. 이번 주는 가급적 페이지 하단의 <strong>"HTML로 내보내기"</strong>로 제출해 주세요. PDF로 내야 하는 경우, 인쇄 전 답안이 다 보이는지 한 번 확인해 주시면 됩니다. (이번 페이지는 인쇄 시 textarea 잘림을 자동 보정하도록 손봤어요.)
+  </div>
+
+  <!-- ===== RECOVERY NOTICE ===== -->
+  <div class="recovery-notice">
+    <strong>&#x1F4AA; 늦은 제출, 받습니다</strong> — 1~6주차 중 빠진 주차가 있는 분들, 7주차 4번 섹션의 <strong>"이전 주차 빠르게 따라잡기"</strong> 박스를 참고해서 30분 안에 압축 보충이 가능합니다. 늦었다고 그만두지 말고, 한 줄이라도 채워서 보내주세요. 평가는 점수보다 <strong>꾸준한 시도</strong>를 우선합니다.
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>7주차 과제 안내</strong><br><br>
+      6주차에서 텍스트의 <strong>핵심 단어와 주제</strong>를 뽑아냈다면, 이번 주에는 <strong>긴 문서를 빠르게 요약하고, 의미 있는 비교축으로 인사이트를 뽑아내는 법</strong>을 배웁니다.<br>
+      "이 50건을 한 시간 안에 어떻게 다 읽나?", "학기 초와 학기 말, 무엇이 달라졌나?"를 AI로 분석하는 능력을 기릅니다.<br><br>
+      먼저 <strong>6주차 복습</strong>을 짧게 하고, 본 주제로 넘어갑니다. <strong>6주차에 본인이 분석한 데이터</strong>를 그대로 7주차에서 비교 분석에 재투입할 거예요.<br>
+      <div class="subtitle">예상 소요 시간: 약 75~90분 — 다 못 채워도 OK. <strong style="color:var(--gold);">핵심은 R + 1번 전략 선택 + 4번 즉시 행동안 1개</strong>입니다. 6주차 결과를 옆에 펴 두면 흐름이 빨라집니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 배울 핵심 개념</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:25%">개념</th>
+              <th style="width:35%">핵심 아이디어</th>
+              <th>교육 현장 예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>요약</strong><br>(Summarization)</td>
+              <td>긴 문서를 핵심만 남기고 압축. 단일 문서/다중 문서/장르별 전략이 다름</td>
+              <td>학부모 상담록 50건 → "올해 가장 자주 나온 우려 5가지" 한 장 요약</td>
+            </tr>
+            <tr>
+              <td><strong>비교 분석</strong><br>(Comparative Analysis)</td>
+              <td>같은 축 위에서 둘 이상의 그룹/시점/문서를 나란히 놓고 차이를 읽음</td>
+              <td>1학기 vs 2학기 강의평가 → "어떤 항목이 개선됐고, 무엇이 후퇴했나"</td>
+            </tr>
+            <tr>
+              <td><strong>결과 검증</strong><br>(Verification)</td>
+              <td>AI 분석 결과의 근거·누락·과대해석을 본인 판단으로 점검</td>
+              <td>"AI가 5개 주제로 묶었는데, 정말 5개로 묶이는 게 맞는가?" 반박 요청</td>
+            </tr>
+            <tr>
+              <td><strong>행동안 도출</strong><br>(Action Planning)</td>
+              <td>인사이트를 "언제·어떻게·누구와" 5W1H로 분해해 실행 가능한 행동으로 변환</td>
+              <td>"피드백 강화 필요" → "다음 주 월요일 1교시 종료 5분 전, 짧은 메모 형식 적용"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION R: 6주차 복습 — 검증과 행동안 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-review">
+    <div class="section-header">
+      <div class="section-number gold">R</div>
+      <div class="section-title-group">
+        <h2>6주차 복습: AI 결과를 그대로 받아쓰지 않으려면</h2>
+        <p>지난 주 제출물에서 가장 약했던 두 지점 — 결과 검증과 구체적 행동안</p>
+      </div>
+    </div>
+
+    <div class="review-box">
+      <h3>&#x1F4AC; 6주차 제출물에서 본 두 가지 패턴</h3>
+      <p>① <strong>"AI가 5개 주제로 묶어줬다"</strong>로 끝나고, 왜 5개인지·근거가 무엇인지가 비어 있는 경우가 많았습니다.<br>
+      ② <strong>"피드백 강화가 필요하다"</strong>처럼 시사점이 추상적인 결론에서 멈추고, 월요일 출근해서 무엇을 바꿀지가 비어 있는 경우가 많았습니다.</p>
+      <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--gray-600);">이번 R 섹션에서 두 약점을 보강하는 미니 프레임을 익히고 본 주제로 넘어갑니다.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block gold-border">
+          <h4>핵심 원리: "AI 결과는 초안이지, 최종본이 아니다"</h4>
+          <p>AI가 5개 주제로 묶어줬다면, 그건 <strong>"AI가 본 한 가지 묶음 방식"</strong>일 뿐입니다. 7개로도 묶일 수 있고, 3개로도 묶일 수 있어요. <strong>왜 5개로 묶었는지 근거를 묻고, 다른 묶음을 시뮬레이션해 보고, 본인 현장 감각으로 최종 판단</strong>하는 것이 분석가의 일입니다.</p>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F50D; 결과 검증 3가지 질문 (이번 주에 매번 던질 질문)</h4>
+
+          <div class="dt-row">
+            <span class="dt-label teal">근거</span>
+            <span class="dt-example">"왜 이 키워드들을 <strong>같은 주제</strong>로 묶었는가?"<br>예: "친구·모둠활동·학교"가 왜 한 주제? — AI에게 직접 묻기</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label coral">누락</span>
+            <span class="dt-example">"이 묶음에서 <strong>빠진 키워드/주제</strong>가 있는가?"<br>예: "정서 안정"이 27개 키워드 중 1번만 나왔다 — 진짜 비중이 작은가, 아니면 표현이 다른 키워드들에 섞여 누락됐나?</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label purple">과장</span>
+            <span class="dt-example">"AI가 결론을 <strong>너무 강하게</strong> 말하고 있는가?"<br>예: "학생들이 가장 많이 호소하는 문제" — 50건 중 8건뿐인데 '가장'이라고 단정한 건 아닌가?</span>
+          </div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>3가지 질문은 매번 같이:</strong> 검증을 안 하면 AI 결과가 그대로 결론이 되어 버립니다. 검증 단계 한 번이 분석의 신뢰도를 두 배로 올려요.</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F50D; 행동안의 함정 — 6주차에서 자주 본 추상적 결론 5가지</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <table class="compare-table">
+                <thead>
+                  <tr><th style="width:45%">추상적 결론 (멈춤)</th><th>구체적 행동안 (5W1H 변환)</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>"피드백을 강화해야 한다"</td>
+                    <td>다음 주 월요일 1교시부터, 종료 5분 전에 학생 3명에게 1줄 메모 형식 피드백 (담임이 직접)</td>
+                  </tr>
+                  <tr>
+                    <td>"학생 정서 안정에 신경 써야 한다"</td>
+                    <td>5월 첫 주에 정서 진단 설문 1회 + 상위 3명 1:1 면담 30분 (상담 교사 협조)</td>
+                  </tr>
+                  <tr>
+                    <td>"교우관계 갈등이 많다"</td>
+                    <td>5월 둘째 주 학급 회의 30분, "마음의 수신호" 활동으로 갈등 신호 표현법 공유</td>
+                  </tr>
+                  <tr>
+                    <td>"자기주도 학습이 약하다"</td>
+                    <td>4월 마지막 주, 3-2-1 셀프체크 카드 도입 (수업 끝 3분: 알게 된 것 3·헷갈리는 것 2·다음에 할 것 1)</td>
+                  </tr>
+                  <tr>
+                    <td>"진로 탐색이 부족하다"</td>
+                    <td>다음 학기, 직업인 게스트 강의 2회 + 가족 직업 인터뷰 활동 1회</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">&#x26A0;&#xFE0F;</span>
+          <span class="tip-text"><strong>주의:</strong> "강화·신경·노력" 같은 추상 동사로 끝나면 행동안이 아닙니다. <strong>언제·어디서·누가·어떻게</strong>가 한 줄에 다 들어가야 행동안입니다.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 복습 실습: 6주차 결과를 검증·구체화하기</h4>
+          <div class="guide-text">6주차에 본인이 도출한 주제 클러스터링 결과 중 <strong>가장 비중이 큰 주제 1개</strong>를 골라, 검증 3질문 + 행동안 1개를 적어보세요.</div>
+          <textarea id="practice-review" placeholder="[6주차 결과 한 줄 요약]&#10;예: 학부모 상담 50건 분석에서 '교우관계' 주제가 22% 비중으로 1위.&#10;&#10;[검증 1 — 근거]&#10;예: '친구·모둠활동·학교' 키워드를 '교우관계'로 묶은 이유는?&#10;&#10;[검증 2 — 누락]&#10;예: '소외감' 같은 정서 표현이 별도 주제로 안 잡혔는데, 교우관계에 묶여야 하나?&#10;&#10;[검증 3 — 과장]&#10;예: '가장 큰 우려'라고 단정했지만 22%는 압도적 비중은 아님.&#10;&#10;[구체적 행동안 1개]&#10;예: 5월 둘째 주 학급 회의 30분, '마음의 수신호' 활동으로 갈등 신호 공유 (담임 직접 진행)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-review-count">0자</span>
+            <span class="save-indicator" id="practice-review-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="0" class="section-check" />
+              <span>6주차 결과 한 줄 요약이 적혀 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="1" class="section-check" />
+              <span>검증 3질문(근거/누락/과장)에 모두 답했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="2" class="section-check" />
+              <span>행동안에 "언제·어디서·누가·어떻게"가 들어 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: 긴 문서 처리 전략 (DIGEST) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-digest">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>긴 문서 처리 전략 3종</h2>
+        <p>10건이든 500건이든 — 분량에 따라 전략이 다르다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block">
+          <h4>왜 전략이 필요한가?</h4>
+          <p>AI에 그냥 "요약해줘" 하면 짧은 글은 잘 됩니다. 그런데 <strong>학부모 상담록 50건, 강의평가 200건, 한 학기치 성찰일지</strong> 같은 누적 데이터는 길이 한계에 걸리고, 결과도 두루뭉술해집니다. <strong>분량과 종류에 맞는 처리 전략</strong>을 골라야 정밀한 요약이 나와요.</p>
+        </div>
+
+        <div class="concept-block coral-border">
+          <h4>3가지 전략 한눈에 보기</h4>
+          <ul>
+            <li><strong>Stuffing (한 번에 넣기):</strong> 짧은 문서·소량. AI 입력 한도 안에 다 들어갈 때. 가장 빠르고 정확</li>
+            <li><strong>Map-Reduce (나누고 합치기):</strong> 많거나 긴 문서. 각 문서를 부분 요약 후, 부분 요약들을 다시 통합 요약</li>
+            <li><strong>Refining (주간 업데이트 요약법):</strong> 시간 따라 들어오는 문서. 기존 요약에 새 문서 정보를 점진적으로 더해 갱신</li>
+          </ul>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F6A6; 어떤 전략을 쓸까? (자가진단 트리)</h4>
+
+          <div class="dt-row">
+            <span class="dt-label teal">Stuffing</span>
+            <span class="dt-example">전체 텍스트 <strong>총 5만자 이하</strong>(한 건이 짧고 건수가 적은 경우. ChatGPT/Claude 모두 한 번에 처리)<br>예: 한 수업 회차의 학생 성찰일지 8장 → 한 번에 다 붙여서 요약</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label coral">Map-Reduce</span>
+            <span class="dt-example"><strong>총 5만자 초과</strong> 또는 <strong>한 건이 매우 긴 면담록</strong>인 경우<br>예: 학부모 상담록 50건 → 각각 한 줄 요약 → 50개 한 줄 요약을 다시 종합 요약</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label purple">Refining</span>
+            <span class="dt-example"><strong>매주/매달 새 문서가 추가되는</strong> 경우 (주간 업데이트 요약법)<br>예: 매주 작성되는 수업 일지 → 지난 주 누적 요약에 이번 주 일지를 더해 갱신</span>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 전략별 프롬프트 템플릿 3종 (그대로 복붙)</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size: 0.88rem; color: var(--teal); margin-top: 0.5rem; margin-bottom: 0.4rem;">① Stuffing — 한 번에 요약</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 데이터 분석 전문가야.
+
+아래 [문서 모음]을 요약해줘.
+
+[요약 기준]
+- 핵심 메시지 5줄 이내
+- 모든 문서를 통합한 종합 요약 (개별 요약 X)
+- 자주 반복되는 표현은 빈도와 함께 명시
+- 상반된 의견이 있으면 양쪽 다 보여주기
+
+[출력 형식]
+1. 한 문장 요약 (전체 핵심)
+2. 자주 등장한 주제 TOP 3 (빈도 포함)
+3. 의견이 갈리는 지점
+4. 특이하거나 인상적인 1건
+
+[문서 모음]
+(여기에 모든 문서를 한 번에 붙여넣으세요)</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--coral); margin-top: 1.5rem; margin-bottom: 0.4rem;">② Map-Reduce — 나누고 합치기 (2단계)</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>[1단계 — Map: 각 문서를 한 줄 요약]
+
+너는 교육 데이터 분석 전문가야.
+아래 문서를 정확히 1줄로 요약해줘.
+- 핵심 주제 + 화자의 입장이 드러나도록
+- 50자 이내
+- 객관적 사실 위주, 평가 자제
+
+[문서]
+(개별 문서를 여기에 붙여넣으세요)
+
+---
+
+[2단계 — Reduce: 한 줄 요약들을 종합]
+
+너는 교육 데이터 분석 전문가야.
+아래는 50건의 학부모 상담록을 각각 한 줄로 요약한 것이야.
+이 50줄을 다시 종합 요약해줘.
+
+[종합 요약 기준]
+- 자주 반복되는 주제 5개 추출 (빈도 포함)
+- 주제별 대표 한 줄 요약 1개씩 인용
+- 특이 사례(전체 흐름과 다른 1~2건) 별도 표시
+- 학기 진행에 따라 변화하는 패턴이 보이면 명시
+
+[한 줄 요약 50건]
+(1단계 결과를 여기에 모두 붙여넣으세요)</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--purple); margin-top: 1.5rem; margin-bottom: 0.4rem;">③ Refining — 점진 보정 (매주 갱신용)</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 데이터 분석 전문가야.
+
+아래 [기존 누적 요약]에 [이번 주 새 문서]의 정보를 더해
+갱신된 요약을 만들어줘.
+
+[갱신 규칙]
+- 기존 주제는 빈도/사례를 업데이트
+- 이번 주에 처음 등장한 주제는 별도 표시 (NEW 마크)
+- 사라지거나 줄어든 주제도 표시 (DECLINING 마크)
+- 전체 분량은 기존 요약과 비슷하게 유지
+
+[기존 누적 요약]
+(지난 주까지 누적 요약을 여기에 붙여넣으세요)
+
+[이번 주 새 문서]
+(이번 주 들어온 문서를 여기에 붙여넣으세요)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>실전 팁:</strong> 50건이 넘는 데이터는 무조건 Map-Reduce. Stuffing으로 욕심내면 AI가 중반부터 흐려집니다. 1단계 한 줄 요약은 시간이 좀 걸려도 결과 품질이 확연히 올라가요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 1: 본인 데이터에 맞는 전략 선정</h4>
+          <div class="guide-text">6주차에 분석한 본인 데이터를 기준으로, 어떤 전략이 적합한지 선택하고 이유를 적어보세요. (6주차 데이터 그대로 사용 권장)</div>
+          <textarea id="practice-digest" placeholder="[분석 대상 데이터]&#10;예: 학부모 상담록 50건 (한 건당 평균 800자)&#10;&#10;[선택한 전략과 이유]&#10;예: Map-Reduce 선택. 이유: 50건이라 Stuffing은 입력 한도를 넘김. 시간 흐름은 중요하지 않아 Refining까지는 불필요.&#10;&#10;[1단계 결과 일부 (3~5건만 한 줄 요약 시도)]&#10;예:&#10;1) 4학년 A 학부모: 자녀의 친구 갈등 상담, 모둠활동 부담 호소&#10;2) 4학년 B 학부모: 학습 시간 관리 어려움, 게임 사용 조절 요청&#10;3) ..."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-digest-count">0자</span>
+            <span class="save-indicator" id="practice-digest-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="digest" data-index="0" class="section-check" />
+              <span>분석 대상의 분량(건수, 글자 수)을 명시했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="digest" data-index="1" class="section-check" />
+              <span>3가지 전략 중 하나를 선택하고 이유를 적었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="digest" data-index="2" class="section-check" />
+              <span>1단계 결과(샘플 3건 이상)를 시도해 보았는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: 비교 분석 4축 (COMPARE) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-compare">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>비교 분석의 4가지 축</h2>
+        <p>"무엇과 무엇을 비교할 것인가" — 이 한 문장이 분석의 절반</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>비교 분석은 "비교 축 선정"이 8할이다</h4>
+          <p>"강의평가를 비교 분석해줘"는 막연한 요청. <strong>"1학기 vs 2학기"</strong> 또는 <strong>"1학년 vs 6학년"</strong>처럼 비교 축을 명시하는 순간 분석이 달라집니다. 4가지 대표 축을 익히고, 본인 데이터에 가장 어울리는 축을 골라봅시다.</p>
+        </div>
+
+        <div class="axis-grid">
+          <div class="axis-card">
+            <div class="axis-icon">&#x23F0;</div>
+            <h4>① 시간 축</h4>
+            <p>같은 대상을 시점만 바꿔 비교. 변화 추적·개선 효과 측정에 적합.</p>
+            <div class="axis-example">예: 학기 초 vs 학기 말 강의평가, 4월 vs 5월 학부모 상담</div>
+          </div>
+          <div class="axis-card">
+            <div class="axis-icon">&#x1F465;</div>
+            <h4>② 대상 축</h4>
+            <p>속성이 다른 그룹을 동시점 비교. 학년·연령·역할 차이 파악에 적합.</p>
+            <div class="axis-example">예: 1학년 vs 6학년 성찰일지, 신규교사 vs 경력교사 피드백</div>
+          </div>
+          <div class="axis-card">
+            <div class="axis-icon">&#x1F500;</div>
+            <h4>③ 그룹 축</h4>
+            <p>같은 환경 안의 분류된 그룹을 비교. 처치·집단 간 차이 검증에 적합.</p>
+            <div class="axis-example">예: 일반학급 vs 특수학급, 모둠 A·B·C의 토론 기록</div>
+          </div>
+          <div class="axis-card">
+            <div class="axis-icon">&#x1F4DA;</div>
+            <h4>④ 문서종 축</h4>
+            <p>장르가 다른 문서를 같은 주제로 교차 비교. 입체적 인사이트 도출.</p>
+            <div class="axis-example">예: 강의평가(공식) vs 익명 메신저(비공식), 성찰일지 vs 면담록</div>
+          </div>
+        </div>
+
+        <div class="tip-callout purple">
+          <span class="tip-icon">&#x1F50D;</span>
+          <span class="tip-text"><strong>축 선정 자가진단:</strong> 본인 데이터에 "지난 학기 자료가 있다" → 시간축. "여러 학년 자료가 있다" → 대상축. "그룹 라벨이 있다(반/팀)" → 그룹축. "여러 종류 문서가 있다" → 문서종축. 두 축이 다 가능하면 시간축을 우선 권장 (변화가 가장 강한 인사이트).</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 비교 분석 프롬프트 템플릿 4종 (축별)</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size: 0.88rem; color: var(--teal); margin-top: 0.5rem; margin-bottom: 0.4rem;">① 시간 축 비교 프롬프트</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 평가 전문가야.
+
+아래 [A 시점 데이터]와 [B 시점 데이터]를 비교 분석해줘.
+
+[비교 기준]
+- 자주 등장하는 주제의 변화 (TOP 5 비교)
+- 새로 등장한 주제 / 사라진 주제
+- 같은 주제라도 표현/감성 톤이 달라진 부분
+- 변화의 가능한 원인 추정 (확신 X, 가설 형태로)
+
+[출력 형식]
+| 주제 | A 시점 | B 시점 | 변화 |
++ 종합 해석 3줄
+
+[A 시점 데이터] (예: 학기 초)
+(여기에 데이터)
+
+[B 시점 데이터] (예: 학기 말)
+(여기에 데이터)</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--coral); margin-top: 1.5rem; margin-bottom: 0.4rem;">② 대상 축 비교 프롬프트</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 평가 전문가야.
+
+아래 [그룹 A 데이터]와 [그룹 B 데이터]를 비교 분석해줘.
+
+[비교 기준]
+- 두 그룹이 공통으로 가진 관심사
+- 그룹 A에만 두드러진 주제
+- 그룹 B에만 두드러진 주제
+- 같은 주제도 표현 방식이 어떻게 다른지
+
+[출력 형식]
+| 영역 | 그룹 A | 그룹 B | 차이의 의미 |
++ 교육적 시사점 3줄
+
+[그룹 A 데이터] (예: 1학년)
+(여기에 데이터)
+
+[그룹 B 데이터] (예: 6학년)
+(여기에 데이터)</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--purple); margin-top: 1.5rem; margin-bottom: 0.4rem;">③ 그룹 축 (3그룹 이상) 비교 프롬프트</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육 데이터 분석 전문가야.
+
+아래 [3개 이상의 그룹 데이터]를 비교 분석해줘.
+
+[비교 기준]
+- 모든 그룹에서 공통으로 나타난 주제
+- 각 그룹에 고유하게 두드러진 주제
+- 그룹 간 톤·관점·우려의 차이
+- 가장 차이가 큰 영역 1개와 그 의미
+
+[출력 형식]
+주제별 표 + 그룹별 핵심 메시지 1줄씩
+
+[그룹 데이터]
+- 그룹 A (라벨): ...
+- 그룹 B (라벨): ...
+- 그룹 C (라벨): ...</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--gold); margin-top: 1.5rem; margin-bottom: 0.4rem;">④ 문서종 축 (장르 교차) 비교 프롬프트</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 질적 연구 방법론 전문가야.
+
+아래 [공식 문서]와 [비공식 문서]를 같은 주제 축에서 비교해줘.
+
+[비교 기준]
+- 공식 문서에서 강조되는 주제 vs 비공식 문서에서 강조되는 주제
+- 같은 사건/주제를 두 장르가 어떻게 다르게 표현하는지
+- 한 쪽에만 나타나는 주제 (그 의미)
+- 두 장르를 결합했을 때 보이는 입체적 진실
+
+[출력 형식]
+| 주제 | 공식 문서 | 비공식 문서 | 결합 해석 |
++ 핵심 통찰 3줄
+
+[공식 문서] (예: 강의평가, 보고서)
+(여기에 데이터)
+
+[비공식 문서] (예: 메신저, 자유 코멘트)
+(여기에 데이터)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 2: 비교 축 선정 + 비교 분석 실행</h4>
+          <div class="guide-text">본인 데이터에 가장 어울리는 비교 축을 1개 골라, 위 템플릿 중 하나로 실제 비교 분석을 실행하고 결과를 붙여넣으세요.</div>
+          <textarea id="practice-compare" placeholder="[선택한 비교 축과 이유]&#10;예: 시간 축 선택. 4월 첫째 주 vs 4월 마지막 주 학부모 상담. 한 달간 어떤 변화가 있었는지 보고 싶음.&#10;&#10;[A 시점 / 그룹 A 라벨]&#10;예: 4월 첫째 주 (15건)&#10;&#10;[B 시점 / 그룹 B 라벨]&#10;예: 4월 마지막 주 (12건)&#10;&#10;[비교 분석 결과 요약]&#10;예: 4월 초에는 '적응', '친구', '학습 습관'이 TOP 3. 4월 말에는 '진로', '자기주도', '시험 부담'으로 변화. '친구' 주제는 줄어들었음.&#10;&#10;[해석 3줄]&#10;1) 한 달 사이 학부모 관심이 적응→성취로 이동.&#10;2) 친구 관계는 4월 초 안정화된 듯.&#10;3) 시험·진로 주제는 5월 중간고사 영향으로 추정."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-compare-count">0자</span>
+            <span class="save-indicator" id="practice-compare-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="0" class="section-check" />
+              <span>4가지 축 중 1개를 선택하고 이유를 적었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="1" class="section-check" />
+              <span>비교 대상 두 그룹/시점이 명시되어 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="2" class="section-check" />
+              <span>비교 결과와 해석이 함께 정리되었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: AI 결과 검증 (VERIFY) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-verify">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>AI 결과 검증 — 반박과 보정</h2>
+        <p>AI에게 자기 결과를 반박시키는 것 — 이게 진짜 분석가의 일</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>왜 검증이 필요한가?</h4>
+          <p>AI 요약·비교 결과는 매끈하고 그럴듯해 보입니다. 그래서 더 위험합니다. <strong>매끈한 결론을 그대로 받아쓰면, 본인 현장 감각이 빠진 분석</strong>이 됩니다. 6주차에 4명 모두 5주차↔6주차 차이는 명확히 썼지만, "이 묶음이 정말 맞나?"라는 질문은 거의 없었어요. 이번 주에 그 빈자리를 채웁니다.</p>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F50D; 검증 3단계 (R 섹션 복습)</h4>
+
+          <div class="dt-row">
+            <span class="dt-label teal">근거</span>
+            <span class="dt-example"><strong>"왜 이렇게 분석했는가?"</strong> AI에게 직접 물어본다. "이 5개 주제로 묶은 이유와, 다른 묶음 가능성 1개를 함께 제시해줘"</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label coral">누락</span>
+            <span class="dt-example"><strong>"빠진 게 있는가?"</strong> 본인이 익히 아는 현장 키워드 3~5개가 결과에 없으면 의심. AI에게 "[키워드 X]가 결과에 안 보이는데, 데이터에 정말 없는지 다시 확인해줘"</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label purple">과장</span>
+            <span class="dt-example"><strong>"결론을 너무 강하게 말하는가?"</strong> "가장 큰 / 압도적인 / 모두" 같은 단정 표현을 본 후, 실제 비중 숫자와 대조. 8/50건이면 '가장 큰'은 아님</span>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 검증 프롬프트 템플릿 (자기 반박 요청)</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 비판적 사고에 능한 교육 데이터 분석 전문가야.
+
+아래 [기존 분석 결과]를 비판적으로 검토하고,
+세 가지 측면에서 약점을 지적해줘.
+
+[검증 기준]
+1. 근거: 결과를 묶은 기준이 충분히 설명되는가?
+   다르게 묶을 수 있는 가능성 1개를 함께 제시해줘.
+2. 누락: 데이터에는 있지만 결과에 빠진 키워드/주제가 있는가?
+   특히 [내가 신경 쓰는 키워드]가 누락되지 않았는지 확인해줘.
+3. 과장: 결론이 데이터 비중에 비해 과하게 단정적인가?
+   "가장", "압도적으로" 같은 표현이 적절한지 비중 숫자와 대조해줘.
+
+[출력 형식]
+- 근거 비판: ...
+- 누락 비판: ...
+- 과장 비판: ...
+- 보정된 결론 (3줄)
+
+[기존 분석 결과]
+(6주차 또는 7주차 분석 결과를 여기에 붙여넣으세요)
+
+[내가 신경 쓰는 키워드 (선택)]
+(예: 정서, 친구, 자기주도)</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; 검증 없이 받아쓴 결론</span>
+          <pre>"학부모들이 가장 큰 우려는 자녀의 교우관계이며, 학교는 즉시 대응이 필요하다."</pre>
+        </div>
+
+        <div class="example-box good">
+          <span class="label">&#x2705; 검증 후 보정된 결론</span>
+          <pre>"학부모 상담 50건 중 22%(11건)가 교우관계 관련이며, 가장 빈번한 주제 중 하나다.
+다만 '학습 부담'(20%, 10건)과 비중이 거의 같아 단일 우선순위로 보기는 어렵다.
+'정서 안정' 키워드는 별도 주제로 잡히지 않았으나, 교우관계 사례 11건 중 6건에 정서 표현이 동반되어 있어 별도 검토가 필요하다."</pre>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">&#x26A0;&#xFE0F;</span>
+          <span class="tip-text"><strong>주의:</strong> AI가 "잘 모르겠습니다", "데이터가 부족합니다"라고 말하는 게 정상입니다. 매번 자신감 있는 결론만 주는 AI는 오히려 의심해야 해요. <strong>모르는 부분을 모른다고 말하게 만드는 프롬프트</strong>가 좋은 프롬프트입니다.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 3: 검증 실행 — AI에게 자기 반박 시키기</h4>
+          <div class="guide-text">실습 1·2의 분석 결과 중 하나를 골라, 위 검증 프롬프트로 AI에게 자기 반박을 시킨 후, <strong>본인의 최종 판단</strong>을 정리하세요.</div>
+          <textarea id="practice-verify" placeholder="[검증 대상 분석 결과]&#10;예: 실습 2에서 '4월 초 vs 4월 말 학부모 상담' 비교 결과.&#10;&#10;[AI 자기 반박 결과 요약]&#10;- 근거 비판: '친구' 주제 감소를 단정했는데, 4월 말 데이터(12건)가 4월 초(15건)보다 적어 비교 신뢰도 낮음.&#10;- 누락 비판: '진로' 주제가 새로 등장했다고 했지만, 4월 초 데이터에도 1건 있었음. '새로 등장'은 부정확.&#10;- 과장 비판: '관심이 적응→성취로 이동'이라는 표현이 단정적. 한 달 데이터로 일반화하기 어려움.&#10;&#10;[본인 최종 판단]&#10;1) AI 반박 1, 2 수용 → 표현 수정.&#10;2) 반박 3은 일부 수용. '이동'을 '강조점 변화 가능성'으로 표현 완화.&#10;3) 추가 검증 필요: 5월 첫째 주 데이터까지 보고 다시 판단."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-verify-count">0자</span>
+            <span class="save-indicator" id="practice-verify-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="verify" data-index="0" class="section-check" />
+              <span>검증 3가지 측면(근거/누락/과장)에 모두 답을 받았는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="verify" data-index="1" class="section-check" />
+              <span>본인이 어떤 반박을 수용/거부했는지 판단을 적었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="verify" data-index="2" class="section-check" />
+              <span>최종 결론이 처음보다 더 신중한 표현으로 바뀌었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: 행동안 도출 (ACTION) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-action">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>인사이트를 행동안으로</h2>
+        <p>"피드백 강화" 같은 추상은 그만 — 월요일 출근해서 할 일로</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>5W1H 강제 분해 프레임</h4>
+          <p>분석 결과를 행동안으로 옮길 때, 다음 6가지가 한 줄에 다 들어가야 합니다. 비어 있으면 추상에 머문 거예요.</p>
+        </div>
+
+        <div class="action-frame">
+          <div class="af-row"><span class="af-key">When</span><span class="af-val">언제 시작? (예: 다음 주 월요일 1교시)</span></div>
+          <div class="af-row"><span class="af-key">Where</span><span class="af-val">어디서? (예: 우리 반 교실, 학생부 면담실)</span></div>
+          <div class="af-row"><span class="af-key">Who</span><span class="af-val">누가 진행? 누가 대상? (예: 담임 직접, 4학년 12명)</span></div>
+          <div class="af-row"><span class="af-key">What</span><span class="af-val">정확히 무엇을? (예: 1줄 메모 형식 피드백)</span></div>
+          <div class="af-row"><span class="af-key">How</span><span class="af-val">어떤 방법? 얼마나? (예: 종료 5분 전, 학생 3명에게)</span></div>
+          <div class="af-row"><span class="af-key">If-not</span><span class="af-val">실패/미달 시 대비책 (예: 시간 부족하면 다음 시간 첫 5분으로 이월)</span></div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>비대칭 부담 분배:</strong> <strong style="color:var(--coral);">즉시 행동안 1개에만</strong> 6요소를 풀세트로 깊게 채우세요. <strong>단기·장기는 한 줄 행동안 + 핵심 What·When 정도면 충분</strong>합니다. 다 못 채워도 괜찮아요 — 즉시 행동안 1개를 끝까지 가져가는 게 핵심입니다.</span>
+        </div>
+
+        <div class="concept-block coral-border">
+          <h4>3단 시간축 — 즉시·단기·장기</h4>
+          <p>행동안 한 묶음은 시간축 3단으로 분배하면 실행률이 올라갑니다. 단, 깊이는 비대칭으로.</p>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F4C5; 시간축 3단 분배</h4>
+
+          <div class="dt-row">
+            <span class="dt-label coral">즉시</span>
+            <span class="dt-example"><span class="time-badge now">NOW</span>다음 1주일 내 시작 가능. 자원·승인 거의 불필요.<br>예: 다음 주 월요일 1교시 종료 5분, 학생 3명에게 1줄 메모</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label gold">단기</span>
+            <span class="dt-example"><span class="time-badge short">SHORT</span>이번 학기 안에 진행. 학년/팀 협의 정도 필요.<br>예: 5월 둘째 주 학급 회의 30분, "마음의 수신호" 활동 도입</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label teal">장기</span>
+            <span class="dt-example"><span class="time-badge long">LONG</span>다음 학기/연말 목표. 교육과정·예산·외부 협력 필요.<br>예: 다음 학기 직업인 게스트 강의 2회 + 가족 직업 인터뷰 활동</span>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 행동안 도출 프롬프트 + "이전 주차 빠르게 따라잡기" 30분 루트</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size: 0.88rem; color: var(--navy); margin-top: 0.5rem; margin-bottom: 0.4rem;">행동안 도출 프롬프트</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 교육과정 개선 컨설턴트이자 실행 코치야.
+
+아래 [분석 결과]를 바탕으로,
+교사가 즉시 / 단기 / 장기로 실행할 행동안을 각각 1개씩 도출해줘.
+
+[행동안 작성 규칙]
+- 6요소(언제·어디서·누가·무엇을·어떻게·실패시대비) 모두 포함
+- "강화한다 / 노력한다 / 고려한다" 같은 추상 동사 금지
+- 1개 행동안 = 한 문장 30자 이내 + 부속 메모 50자 이내
+- 즉시 = 1주일 내, 단기 = 이번 학기 내, 장기 = 다음 학기 이후
+
+[출력 형식]
+[즉시 NOW]
+- 행동: ___
+- 6요소: 언제(__), 어디서(__), 누가(__), 무엇을(__), 어떻게(__), 실패시(__)
+
+[단기 SHORT]
+- (위와 같은 형식)
+
+[장기 LONG]
+- (위와 같은 형식)
+
+[분석 결과]
+(검증까지 마친 본인의 최종 분석 결과를 붙여넣으세요)</pre>
+              </div>
+
+              <h4 style="font-size: 0.88rem; color: var(--coral); margin-top: 1.5rem; margin-bottom: 0.4rem;">&#x1F680; 이전 주차 빠르게 따라잡기 — 30분 압축 루트 (미제출자용)</h4>
+              <div class="concept-block coral-border" style="margin-top: 0.4rem;">
+                <p>1·2주차나 그 이후 주차를 못 낸 분들을 위한 압축 보충 가이드입니다. 7주차 데이터를 그대로 활용해 한 번에 따라잡습니다.</p>
+                <p style="margin-top: 0.5rem;"><strong>① (5분)</strong> 본인 교육 현장 텍스트 데이터 1종 선정 (이미 7주차에서 정했다면 그대로)<br>
+                <strong>② (10분)</strong> 1주차: 데이터 종류·분량·수집 맥락 3줄 메모<br>
+                <strong>③ (5분)</strong> 2주차: ChatGPT vs Claude 중 하나 선택 + 이유 1줄<br>
+                <strong>④ (5분)</strong> 3주차: 본인이 가장 자주 쓰는 프롬프트 1개를 5W1H 형식으로 다듬기<br>
+                <strong>⑤ (5분)</strong> 누락 주차 빈칸을 위 4단계 결과로 채워 따로 .html 또는 .docx로 저장 → 같은 폴더에 제출</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>실전 팁:</strong> 행동안 1개라도 <strong>이번 주 안에 진짜로 실행</strong>하면 다음 주 분석이 달라집니다. 분석은 머리로, 변화는 행동으로. 학기 말까지 1개라도 끝까지 가본 행동안이 있으면 종강 발표가 달라져요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 4: 본인 분석 결과로 3단 행동안 작성</h4>
+          <div class="guide-text">실습 3까지 완료한 본인의 검증된 분석 결과를 바탕으로, 즉시·단기·장기 행동안 3개를 5W1H로 작성하세요.</div>
+          <textarea id="practice-action" placeholder="[즉시 NOW] — 6요소 풀세트 (이거 1개만 깊게)&#10;- 행동: 다음 주 월요일 1교시 종료 5분, 학생 3명에게 1줄 메모 형식 피드백&#10;- When: 4월 28일 월요일 1교시 종료 5분 전&#10;- Where: 우리 반 교실&#10;- Who: 담임 직접 → 학생 3명(1주 동안 발화 적었던 학생 우선)&#10;- What: '오늘 너의 ___이 인상적이었어' 한 줄 메모&#10;- How: 종이 포스트잇, 손글씨로&#10;- If-not: 시간 부족 시 다음 시간 첫 5분으로 이월&#10;&#10;[단기 SHORT] — 한 줄 행동안 + 핵심 What·When&#10;- 행동: 5월 둘째 주 학급 회의 30분, '마음의 수신호' 활동 도입&#10;- When: 5월 12일(월) 6교시&#10;- What: 갈등 신호 표현 카드 4종으로 모둠 워크숍&#10;&#10;[장기 LONG] — 한 줄 행동안만&#10;- 행동: 다음 학기 직업인 게스트 강의 2회 + 가족 직업 인터뷰 활동 1회"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-action-count">0자</span>
+            <span class="save-indicator" id="practice-action-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="action" data-index="0" class="section-check" />
+              <span>즉시 행동안에 6요소(5W1H + 실패시대비)가 모두 채워졌는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="action" data-index="1" class="section-check" />
+              <span>단기·장기는 한 줄 행동안 + 핵심 요소(What·When)가 적혀 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="action" data-index="2" class="section-check" />
+              <span>"강화·노력" 같은 추상 동사 없이 구체 동사로 작성됐는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION FINAL: 최종 과제 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="section-header">
+      <div class="section-number gold">&#x2714;</div>
+      <div class="section-title-group">
+        <h2>최종 과제 — 통합 보고서</h2>
+        <p>1~4 섹션을 종합한 한 편의 미니 분석 리포트</p>
+      </div>
+    </div>
+
+    <div class="final-box">
+      <h3>&#x270F;&#xFE0F; 최종 과제 작성</h3>
+      <p>요약 전략 → 비교 분석 → 결과 검증 → 행동안 도출의 흐름을 한 편으로 통합해주세요. 분량은 800~1,200자 권장.</p>
+      <textarea id="practice-final" placeholder="[1] 분석 대상과 6주차와의 연결&#10;6주차에서 분석했던 ___ 데이터를 그대로 7주차 비교 분석에 재투입함.&#10;&#10;[2] 요약 전략 선택과 실행&#10;Map-Reduce 전략 사용. 1단계 한 줄 요약 50건 → 2단계 종합 요약. 결과: ...&#10;&#10;[3] 비교 분석 (축 + 결과)&#10;시간 축 선택 (4월 초 vs 4월 말). 결과: ...&#10;&#10;[4] 결과 검증 (3측면 + 보정)&#10;근거 비판: ... 누락 비판: ... 과장 비판: ... 최종 보정 결론: ...&#10;&#10;[5] 3단 행동안&#10;즉시: ...&#10;단기: ...&#10;장기: ...&#10;&#10;[6] 6주차 → 7주차 학습의 누적 효과&#10;6주차 키워드/주제 분석에 시간 비교를 더하니 ___이 보였다. 다음 주차에는 ___을 추가로 시도해보고 싶다."></textarea>
+
+      <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem; margin-top: 1.5rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem;">최종 과제 체크리스트</h4>
+        <div class="checklist" style="background: transparent;">
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="0" class="section-check" />
+            <span>&#x2460; 6주차와의 연결(데이터 재사용)이 명시됐는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="1" class="section-check" />
+            <span>&#x2461; 요약 전략 3종(Stuffing/Map-Reduce/Refining) 중 선택과 이유가 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="2" class="section-check" />
+            <span>&#x2462; 비교 분석 4축 중 선택과 결과가 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="3" class="section-check" />
+            <span>&#x2463; 검증 3측면(근거/누락/과장)에 모두 답했는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="4" class="section-check" />
+            <span>&#x2464; 3단 행동안(즉시/단기/장기) + 5W1H가 들어갔는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="5" class="section-check" />
+            <span>&#x2465; 학습의 누적 효과(6→7주차 변화)를 반성적으로 적었는가?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 1</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">Stuffing / Map-Reduce / Refining 중 본인 데이터에 가장 잘 맞았던 전략은? 다른 전략을 시도해본다면 어떤 차이가 예상되는가?</p>
+      <textarea id="practice-reflect1" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect1-count">0자</span>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 2</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">AI 검증을 거치며 본인이 처음 결론을 수정/보정한 사례가 있다면 1개만 구체적으로 적어주세요. (있으면 그 자체로 의미 있는 학습입니다)</p>
+      <textarea id="practice-reflect2" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect2-count">0자</span>
+      </div>
+    </div>
+
+    <div class="export-card">
+      <h4>&#x1F4C4; 결과 내보내기</h4>
+      <p class="export-tip">
+        &#x2705; 권장: <strong>HTML로 내보내기</strong> — 답안 잘림 없이 안전하게 제출됩니다.<br>
+        &#x1F5A8;&#xFE0F; PDF가 필요하면 인쇄 미리보기에서 답안이 다 보이는지 확인해 주세요. (이번 페이지는 인쇄 시 textarea를 자동으로 펼쳐 보입니다)
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="exportHTML()">&#x1F4C4; HTML로 내보내기</button>
+        <button class="btn btn-outline" onclick="printPage()">&#x1F5A8;&#xFE0F; 인쇄 / PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 7주차 요약과 비교 분석 · 김민철
+</div>
+
+<script>
+  // ===== CONFIGURATION =====
+  const STORAGE_KEY = 'ta_week7_';
+  const textareas = [
+    'practice-review', 'practice-digest', 'practice-compare',
+    'practice-verify', 'practice-action', 'practice-final',
+    'practice-reflect1', 'practice-reflect2'
+  ];
+  const sections = ['intro', 'review', 'digest', 'compare', 'verify', 'action', 'final'];
+
+  // ===== SECTION COMPLETION RULES =====
+  function getSectionCompletionRules() {
+    return {
+      review: { textarea: 'practice-review', checkboxCount: 3 },
+      digest: { textarea: 'practice-digest', checkboxCount: 3 },
+      compare: { textarea: 'practice-compare', checkboxCount: 3 },
+      verify: { textarea: 'practice-verify', checkboxCount: 3 },
+      action: { textarea: 'practice-action', checkboxCount: 3 },
+      final: { textarea: 'practice-final', checkboxCount: 6 }
+    };
+  }
+
+  // ===== SAVE ALL =====
+  function saveAll() {
+    localStorage.setItem(STORAGE_KEY + 'name', document.getElementById('studentName').value);
+    localStorage.setItem(STORAGE_KEY + 'id', document.getElementById('studentId').value);
+    textareas.forEach(id => {
+      localStorage.setItem(STORAGE_KEY + id, document.getElementById(id).value);
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      localStorage.setItem(STORAGE_KEY + 'cb_' + key, cb.checked);
+    });
+  }
+
+  // ===== LOAD ALL =====
+  function loadAll() {
+    const name = localStorage.getItem(STORAGE_KEY + 'name');
+    const id = localStorage.getItem(STORAGE_KEY + 'id');
+    if (name) document.getElementById('studentName').value = name;
+    if (id) document.getElementById('studentId').value = id;
+    textareas.forEach(id => {
+      const value = localStorage.getItem(STORAGE_KEY + id);
+      if (value) document.getElementById(id).value = value;
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      const saved = localStorage.getItem(STORAGE_KEY + 'cb_' + key);
+      if (saved === 'true') {
+        cb.checked = true;
+        cb.closest('.checklist-item').classList.add('checked');
+      }
+    });
+  }
+
+  // ===== AUTO SAVE =====
+  function autoSave() {
+    saveAll();
+    updateCount();
+    updateProgress();
+  }
+
+  // ===== UPDATE CHARACTER COUNT =====
+  function updateCount() {
+    textareas.forEach(id => {
+      const elem = document.getElementById(id);
+      const count = elem.value.length;
+      const countElem = document.getElementById(id + '-count');
+      if (countElem) countElem.textContent = count + '자';
+    });
+  }
+
+  // ===== UPDATE PROGRESS =====
+  function updateProgress() {
+    const rules = getSectionCompletionRules();
+    let completedCount = 0;
+    sections.forEach(sec => {
+      const isComplete = isSectionComplete(sec, rules[sec]);
+      const pill = document.querySelector('.nav-pill[data-section="' + sec + '"]');
+      if (pill) {
+        if (isComplete) {
+          pill.classList.add('done');
+          completedCount++;
+        } else {
+          pill.classList.remove('done');
+        }
+      }
+    });
+    const total = sections.length;
+    const percent = (completedCount / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').textContent = completedCount + ' / ' + total;
+  }
+
+  // ===== CHECK SECTION COMPLETE =====
+  function isSectionComplete(section, rule) {
+    if (section === 'intro') return true; // intro는 안내 섹션이라 자동 완료
+    if (!rule) return false;
+    const textareaValue = document.getElementById(rule.textarea).value.trim();
+    if (textareaValue.length < 10) return false;
+    const checkboxes = document.querySelectorAll('.section-check[data-section="' + section + '"]:checked');
+    return checkboxes.length >= rule.checkboxCount;
+  }
+
+  // ===== UPDATE CHECKLIST DISPLAY =====
+  function updateChecklist() {
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      const item = cb.closest('.checklist-item');
+      if (cb.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  }
+
+  // ===== TOGGLE COLLAPSIBLE =====
+  function toggleCollapsible(btn) {
+    const collapsible = btn.closest('.collapsible');
+    collapsible.classList.toggle('open');
+  }
+
+  // ===== COPY TEMPLATE (with fallback for file:// or restricted env) =====
+  function flashCopied(btn, msg) {
+    const original = btn.textContent;
+    btn.textContent = msg || '복사됨!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+  function fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      flashCopied(btn);
+    } catch (e) {
+      flashCopied(btn, '복사 실패');
+    }
+    document.body.removeChild(ta);
+  }
+  function copyTemplate(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => flashCopied(btn))
+        .catch(() => fallbackCopy(text, btn));
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  // ===== EXPORT HTML =====
+  function exportHTML() {
+    const name = document.getElementById('studentName').value || '이름미입력';
+    const studentId = document.getElementById('studentId').value || '';
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const filename = '7주차_요약비교분석_' + name + '_' + dateStr + '.html';
+
+    let html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>7주차 과제 — 요약과 비교 분석</title>';
+    html += '<style>body { font-family: "Noto Sans KR", sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f0e8; } h1 { color: #2C3E6B; } .section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; } .meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; } table { width: 100%; border-collapse: collapse; margin: 1rem 0; } th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; } th { background: #2C3E6B; color: white; }</style></head><body>';
+    html += '<h1>7주차 요약과 비교 분석 과제</h1>';
+    html += '<p class="meta">이름: ' + escapeHtml(name) + ' | 학번: ' + escapeHtml(studentId) + ' | 작성일: ' + dateStr + '</p>';
+
+    html += '<div class="section"><h2>&#x1F504; 6주차 복습: 검증과 행동안</h2><p>' + escapeHtml(document.getElementById('practice-review').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2460; 긴 문서 처리 전략</h2><p>' + escapeHtml(document.getElementById('practice-digest').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2461; 비교 분석 (축 + 실행)</h2><p>' + escapeHtml(document.getElementById('practice-compare').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2462; 결과 검증 (자기 반박)</h2><p>' + escapeHtml(document.getElementById('practice-verify').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2463; 3단 행동안 (5W1H)</h2><p>' + escapeHtml(document.getElementById('practice-action').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2464; 최종 통합 보고서</h2><p>' + escapeHtml(document.getElementById('practice-final').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x1F4DD; 성찰</h2>';
+    html += '<h3>질문 1: 가장 잘 맞은 요약 전략</h3><p>' + escapeHtml(document.getElementById('practice-reflect1').value).replace(/\n/g, '<br>') + '</p>';
+    html += '<h3>질문 2: 검증으로 보정된 결론</h3><p>' + escapeHtml(document.getElementById('practice-reflect2').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '</body></html>';
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  // ===== ESCAPE HTML =====
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ===== PRINT — textarea 잘림 자동 보정 =====
+  function preparePrintMirrors() {
+    document.querySelectorAll('textarea').forEach(t => {
+      // 빈 textarea는 미러링하지 않음
+      if (!t.value.trim()) return;
+      // 이미 미러링된 게 있으면 갱신
+      let mirror = t.nextElementSibling;
+      if (!mirror || !mirror.classList.contains('print-mirror')) {
+        mirror = document.createElement('div');
+        mirror.className = 'print-mirror';
+        t.parentNode.insertBefore(mirror, t.nextSibling);
+      }
+      mirror.textContent = t.value;
+      t.classList.add('print-hide');
+    });
+    // 모든 collapsible 펼치기
+    document.querySelectorAll('.collapsible').forEach(c => c.classList.add('open', 'was-closed-for-print'));
+  }
+  function teardownPrintMirrors() {
+    document.querySelectorAll('.print-mirror').forEach(d => d.remove());
+    document.querySelectorAll('.print-hide').forEach(t => t.classList.remove('print-hide'));
+    document.querySelectorAll('.collapsible.was-closed-for-print').forEach(c => {
+      c.classList.remove('open', 'was-closed-for-print');
+    });
+  }
+  window.addEventListener('beforeprint', preparePrintMirrors);
+  window.addEventListener('afterprint', teardownPrintMirrors);
+
+  function printPage() {
+    // Safari/iOS는 beforeprint를 부분 지원하므로 명시 호출 + 짧은 지연 후 print()
+    preparePrintMirrors();
+    setTimeout(() => window.print(), 50);
+  }
+
+  // ===== DOM CONTENT LOADED =====
+  document.addEventListener('DOMContentLoaded', function() {
+    loadAll();
+    updateCount();
+    updateProgress();
+
+    document.getElementById('studentName').addEventListener('change', autoSave);
+    document.getElementById('studentId').addEventListener('change', autoSave);
+    textareas.forEach(id => {
+      document.getElementById(id).addEventListener('input', autoSave);
+    });
+
+    document.querySelectorAll('.section-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateChecklist();
+        updateProgress();
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        const target = document.getElementById('sec-' + section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    const observerOptions = { threshold: 0.3 };
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const section = id.replace('sec-', '');
+          document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+          const activePill = document.querySelector('.nav-pill[data-section="' + section + '"]');
+          if (activePill) activePill.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => {
+      const elem = document.getElementById('sec-' + sec);
+      if (elem) observer.observe(elem);
+    });
+  });
+</script>
+
+</body>
+</html>
