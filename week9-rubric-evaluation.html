@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9주차 — 루브릭 기반 평가</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.22;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-label { font-size: 0.85rem; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+  .header h1 { font-size: 1.8rem; font-weight: 900; line-height: 1.3; margin-bottom: 0.3rem; }
+  .header p { font-size: 0.95rem; color: rgba(255,255,255,0.7); font-weight: 300; }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0.8rem 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .progress-bar-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 0.8rem; }
+  .progress-label { font-size: 0.78rem; color: var(--gray-600); font-weight: 500; white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--navy)); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+  .progress-text { font-size: 0.78rem; color: var(--navy); font-weight: 700; white-space: nowrap; }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills { max-width: 860px; margin: 1.2rem auto 0; padding: 0 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nav-pill { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--gray-200); background: var(--white); color: var(--gray-600); transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+  .nav-pill:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 0.8rem 1rem; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); }
+  .student-info-bar label { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+  .student-info-bar input { padding: 0.4rem 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 120px; transition: border-color 0.2s; }
+  .student-info-bar input:focus { outline: none; border-color: var(--navy); }
+
+  /* ===== SECTION ===== */
+  .section { margin-bottom: 2rem; }
+  .section-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid var(--gray-200); }
+  .section-number { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; color: var(--white); flex-shrink: 0; }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 { font-size: 1.2rem; font-weight: 900; }
+  .section-title-group p { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* ===== NOTICE BOXES ===== */
+  .intro-box { background: var(--navy); color: var(--white); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.8; }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .recovery-notice { background: linear-gradient(135deg, #FFF8E1 0%, #FFF4ED 100%); border: 1.5px dashed var(--gold); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .recovery-notice strong { color: var(--coral); }
+
+  .submit-notice { background: var(--coral-bg); border-left: 4px solid var(--coral); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .submit-notice strong { color: var(--coral); font-weight: 700; }
+
+  .flow-notice { background: var(--teal-bg); border-left: 4px solid var(--teal); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .flow-notice strong { color: var(--teal); font-weight: 700; }
+
+  /* ===== REVIEW BOX ===== */
+  .review-box { background: linear-gradient(135deg, #FFF8E1 0%, #FFF0EC 100%); border: 2px solid var(--gold); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+  .review-box h3 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+  .review-box p, .review-box li { font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .review-box ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+  .review-box li { margin-bottom: 0.3rem; }
+
+  /* ===== DECISION TREE ===== */
+  .decision-tree { background: var(--white); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; border: 1.5px solid var(--gray-200); }
+  .decision-tree h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.8rem; }
+  .dt-row { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-label { font-size: 0.82rem; font-weight: 700; min-width: 90px; padding: 0.2rem 0.6rem; border-radius: 6px; text-align: center; flex-shrink: 0; }
+  .dt-label.teal { background: var(--teal-bg); color: var(--teal); }
+  .dt-label.coral { background: var(--coral-bg); color: var(--coral); }
+  .dt-label.purple { background: var(--purple-bg); color: var(--purple); }
+  .dt-label.gold { background: var(--gold-bg); color: #B8860B; }
+  .dt-example { font-size: 0.84rem; color: var(--gray-600); line-height: 1.7; }
+  .dt-example strong { color: var(--gray-800); }
+
+  /* ===== CARD ===== */
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden; }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block { background: var(--gray-50); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; border-left: 4px solid var(--teal); }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block.gold-border { border-left-color: var(--gold); }
+  .concept-block h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--navy); }
+  .concept-block p, .concept-block li { font-size: 0.86rem; color: var(--gray-600); line-height: 1.8; }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== COMPARE TABLE ===== */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  .compare-table th { background: var(--navy); color: var(--white); padding: 0.6rem 0.8rem; text-align: left; font-weight: 500; }
+  .compare-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== RUBRIC GRID (4영역 카드) ===== */
+  .rubric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  .rubric-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.1rem; transition: all 0.2s; }
+  .rubric-card:hover { border-color: var(--purple); box-shadow: var(--shadow); }
+  .rubric-card .rubric-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .rubric-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .rubric-card p { font-size: 0.8rem; color: var(--gray-600); line-height: 1.65; }
+  .rubric-card .rubric-example { font-size: 0.78rem; color: var(--coral); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--gray-200); }
+  @media (max-width: 600px) { .rubric-grid { grid-template-columns: 1fr; } }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible { margin: 0.8rem 0; }
+  .collapsible-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.8rem 1rem; background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 0.88rem; font-weight: 500; color: var(--gray-800); transition: all 0.2s; }
+  .collapsible-trigger:hover { border-color: var(--purple); }
+  .collapsible-trigger .arrow { transition: transform 0.2s; font-size: 0.8rem; }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-content { padding: 1rem 0; }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template { background: var(--navy-deep); color: #E0E0E0; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; position: relative; }
+  .prompt-template pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.8; margin: 0; }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn { position: absolute; top: 0.6rem; right: 0.8rem; padding: 0.3rem 0.7rem; font-size: 0.72rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== SAMPLE BOX ===== */
+  .sample-box { background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 1rem 1.2rem; margin: 0.6rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .sample-box .sample-label { font-size: 0.74rem; font-weight: 700; color: var(--purple); margin-bottom: 0.4rem; }
+  .sample-box .sample-question { font-style: italic; color: var(--navy); margin-bottom: 0.5rem; }
+  .sample-box .sample-answer { color: var(--gray-800); white-space: pre-wrap; }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.8rem 1rem; border-radius: 10px; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .tip-callout.info { background: var(--teal-bg); }
+  .tip-callout.success { background: var(--gold-bg); }
+  .tip-callout.warning { background: var(--coral-bg); }
+  .tip-callout.purple { background: var(--purple-bg); }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-text { color: var(--gray-800); }
+
+  /* ===== BIAS BOX (AI 채점 편향 4종) ===== */
+  .bias-box { background: linear-gradient(135deg, #FFF0EC 0%, #FFF8E1 100%); border: 2px solid var(--coral); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1rem 0; }
+  .bias-box h4 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.6rem; }
+  .bias-box .bias-row { padding: 0.5rem 0; border-bottom: 1px dashed rgba(231,111,81,0.25); font-size: 0.86rem; line-height: 1.7; }
+  .bias-box .bias-row:last-child { border-bottom: none; }
+  .bias-box .bias-name { font-weight: 700; color: var(--navy); display: inline-block; min-width: 130px; }
+  .bias-box .bias-desc { color: var(--gray-600); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area { background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%); border: 2px solid #E8E0FF; border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+  .practice-area h4 { font-size: 0.95rem; font-weight: 700; color: var(--purple); margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+  .practice-area .guide-text { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 0.8rem; }
+  .practice-area textarea { width: 100%; min-height: 140px; padding: 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; transition: border-color 0.2s; background: var(--white); }
+  .practice-area textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .practice-area textarea::placeholder { color: var(--gray-400); }
+
+  .practice-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem; padding: 0 0.2rem; }
+  .char-count { font-size: 0.75rem; color: var(--gray-400); }
+  .save-indicator { font-size: 0.75rem; color: var(--teal); font-weight: 500; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist { margin-top: 0.8rem; padding: 0.8rem 1rem; background: rgba(255,255,255,0.5); border-radius: 8px; }
+  .checklist-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.82rem; color: var(--gray-600); cursor: pointer; transition: color 0.2s; }
+  .checklist-item.checked { color: var(--teal); text-decoration: line-through; }
+  .checklist-item input[type="checkbox"] { accent-color: var(--teal); width: 16px; height: 16px; }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box { border-radius: 10px; padding: 1rem 1.2rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; }
+  .example-box.bad { background: #FFF0EC; border: 1px solid #FECDC2; }
+  .example-box.good { background: #E6F7F5; border: 1px solid #B2DFDB; }
+  .example-box .label { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.3rem; display: block; }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.7; margin: 0; }
+
+  /* ===== ACTION FRAME ===== */
+  .action-frame { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0; }
+  .action-frame .af-row { display: flex; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.84rem; }
+  .action-frame .af-row:last-child { border-bottom: none; }
+  .action-frame .af-key { min-width: 110px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+  .action-frame .af-val { color: var(--gray-600); line-height: 1.7; }
+
+  /* ===== FINAL BOX ===== */
+  .final-box { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: var(--white); border-radius: var(--radius); padding: 2rem 1.5rem; margin-bottom: 1.5rem; }
+  .final-box h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .final-box p { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin-bottom: 1rem; }
+  .final-box textarea { width: 100%; min-height: 240px; padding: 1rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; background: rgba(255,255,255,0.08); color: var(--white); }
+  .final-box textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(233,196,106,0.2); }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.35); }
+
+  /* ===== REFLECTION ===== */
+  .reflection-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; }
+  .reflection-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .reflection-card textarea { width: 100%; min-height: 100px; padding: 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.86rem; line-height: 1.7; resize: vertical; }
+  .reflection-card textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(44,62,107,0.1); }
+
+  /* ===== EXPORT ===== */
+  .export-card { background: var(--gray-50); border-radius: var(--radius); padding: 1.5rem; text-align: center; }
+  .export-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+  .export-card .export-tip { font-size: 0.8rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.7; }
+  .btn-group { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-outline { background: var(--white); color: var(--navy); border: 1.5px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* ===== FOOTER ===== */
+  .footer { text-align: center; padding: 2rem; font-size: 0.78rem; color: var(--gray-400); }
+
+  /* ===== PRINT MIRROR ===== */
+  .print-mirror { display: none; }
+  @media print {
+    .progress-bar-container, .nav-pills, .student-info-bar, .copy-btn, .btn-group, .export-card, .footer, .submit-notice, .recovery-notice, .flow-notice { display: none !important; }
+    .collapsible-body { max-height: none !important; }
+    .collapsible.open .collapsible-body, .collapsible-body { max-height: none !important; overflow: visible !important; }
+    body { background: white; }
+    .main { padding: 0; }
+    .print-hide { display: none !important; }
+    .print-mirror {
+      display: block !important;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      padding: 0.8rem 1rem;
+      border: 1px solid #999;
+      border-radius: 8px;
+      background: white !important;
+      color: #222 !important;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      page-break-inside: auto;
+      min-height: 1.6em;
+    }
+    .final-box .print-mirror { color: #fff !important; background: rgba(0,0,0,0.5) !important; border-color: #888 !important; }
+    .section, .card, .practice-area, .reflection-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · Week 9</div>
+    <h1>루브릭 기반 평가</h1>
+    <p>AI로 서술형 답변 채점하기 — 그리고 본인 채점과의 비교로 판단 근육 단련</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 7</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">&#10003; </span>시작</a>
+  <a class="nav-pill" href="#sec-review" data-section="review"><span class="pill-check">&#10003; </span>7주차 복습</a>
+  <a class="nav-pill" href="#sec-rubric" data-section="rubric"><span class="pill-check">&#10003; </span>루브릭 기초</a>
+  <a class="nav-pill" href="#sec-design" data-section="design"><span class="pill-check">&#10003; </span>루브릭 설계</a>
+  <a class="nav-pill" href="#sec-grade" data-section="grade"><span class="pill-check">&#10003; </span>AI 채점</a>
+  <a class="nav-pill" href="#sec-compare" data-section="compare"><span class="pill-check">&#10003; </span>비교 + 개선</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">&#10003; </span>최종 과제</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ===== SUBMIT NOTICE ===== -->
+  <div class="submit-notice">
+    <strong>&#x1F4DD; 제출 안내</strong> — 페이지 하단의 <strong>"HTML로 내보내기"</strong>로 제출해 주세요. PDF가 필요한 경우, 이번 페이지는 인쇄 시 textarea 잘림을 자동 보정하도록 손봤습니다.
+  </div>
+
+  <!-- ===== RECOVERY NOTICE ===== -->
+  <div class="recovery-notice">
+    <strong>&#x1F4AA; 7주차 보강, 부담 없이</strong> — 8주차 중간고사가 어린이날 연휴로 휴강되면서 흐름이 끊긴 분들이 있을 수 있어요. 7주차 페이지의 <strong>"이전 주차 빠르게 따라잡기 30분 루트"</strong>를 활용해 한 줄이라도 채워서 함께 제출해 주시면 됩니다. 9주차 진행하면서 자연스럽게 7주차의 검증·행동안 흐름을 다시 만나도록 R 섹션에 짧은 복습을 넣어두었어요.
+  </div>
+
+  <!-- ===== FLOW NOTICE ===== -->
+  <div class="flow-notice">
+    <strong>&#x1F558; 수업 흐름</strong> — 강의 시간에는 <strong>R + 1번(루브릭 기초)</strong>까지 함께 진행하고, <strong>2~4번은 본인 페이스로 충분히 시간 두고</strong> 작성해 주세요. 핵심은 4번(AI 채점과 본인 채점 비교)이라 거기서 깊게 머무는 게 좋습니다.
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>9주차 과제 안내</strong><br><br>
+      7주차에서 텍스트를 <strong>요약하고 비교하고 검증</strong>했다면, 이번 주에는 <strong>학생 서술형 답변을 루브릭 기반으로 채점</strong>하는 법을 배웁니다.<br>
+      "AI에게 채점을 맡기면 시간이 줄어든다"는 단순한 효율 이야기가 아니라, <strong>"AI가 매긴 점수와 내가 매긴 점수가 다를 때 어느 쪽이 옳은가? 그 차이가 무엇을 가르쳐주는가?"</strong>가 이번 주의 진짜 질문입니다.<br><br>
+      <div class="subtitle">충분히 시간 두고 진행하세요. 강의 시간에 R + 1번까지 익히고, 2~4번은 본인 데이터로 깊게 작성하시면 됩니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 배울 핵심 개념</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:25%">개념</th>
+              <th style="width:35%">핵심 아이디어</th>
+              <th>교육 현장 예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>루브릭</strong><br>(Rubric)</td>
+              <td>평가 영역과 척도를 명문화한 표. 채점자가 누구든 일관된 결과가 나오도록 하는 도구</td>
+              <td>역사 서술형: "사건 인과"·"근거 사용"·"관점 표현" 3영역 × 우수/보통/미흡 3척도</td>
+            </tr>
+            <tr>
+              <td><strong>AI 채점</strong><br>(AI Scoring)</td>
+              <td>루브릭과 답변을 함께 AI에 입력해 영역별 척도 + 근거 인용 + 총평 산출</td>
+              <td>학생 답변 30건을 영역별로 한 번에 채점, 인용 문장과 총평까지 표 형태로 받기</td>
+            </tr>
+            <tr>
+              <td><strong>일치도 분석</strong><br>(Inter-rater)</td>
+              <td>AI 채점과 본인 채점이 어디서·왜 다른가? 차이 자체가 학생 이해 단서</td>
+              <td>"AI가 후하게 준 영역" / "내가 후하게 준 영역" → 채점 기준의 모호함 발견</td>
+            </tr>
+            <tr>
+              <td><strong>루브릭 개선</strong><br>(Refinement)</td>
+              <td>비교 결과를 바탕으로 척도 정의·영역·동사를 다듬는 1턴 보정 사이클</td>
+              <td>"보통"의 정의를 "예시 1~2개" → "예시 2개 + 적용 1회"로 명확화</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION R: 7주차 복습 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-review">
+    <div class="section-header">
+      <div class="section-number gold">R</div>
+      <div class="section-title-group">
+        <h2>7주차 복습: 검증은 채점에도 그대로 작동한다</h2>
+        <p>비교 분석의 검증 3질문이 9주차의 AI 채점에 어떻게 이어지는가</p>
+      </div>
+    </div>
+
+    <div class="review-box">
+      <h3>&#x1F4AC; 7주차에서 가장 빛난 한 사례</h3>
+      <p>한 학생은 "교우관계 24%, 학습 20%, <strong>단 2건 차이</strong>로 '관계 중심으로 이동했다'고 단정하는 건 과장"이라며 비중 숫자를 그대로 인용해 자기 결론을 반박했어요. AI가 만든 단정 표현을 그대로 받아쓰는 대신, <strong>비중 숫자 = 검증 도구</strong>로 활용한 좋은 사례입니다.</p>
+      <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--gray-600);">이번 9주차 AI 채점에서도 같은 자세가 필요해요. AI가 "이 답변은 우수"라고 했을 때 — "왜 우수인가? 근거는? 다른 척도로 보면? 누락된 평가 항목은 없나?" 묻는 것.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block gold-border">
+          <h4>핵심 원리: "AI 채점도 분석의 일종이다"</h4>
+          <p>채점은 "정답을 맞히는 일"이 아니라 <strong>"답변에서 평가 기준 적용 정도를 읽어내는 분석 행위"</strong>입니다. 7주차 검증 3질문(근거·누락·과장)을 그대로 적용하면 채점 결과의 신뢰도가 두 배가 됩니다.</p>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F50D; 검증 3질문, 채점에 적용하면</h4>
+
+          <div class="dt-row">
+            <span class="dt-label teal">근거</span>
+            <span class="dt-example">"AI가 이 답변을 '우수'로 본 <strong>근거 문장은 어디인가?</strong>"<br>예: "AI가 인용한 문장이 실제로 평가 영역과 맞닿아 있는지 확인 — 답변 본문의 다른 부분을 보지 않은 채 결론을 내렸을 수 있음"</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label coral">누락</span>
+            <span class="dt-example">"이 답변에서 <strong>AI가 못 본 평가 항목</strong>이 있는가?"<br>예: '근거 사용' 영역에서 AI는 명시적 출처만 카운트, 학생이 본문에서 추론으로 활용한 근거는 누락 가능성</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label purple">과장</span>
+            <span class="dt-example">"AI 총평이 <strong>실제 채점 점수보다 강하게</strong> 쓰여 있는가?"<br>예: 영역별로 '보통'이 2개인데 총평은 "전반적으로 우수한 답변"으로 표현. 점수와 글이 어긋남</span>
+          </div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>7주차→9주차 transfer:</strong> 같은 검증 3질문을 다른 분석 행위에 적용하면 학습이 굳어집니다. 이번 주에 한 번 더 적용한 사람은 11주차의 피드백 생성, 12주차의 워크플로우 설계에서도 자연스럽게 검증을 띄울 수 있어요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 복습 실습: 검증 3질문을 채점 상황으로 옮기기</h4>
+          <div class="guide-text">아래 가상의 AI 채점 결과를 보고, 검증 3질문(근거·누락·과장) 중 어떤 의심이 드는지 한 가지 골라 적어보세요.</div>
+          <div style="background:var(--white); border-radius:8px; padding:1rem; margin-bottom:0.8rem; font-size:0.84rem; line-height:1.8;">
+            <strong>가상의 AI 채점 결과 (역사 서술형 답변)</strong><br>
+            영역 1 사건 인과: <strong>우수</strong><br>
+            영역 2 근거 사용: <strong>보통</strong><br>
+            영역 3 관점 표현: <strong>보통</strong><br>
+            총평: "학생은 본 사건의 흐름을 우수하게 이해하고 있으며, 전반적으로 매우 좋은 답변입니다."
+          </div>
+          <textarea id="practice-review" placeholder="예: 과장 의심. 영역 2·3이 '보통'인데 총평이 '매우 좋은 답변'이라 표현. 점수 분포와 총평 글의 어조가 일치하지 않음. 본인이라면 '사건 이해는 좋으나 근거 사용과 관점 표현은 보강 여지 있음'으로 톤 조정 필요."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-review-count">0자</span>
+            <span class="save-indicator" id="practice-review-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="0" class="section-check" />
+              <span>검증 3질문 중 1가지 의심을 명시했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="1" class="section-check" />
+              <span>가상 결과의 어느 부분이 의심의 근거인지 짚었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="2" class="section-check" />
+              <span>본인이라면 어떻게 보정할지 한 줄 적었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: 루브릭의 기초 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-rubric">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>루브릭의 기초 — 왜 AI 시대에 더 중요한가</h2>
+        <p>평가 기준의 명문화가 채점의 일관성을 만든다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>왜 루브릭이 AI 시대에 더 중요해졌나</h4>
+          <p>예전엔 교사 한 명이 채점하니 머릿속 기준만 있어도 됐어요. 그런데 AI에 채점을 맡기면 <strong>"내 머릿속 기준이 AI에 전달되지 않는다"</strong>는 문제가 생깁니다. 루브릭은 머릿속 기준을 글로 옮긴 것. <strong>글로 안 옮기면 AI는 자기 학습 데이터의 기준을 씁니다</strong> — 그건 한국 교실의 기준과 다를 수 있어요. 루브릭이 명확할수록 AI 채점이 본인 의도에 가까워집니다.</p>
+        </div>
+
+        <div class="concept-block">
+          <h4>좋은 루브릭의 4요건</h4>
+          <ul>
+            <li><strong>영역(Dimension):</strong> 3~5개. 너무 많으면 채점자가 못 외움. 너무 적으면 변별력 사라짐</li>
+            <li><strong>척도(Scale):</strong> 3~5단계. 우수/보통/미흡(3단) 또는 5단(매우우수~매우미흡)</li>
+            <li><strong>척도 정의:</strong> 각 척도가 무엇을 의미하는지 <strong>관찰 가능한 동사로</strong> 명시</li>
+            <li><strong>척도 정의 폭:</strong> "보통"의 의미가 너무 넓으면 AI도 본인도 흔들림. 좁힐수록 일치도 상승</li>
+          </ul>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 교육 현장 루브릭 예시 3종</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size:0.88rem; color:var(--teal); margin-top:0.5rem; margin-bottom:0.4rem;">예시 1 — 역사 서술형 답변 (사건 분석)</h4>
+              <table class="compare-table">
+                <thead><tr><th style="width:18%">영역</th><th style="width:27%">우수</th><th style="width:27%">보통</th><th>미흡</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>사건 인과</strong></td><td>원인→결과 2단계 이상 연결 + 시간 순서 명시</td><td>원인→결과 1단계만 또는 시간 순서 흐릿</td><td>사건 나열, 인과 관계 미명시</td></tr>
+                  <tr><td><strong>근거 사용</strong></td><td>구체적 자료(연도·인물·문서) 2개 이상 인용</td><td>구체적 자료 1개 인용</td><td>일반 진술만, 자료 인용 없음</td></tr>
+                  <tr><td><strong>관점 표현</strong></td><td>본인 입장 + 반대 입장 인지 + 자기 근거</td><td>본인 입장만 명시</td><td>입장 불명확</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="font-size:0.88rem; color:var(--coral); margin-top:1.2rem; margin-bottom:0.4rem;">예시 2 — 과학 탐구 보고서</h4>
+              <table class="compare-table">
+                <thead><tr><th style="width:18%">영역</th><th style="width:27%">우수</th><th style="width:27%">보통</th><th>미흡</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>가설 명료성</strong></td><td>변인 명시 + 측정 가능 + 1문장</td><td>변인 1개만 명시, 추상</td><td>가설이라 보기 어려움</td></tr>
+                  <tr><td><strong>실험 설계</strong></td><td>독립·통제 변인 분리 + 반복 측정</td><td>변인 분리 됨, 반복 미흡</td><td>변인 혼재</td></tr>
+                  <tr><td><strong>결론 해석</strong></td><td>데이터→결론 연결 + 한계 명시</td><td>데이터→결론만</td><td>결론이 데이터와 어긋남</td></tr>
+                </tbody>
+              </table>
+
+              <h4 style="font-size:0.88rem; color:var(--purple); margin-top:1.2rem; margin-bottom:0.4rem;">예시 3 — 국어 글쓰기 (논설문)</h4>
+              <table class="compare-table">
+                <thead><tr><th style="width:18%">영역</th><th style="width:27%">우수</th><th style="width:27%">보통</th><th>미흡</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>주장의 명확성</strong></td><td>주장 1문장 + 부속 근거 3개 이상</td><td>주장 1문장 + 근거 1~2개</td><td>주장 모호</td></tr>
+                  <tr><td><strong>예시·근거</strong></td><td>경험·통계·인용 중 2종 이상 결합</td><td>한 종류만</td><td>주장만 반복</td></tr>
+                  <tr><td><strong>독자 의식</strong></td><td>예상 반박 1개 다룸 + 문체 조정</td><td>독자 의식 약함</td><td>일방적 진술</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; 나쁜 척도 정의 (모호한 동사)</span>
+          <pre>우수: 잘 이해함
+보통: 어느 정도 이해함
+미흡: 이해 못함</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">&#x2705; 좋은 척도 정의 (관찰 가능한 동사)</span>
+          <pre>우수: 예시 2개를 들어 설명함 + 자기 사례 1개 적용함
+보통: 예시 1개를 들어 설명함, 자기 사례 미적용
+미흡: 일반 정의만 진술함, 예시 없음</pre>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">&#x26A0;&#xFE0F;</span>
+          <span class="tip-text"><strong>주의:</strong> "이해한다 / 안다 / 파악한다" 같은 추상 동사는 AI도 본인도 흔들립니다. "예시 N개를 든다 / 자료를 N개 인용한다 / 반박 1개를 다룬다" 같은 <strong>관찰 가능한 동사</strong>로 척도를 정의해야 일치도가 올라가요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 1: 본인이 평가할 답변 종류 + 영역 후보</h4>
+          <div class="guide-text">본인 교과·학년에서 평가하고 싶은 답변 종류와, 평가 영역 후보(3~5개)를 적어보세요. 이 영역들이 다음 실습 2에서 척도 정의로 발전됩니다.</div>
+          <textarea id="practice-rubric" placeholder="[평가 답변 종류]&#10;예: 6학년 사회 서술형 답변 — '조선 후기 사회 변화의 원인을 두 가지 이상 들어 설명하시오'&#10;&#10;[평가 영역 후보 3~5개]&#10;1. 사건 인과 (원인→결과 연결)&#10;2. 근거 사용 (구체 자료 인용)&#10;3. 관점 표현 (본인 입장 명시)&#10;&#10;[척도 단계 결정 + 이유]&#10;예: 3단(우수/보통/미흡) 선택. 5단은 학생 수가 적은 우리 반에서 변별이 어려움. 3단이 채점자 부담도 낮음."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-rubric-count">0자</span>
+            <span class="save-indicator" id="practice-rubric-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="rubric" data-index="0" class="section-check" />
+              <span>평가할 답변 종류가 구체적으로 명시됐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="rubric" data-index="1" class="section-check" />
+              <span>영역 후보가 3~5개 사이로 적혔는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="rubric" data-index="2" class="section-check" />
+              <span>척도 단계 수와 그 이유가 한 줄 들어갔는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: 본인 루브릭 설계 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-design">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>본인 루브릭 설계 — 척도까지 다듬기</h2>
+        <p>영역 × 척도 × 관찰 가능한 동사를 한 표로</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>루브릭 설계 3단계</h4>
+          <ul>
+            <li><strong>1단계 — 영역 확정:</strong> 실습 1의 후보 중 3~4개 확정. 영역끼리 의미가 겹치면 합치거나 분리</li>
+            <li><strong>2단계 — 척도 정의:</strong> 각 영역×척도 칸에 <strong>관찰 가능한 동사</strong>로 정의. "이해한다" 금지, "예시 N개를 든다" 권장</li>
+            <li><strong>3단계 — 정의 폭 점검:</strong> "보통"의 정의가 너무 넓지 않은지 확인. 우수/보통 사이, 보통/미흡 사이의 경계가 한 줄로 설명 가능해야 함</li>
+          </ul>
+        </div>
+
+        <div class="concept-block navy-border">
+          <h4>관찰 가능한 동사 사전</h4>
+          <p style="font-size:0.84rem;"><strong>인지·이해:</strong> 정의한다 / 예시 N개를 든다 / 비교한다 / 분류한다<br>
+          <strong>분석·논증:</strong> 원인을 든다 / 결과를 든다 / 근거 N개를 인용한다 / 반박 1개를 다룬다<br>
+          <strong>적용·생산:</strong> 자기 사례 1개를 든다 / 시나리오를 만든다 / 대안을 제안한다<br>
+          <strong>평가·성찰:</strong> 강점을 짚는다 / 한계를 짚는다 / 다음 행동 1개를 제시한다</p>
+        </div>
+
+        <div class="tip-callout purple">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>비결:</strong> 척도 정의에서 동사 앞에 <strong>숫자</strong>가 들어가면 AI 채점이 안정됩니다. "예시 2개", "근거 3개", "반박 1개" 같이. 숫자가 없으면 "충분히 / 어느 정도"가 들어가는데, AI가 흔들리는 지점이에요.</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 루브릭 설계 템플릿 (4영역 × 3척도)</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>[평가 답변 종류] (예: 6학년 사회 서술형)
+
+| 영역 | 우수 | 보통 | 미흡 |
+|------|------|------|------|
+| 영역1 (예: 사건 인과) | 동사+숫자 (예: 원인→결과 2단계 + 시간순) | 동사+숫자 (예: 1단계만) | 동사 (예: 사건 나열) |
+| 영역2 (예: 근거 사용) | 구체 자료 2개 이상 인용 | 구체 자료 1개 인용 | 일반 진술만 |
+| 영역3 (예: 관점 표현) | 본인 입장 + 반대 인지 + 근거 | 본인 입장만 | 입장 불명확 |
+| 영역4 (선택) | ... | ... | ... |
+
+[척도 정의 폭 점검 — 자체 질문]
+- 우수와 보통의 경계: 한 줄로 설명 가능한가?
+- 보통과 미흡의 경계: 한 줄로 설명 가능한가?
+- 같은 답변을 동료 교사가 봐도 같은 척도가 나올까?</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 2: 본인 루브릭 완성 (4영역 × 3척도 표)</h4>
+          <div class="guide-text">실습 1의 영역 후보를 척도 정의로 발전시켜 완성된 루브릭을 작성하세요. 표 형태로 정리하면 좋습니다.</div>
+          <textarea id="practice-design" placeholder="[평가 답변 종류]&#10;예: 6학년 사회 — '조선 후기 사회 변화의 원인을 두 가지 이상 들어 설명하시오'&#10;&#10;[루브릭 표]&#10;| 영역 | 우수 | 보통 | 미흡 |&#10;| 사건 인과 | 원인→결과 2단계 이상 + 시간순 명시 | 1단계만 또는 시간 흐림 | 사건 나열만 |&#10;| 근거 사용 | 구체 자료 2개 이상 인용 (연도/인물/사건명) | 1개 인용 | 일반 진술 |&#10;| 관점 표현 | 본인 입장 + 다른 입장 인지 + 자기 근거 | 본인 입장만 | 입장 불명확 |&#10;&#10;[척도 정의 폭 자체 점검]&#10;- 우수↔보통 경계 한 줄: '구체 자료 수가 2개 이상인지'&#10;- 보통↔미흡 경계 한 줄: '구체 자료가 0개이거나 일반 진술만 있는지'&#10;- 동료 교사가 봐도 같은 척도가 나올까? Yes/No + 이유: Yes. 숫자 기준이 명확함."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-design-count">0자</span>
+            <span class="save-indicator" id="practice-design-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="0" class="section-check" />
+              <span>영역 3개 이상이 표로 정리됐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="1" class="section-check" />
+              <span>각 척도가 관찰 가능한 동사(+가능하면 숫자)로 정의됐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="2" class="section-check" />
+              <span>척도 정의 폭 자체 점검 결과를 적었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: AI 채점 실행 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-grade">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>AI 채점 실행 — 프롬프트 + 샘플 답변</h2>
+        <p>완성된 루브릭으로 학생 답변을 채점한다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>AI 채점 프롬프트의 4요건</h4>
+          <ul>
+            <li><strong>역할 부여:</strong> "교육 평가 전문가" 같은 정체성을 명시</li>
+            <li><strong>루브릭 전체 포함:</strong> 영역·척도·정의를 표 형태로 그대로 붙여넣기</li>
+            <li><strong>출력 형식 강제:</strong> 영역별 척도 + <strong>인용 문장 1개 이상</strong> + 총평. 인용이 있어야 검증 가능</li>
+            <li><strong>모호한 경우 처리 지시:</strong> "판단이 어려운 경우 '판단 불확실'로 표시하고 이유를 적어줘"</li>
+          </ul>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; AI 채점 프롬프트 템플릿 2종</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size:0.88rem; color:var(--purple); margin-top:0.5rem; margin-bottom:0.4rem;">① 단일 답변 채점 (정밀)</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 한국 초·중등 교육에 경험이 많은 평가 전문가야.
+
+아래 [루브릭]과 [학생 답변]을 보고 채점해줘.
+
+[채점 규칙]
+- 각 영역별로 척도(우수/보통/미흡)를 결정하고
+- 그 척도를 판단한 근거가 되는 답변의 인용 문장을 1개 이상 함께 제시
+- 판단이 어려운 경우 '판단 불확실'로 표시하고 이유를 적기
+- 총평은 영역별 채점 결과의 합과 일치하는 톤으로 작성 (점수 분포와 글의 어조가 어긋나지 않게)
+
+[출력 형식]
+| 영역 | 척도 | 근거 인용 문장 | 메모 |
++ 총평 3줄 이내
+
+[루브릭]
+(실습 2의 완성된 루브릭을 여기에 붙여넣기)
+
+[학생 답변]
+(채점할 답변을 여기에 붙여넣기)</pre>
+              </div>
+
+              <h4 style="font-size:0.88rem; color:var(--coral); margin-top:1.5rem; margin-bottom:0.4rem;">② 다중 답변 일괄 채점 (효율)</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 한국 초·중등 교육에 경험이 많은 평가 전문가야.
+
+아래 [루브릭]을 기준으로 [답변 모음] N건을 일괄 채점해줘.
+
+[채점 규칙]
+- 답변별로 영역별 척도를 결정
+- 척도 판단 근거가 되는 짧은 인용 문장을 함께 제시
+- 모호한 경우 '판단 불확실' 표시
+- 마지막에 전체 패턴 요약: 가장 우수한 영역 / 가장 약한 영역 / 흥미로운 한 사례
+
+[출력 형식]
+| 답변번호 | 영역1 척도 | 영역2 척도 | 영역3 척도 | 짧은 메모 |
++ 전체 패턴 요약 3줄
+
+[루브릭]
+(실습 2의 완성된 루브릭)
+
+[답변 모음]
+1) ...
+2) ...
+3) ...</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DA; 샘플 답변 3종 — 본인 학생 답변이 없으면 이걸로</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="sample-box">
+                <div class="sample-label">샘플 1 — 6학년 사회 서술형</div>
+                <div class="sample-question">문제: 조선 후기 사회 변화의 원인을 두 가지 이상 들어 설명하시오.</div>
+                <div class="sample-answer">답변 A (학생): 조선 후기에는 신분제가 흔들렸다. 양반 수가 늘어났고, 상민이 양반이 되기도 했다. 그리고 농업 기술이 좋아져서 농민들이 잘살게 되었다.
+
+답변 B (학생): 조선 후기 사회 변화의 큰 원인은 두 가지로 정리할 수 있다. 첫째, 모내기법 보급(이앙법, 17세기 후반 이후)으로 농업 생산성이 올라가면서 부농이 생겼고, 이들이 신분 상승 수단으로 공명첩을 사들였다. 둘째, 상업 발달로 보부상과 시전 상인이 부를 축적하면서 신분 질서에 균열이 생겼다. 두 변화 모두 신분제 동요로 이어졌으며, 결국 19세기 말 갑오개혁의 배경이 된다.
+
+답변 C (학생): 조선 후기에 변화가 많았다. 사람들이 잘살게 되었다. 신분도 변했다.</div>
+              </div>
+
+              <div class="sample-box">
+                <div class="sample-label">샘플 2 — 중2 과학 탐구 보고서 발췌</div>
+                <div class="sample-question">문제: 물의 끓는점에 영향을 주는 요인을 가설로 세우고, 실험으로 확인하시오.</div>
+                <div class="sample-answer">답변 A: 가설 — 소금을 넣으면 물이 더 빨리 끓을 것이다. 비커 두 개에 같은 양의 물을 넣고 한쪽에만 소금을 넣어 끓여봤다. 소금 넣은 쪽이 먼저 끓었다. 그래서 소금이 영향을 준다.
+
+답변 B: 가설 — 외부 압력이 낮을수록 물의 끓는점이 낮아진다. 독립변인: 압력(상압/감압 진공펌프 사용). 통제변인: 물의 양(100mL)·초기 온도(20℃)·가열 방식. 측정: 끓는점 도달 온도 5회 반복. 결과: 상압 평균 99.8℃, 감압 평균 76.2℃. 압력이 낮을수록 끓는점 하락. 다만 진공펌프 압력 측정 정밀도의 한계가 있다.
+
+답변 C: 물이 끓는 것은 온도 때문이다. 100도가 되면 끓는다. 끝.</div>
+              </div>
+
+              <div class="sample-box">
+                <div class="sample-label">샘플 3 — 고1 국어 논설문 발췌</div>
+                <div class="sample-question">문제: '학교에서 스마트폰 사용을 제한해야 하는가'에 대한 본인의 주장을 근거와 함께 쓰시오.</div>
+                <div class="sample-answer">답변 A: 스마트폰은 좋기도 하고 나쁘기도 하다. 제한해야 할 것 같기도 하다. 친구들이랑 연락도 해야 하니까.
+
+답변 B: 학교 내 스마트폰 사용은 일정 시간대(수업 중)에 한해 제한되어야 한다. 첫째, 학습 집중도 측면에서 ○○대학 2023년 연구는 수업 중 알림 1회당 회복에 평균 4분이 든다고 보고했다. 둘째, 교우관계 측면에서 쉬는 시간에도 화면에 시선이 몰리면 또래 상호작용이 줄어든다는 현장 관찰이 누적된다. 다만 '비상 연락'·'학습 도구로의 활용' 같은 반론도 있다. 이에 대해 시간대 구분과 지정 보관 방식이라는 절충안이 가능하다.
+
+답변 C: 스마트폰은 나쁘다. 공부 못한다. 그래서 금지해야 한다.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 3: 본인 루브릭 + AI 채점 실행</h4>
+          <div class="guide-text">본인의 학생 답변(또는 위 샘플 중 1종)을 골라 실습 2의 루브릭으로 AI 채점을 실행하고, 결과를 붙여넣으세요. 최소 답변 3건 권장.</div>
+          <textarea id="practice-grade" placeholder="[채점 대상]&#10;예: 샘플 1 (6학년 사회 서술형, 답변 A·B·C)&#10;&#10;[사용한 프롬프트]&#10;예: 다중 답변 일괄 채점 템플릿 사용. 루브릭 전체 + 답변 3건 첨부.&#10;&#10;[AI 채점 결과]&#10;| 답변 | 사건 인과 | 근거 사용 | 관점 표현 | 메모 |&#10;| A | 보통 | 미흡 | 미흡 | 변화 나열은 됐지만 인과 1단계, 자료 인용 없음 |&#10;| B | 우수 | 우수 | 우수 | 인과 2단계 + 자료(이앙법·공명첩·갑오개혁) + 본인 입장 명확 |&#10;| C | 미흡 | 미흡 | 미흡 | 일반 진술만 |&#10;&#10;[전체 패턴 요약]&#10;가장 우수: 근거 사용 (B가 압도). 가장 약함: 관점 표현 (A·C 모두 본인 입장 미명시). 흥미로운 사례: B가 갑오개혁까지 연결한 점은 7학년 수준."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-grade-count">0자</span>
+            <span class="save-indicator" id="practice-grade-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="grade" data-index="0" class="section-check" />
+              <span>채점 대상 답변이 3건 이상인가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="grade" data-index="1" class="section-check" />
+              <span>AI 채점 결과가 영역별 척도 + 메모 형태로 정리됐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="grade" data-index="2" class="section-check" />
+              <span>전체 패턴 요약(가장 우수/가장 약함/흥미 사례)이 있는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: AI vs 본인 채점 비교 + 루브릭 개선 (핵심) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-compare">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>AI vs 본인 채점 — 비교, 그리고 루브릭 개선</h2>
+        <p>이번 주차의 핵심. 차이는 오류가 아니라 학습 단서</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>"AI가 맞다 / 내가 맞다"는 잘못된 질문</h4>
+          <p>같은 답변을 본인과 AI가 다르게 채점한다면, <strong>어느 쪽이 옳은가가 아니라 왜 다른가</strong>가 진짜 질문입니다. 차이가 나는 지점은 보통 두 가지를 가르쳐줍니다: (1) <strong>루브릭의 모호함</strong>(척도 정의가 흔들림), (2) <strong>AI 채점의 구조적 편향</strong>. 둘 다 다음 채점을 더 좋게 만드는 단서.</p>
+        </div>
+
+        <div class="bias-box">
+          <h4>&#x1F50D; AI 채점의 4가지 구조적 편향</h4>
+          <div class="bias-row">
+            <span class="bias-name">① 길이 가중치</span>
+            <span class="bias-desc">긴 답변에 더 후한 점수를 주는 경향. 핵심이 길이 1줄에 압축돼도 짧다는 이유로 '보통'으로 가는 경우가 많음.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">② 키워드 매칭</span>
+            <span class="bias-desc">교과서적 핵심 단어가 등장하면 '우수'로 향함. 단어가 다르더라도 의미가 같으면 인정해야 하는데 그게 약함.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">③ 형식 점수 과장</span>
+            <span class="bias-desc">번호 매기기·표 형태 같은 형식이 깔끔하면 '근거 사용'까지 높게 매김. 형식과 내용을 분리해야 하는데 섞임.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">④ 정성적 깊이 약함</span>
+            <span class="bias-desc">"독창적 관점"·"교과 맥락의 적절성" 같은 정성 항목에서 본인 직관과 자주 어긋남. 한국 교실 맥락은 AI 학습 데이터의 영어권 기준과 다름.</span>
+          </div>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>활용법:</strong> 비교에서 차이가 발견되면 위 4가지 중 어떤 편향이 작용했는지 짚어보세요. 편향이 보이면 루브릭 척도 정의에 <strong>"길이만으로 평가 금지"</strong>, <strong>"단어 일치보다 의미 일치 우선"</strong> 같은 명시 문구를 넣어 다음 채점에서 보정할 수 있어요.</span>
+        </div>
+
+        <div class="concept-block coral-border">
+          <h4>불일치 패턴 4가지 — 어떻게 읽을까</h4>
+          <ul>
+            <li><strong>AI가 후함:</strong> 길이·형식·키워드에 끌렸을 가능성 → ① ② ③ 편향 의심</li>
+            <li><strong>AI가 짬:</strong> 교과 맥락 단서를 못 읽음 → ④ 편향 의심. 본인 직관이 보통 옳음</li>
+            <li><strong>한 영역만 크게 다름:</strong> 그 영역의 척도 정의가 모호함 → 정의 다듬기 필요</li>
+            <li><strong>총평이 점수와 어긋남:</strong> AI 출력 톤 보정 필요. 프롬프트에 "점수 분포와 글의 어조가 일치하게" 강조</li>
+          </ul>
+        </div>
+
+        <div class="concept-block gold-border">
+          <h4>&#x1F527; 루브릭 개선 3가지 행위</h4>
+          <p>비교 결과 1턴으로 루브릭을 다음과 같이 보정합니다. 막연히 "수정"이 아니라 <strong>3가지 중 어떤 행위인지 명시</strong>하면 다음 채점이 명확히 좋아집니다.</p>
+          <div class="action-frame" style="margin-top:0.8rem;">
+            <div class="af-row"><span class="af-key">① 척도 정의 다듬기</span><span class="af-val">"보통"의 범위를 점수 구간이나 숫자로 좁힘. 예: "예시 1~2개" → "예시 정확히 2개 + 적용 1회"</span></div>
+            <div class="af-row"><span class="af-key">② 영역 분리·통합</span><span class="af-val">한 영역에 너무 많은 게 들어 있으면 둘로 나누거나, 비슷한 영역을 하나로 합침</span></div>
+            <div class="af-row"><span class="af-key">③ 행동 동사 교체</span><span class="af-val">"이해한다 / 안다"를 "예시 N개를 든다 / 자료 N개를 인용한다" 같은 관찰 가능한 동사로 교체</span></div>
+          </div>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; 모호한 보정</span>
+          <pre>"근거 사용 영역의 척도를 좀 더 명확하게 다듬자."</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">&#x2705; 구체적 보정 (3가지 행위 명시)</span>
+          <pre>① 척도 정의 다듬기: '근거 사용 - 우수'를 "구체 자료 2개 이상 인용"으로 숫자화
+③ 행동 동사 교체: '근거 사용 - 보통'의 "어느 정도 인용함" → "구체 자료 1개 인용함"
+프롬프트에도 한 문장 추가: "단어 일치보다 의미 일치를 우선해 채점하라"</pre>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 4: 본인 채점 → AI 채점 비교 → 루브릭 개선 1턴</h4>
+          <div class="guide-text">실습 3의 같은 답변을 <strong>본인이 먼저 채점</strong>하고, AI 채점과 비교하세요. 차이가 보이면 AI 편향 4가지 중 어디에 해당하는지 짚고, 루브릭 개선 3가지 행위 중 어떤 행위로 보정할지 명시.</div>
+          <textarea id="practice-compare" placeholder="[본인 채점]&#10;| 답변 | 사건 인과 | 근거 사용 | 관점 표현 |&#10;| A | 보통 | 미흡 | 미흡 |&#10;| B | 우수 | 우수 | 보통 |&#10;| C | 미흡 | 미흡 | 미흡 |&#10;&#10;[AI 채점과의 차이]&#10;답변 B '관점 표현': 본인=보통 vs AI=우수. 본인 입장은 명시됐지만 '반대 입장 인지'는 절충안 언급 한 줄뿐, 명시적 반박은 부족.&#10;&#10;[편향 의심]&#10;② 키워드 매칭 — '갑오개혁'·'이앙법' 같은 교과 핵심 단어 등장으로 AI가 '관점 표현'까지 끌어올린 것 같음.&#10;③ 형식 점수 — '첫째, 둘째' 번호 매김이 명확하니 영역 전반에 후한 점수.&#10;&#10;[루브릭 개선 1턴 — 3가지 행위 중 선택]&#10;① 척도 정의 다듬기: '관점 표현 - 우수'를 '본인 입장 + 반대 입장 1개 명시(절충 언급만으로는 부족)'로 좁힘.&#10;③ 행동 동사 교체: '본인 입장만 명시 - 보통' 정의에 '반대 입장 언급 0회 또는 1회 미만'을 추가.&#10;프롬프트에 한 문장 추가: '교과 핵심 키워드 등장만으로 영역 점수를 올리지 말 것. 영역 척도 정의에 정확히 맞는 행위가 답변에 있는지 확인할 것.'"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-compare-count">0자</span>
+            <span class="save-indicator" id="practice-compare-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="0" class="section-check" />
+              <span>본인 채점과 AI 채점이 모두 표로 정리됐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="1" class="section-check" />
+              <span>차이 나는 부분에서 AI 편향 4가지 중 의심 항목을 짚었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="compare" data-index="2" class="section-check" />
+              <span>루브릭 개선 3가지 행위 중 어떤 행위로 보정할지 명시했는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION FINAL: 최종 통합 보고서 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="section-header">
+      <div class="section-number gold">&#x2714;</div>
+      <div class="section-title-group">
+        <h2>최종 과제 — 통합 보고서</h2>
+        <p>루브릭 → AI 채점 → 본인 채점 → 비교 → 개선의 1턴을 한 편으로</p>
+      </div>
+    </div>
+
+    <div class="final-box">
+      <h3>&#x270F;&#xFE0F; 최종 과제 작성</h3>
+      <p>오늘 익힌 흐름 전체를 한 페이지로 통합합니다. 분량은 1,000~1,500자 권장. 시간이 충분히 있다면 길어져도 좋습니다.</p>
+      <textarea id="practice-final" placeholder="[1] 평가 답변 종류 + 루브릭 요약&#10;6학년 사회 서술형 — 4영역 × 3척도. 영역: 사건 인과 / 근거 사용 / 관점 표현 / (옵션)&#10;&#10;[2] AI 채점 결과 요약&#10;답변 3건 일괄 채점. 가장 우수 영역: 근거 사용 / 가장 약함: 관점 표현 / 흥미 사례: ___&#10;&#10;[3] 본인 채점과의 비교&#10;차이 났던 지점 2~3건. AI 편향 4가지 중 의심 항목.&#10;&#10;[4] 루브릭 개선 1턴 — 3가지 행위 중 선택&#10;① 척도 정의 다듬기: ___&#10;② 영역 분리·통합: ___&#10;③ 행동 동사 교체: ___&#10;&#10;[5] 7주차 → 9주차 학습의 누적 효과&#10;검증 3질문(근거·누락·과장)이 비교 분석에서 채점으로 옮겨오니 ___이 보였다.&#10;&#10;[6] 다음 주차에 가져갈 것&#10;___ 영역의 척도 정의를 한 번 더 다듬어 보고, 학생 답변 10건으로 일치도를 ___% 이상으로 올리고 싶다."></textarea>
+
+      <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem; margin-top: 1.5rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem;">최종 과제 체크리스트</h4>
+        <div class="checklist" style="background: transparent;">
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="0" class="section-check" />
+            <span>&#x2460; 평가 답변 종류 + 루브릭 영역·척도가 요약됐는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="1" class="section-check" />
+            <span>&#x2461; AI 채점 결과 + 전체 패턴 요약이 들어갔는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="2" class="section-check" />
+            <span>&#x2462; 본인 채점과의 차이 + AI 편향 4가지 중 의심 항목 명시?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="3" class="section-check" />
+            <span>&#x2463; 루브릭 개선 3가지 행위 중 어떤 행위인지 명시했는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="4" class="section-check" />
+            <span>&#x2464; 7주차→9주차 학습의 누적 효과를 한 문장 이상 적었는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="5" class="section-check" />
+            <span>&#x2465; 다음 주차에 가져갈 행동 1개가 구체적으로 적혔는가?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 1</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">AI가 본인보다 후하게 또는 짜게 매긴 영역이 있다면, 그 이유는 AI 편향 4가지 중 어느 쪽일 가능성이 큰가요? 구체적인 사례로 적어주세요.</p>
+      <textarea id="practice-reflect1" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect1-count">0자</span>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 2</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">본인 루브릭에서 이번에 가장 크게 바꾼 항목 1개와, 그 변경이 다음 채점에서 어떤 차이를 만들어낼지 예상해 적어주세요.</p>
+      <textarea id="practice-reflect2" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect2-count">0자</span>
+      </div>
+    </div>
+
+    <div class="export-card">
+      <h4>&#x1F4C4; 결과 내보내기</h4>
+      <p class="export-tip">
+        &#x2705; 권장: <strong>HTML로 내보내기</strong> — 답안 잘림 없이 안전하게 제출됩니다.<br>
+        &#x1F5A8;&#xFE0F; PDF가 필요하면 인쇄 미리보기에서 답안이 다 보이는지 확인해 주세요.
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="exportHTML()">&#x1F4C4; HTML로 내보내기</button>
+        <button class="btn btn-outline" onclick="printPage()">&#x1F5A8;&#xFE0F; 인쇄 / PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 9주차 루브릭 기반 평가 · 김민철
+</div>
+
+<script>
+  const STORAGE_KEY = 'ta_week9_';
+  const textareas = [
+    'practice-review', 'practice-rubric', 'practice-design',
+    'practice-grade', 'practice-compare', 'practice-final',
+    'practice-reflect1', 'practice-reflect2'
+  ];
+  const sections = ['intro', 'review', 'rubric', 'design', 'grade', 'compare', 'final'];
+
+  function getSectionCompletionRules() {
+    return {
+      review: { textarea: 'practice-review', checkboxCount: 3 },
+      rubric: { textarea: 'practice-rubric', checkboxCount: 3 },
+      design: { textarea: 'practice-design', checkboxCount: 3 },
+      grade: { textarea: 'practice-grade', checkboxCount: 3 },
+      compare: { textarea: 'practice-compare', checkboxCount: 3 },
+      final: { textarea: 'practice-final', checkboxCount: 6 }
+    };
+  }
+
+  function saveAll() {
+    localStorage.setItem(STORAGE_KEY + 'name', document.getElementById('studentName').value);
+    localStorage.setItem(STORAGE_KEY + 'id', document.getElementById('studentId').value);
+    textareas.forEach(id => {
+      localStorage.setItem(STORAGE_KEY + id, document.getElementById(id).value);
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      localStorage.setItem(STORAGE_KEY + 'cb_' + key, cb.checked);
+    });
+  }
+
+  function loadAll() {
+    const name = localStorage.getItem(STORAGE_KEY + 'name');
+    const id = localStorage.getItem(STORAGE_KEY + 'id');
+    if (name) document.getElementById('studentName').value = name;
+    if (id) document.getElementById('studentId').value = id;
+    textareas.forEach(id => {
+      const value = localStorage.getItem(STORAGE_KEY + id);
+      if (value) document.getElementById(id).value = value;
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      const saved = localStorage.getItem(STORAGE_KEY + 'cb_' + key);
+      if (saved === 'true') {
+        cb.checked = true;
+        cb.closest('.checklist-item').classList.add('checked');
+      }
+    });
+  }
+
+  function autoSave() {
+    saveAll();
+    updateCount();
+    updateProgress();
+  }
+
+  function updateCount() {
+    textareas.forEach(id => {
+      const elem = document.getElementById(id);
+      const count = elem.value.length;
+      const countElem = document.getElementById(id + '-count');
+      if (countElem) countElem.textContent = count + '자';
+    });
+  }
+
+  function updateProgress() {
+    const rules = getSectionCompletionRules();
+    let completedCount = 0;
+    sections.forEach(sec => {
+      const isComplete = isSectionComplete(sec, rules[sec]);
+      const pill = document.querySelector('.nav-pill[data-section="' + sec + '"]');
+      if (pill) {
+        if (isComplete) {
+          pill.classList.add('done');
+          completedCount++;
+        } else {
+          pill.classList.remove('done');
+        }
+      }
+    });
+    const total = sections.length;
+    const percent = (completedCount / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').textContent = completedCount + ' / ' + total;
+  }
+
+  function isSectionComplete(section, rule) {
+    if (section === 'intro') return true; // intro는 안내 섹션이라 자동 완료
+    if (!rule) return false;
+    const textareaValue = document.getElementById(rule.textarea).value.trim();
+    if (textareaValue.length < 10) return false;
+    const checkboxes = document.querySelectorAll('.section-check[data-section="' + section + '"]:checked');
+    return checkboxes.length >= rule.checkboxCount;
+  }
+
+  function updateChecklist() {
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      const item = cb.closest('.checklist-item');
+      if (cb.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  }
+
+  function toggleCollapsible(btn) {
+    const collapsible = btn.closest('.collapsible');
+    collapsible.classList.toggle('open');
+  }
+
+  function flashCopied(btn, msg) {
+    const original = btn.textContent;
+    btn.textContent = msg || '복사됨!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+  function fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); flashCopied(btn); }
+    catch (e) { flashCopied(btn, '복사 실패'); }
+    document.body.removeChild(ta);
+  }
+  function copyTemplate(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => flashCopied(btn))
+        .catch(() => fallbackCopy(text, btn));
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  function exportHTML() {
+    const name = document.getElementById('studentName').value || '이름미입력';
+    const studentId = document.getElementById('studentId').value || '';
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const filename = '9주차_루브릭평가_' + name + '_' + dateStr + '.html';
+
+    let html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>9주차 과제 — 루브릭 기반 평가</title>';
+    html += '<style>body { font-family: "Noto Sans KR", sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f0e8; word-break: keep-all; overflow-wrap: anywhere; } h1 { color: #2C3E6B; } .section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; } .meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; } table { width: 100%; border-collapse: collapse; margin: 1rem 0; } th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; } th { background: #2C3E6B; color: white; }</style></head><body>';
+    html += '<h1>9주차 루브릭 기반 평가 과제</h1>';
+    html += '<p class="meta">이름: ' + escapeHtml(name) + ' | 학번: ' + escapeHtml(studentId) + ' | 작성일: ' + dateStr + '</p>';
+
+    html += '<div class="section"><h2>&#x1F504; 7주차 복습: 검증 3질문을 채점에</h2><p>' + escapeHtml(document.getElementById('practice-review').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2460; 루브릭 기초 — 평가 영역 후보</h2><p>' + escapeHtml(document.getElementById('practice-rubric').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2461; 본인 루브릭 설계 (4영역 × 3척도)</h2><p>' + escapeHtml(document.getElementById('practice-design').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2462; AI 채점 실행 결과</h2><p>' + escapeHtml(document.getElementById('practice-grade').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2463; AI vs 본인 채점 비교 + 루브릭 개선</h2><p>' + escapeHtml(document.getElementById('practice-compare').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2464; 최종 통합 보고서</h2><p>' + escapeHtml(document.getElementById('practice-final').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x1F4DD; 성찰</h2>';
+    html += '<h3>질문 1: AI 편향 4가지 중 의심 항목</h3><p>' + escapeHtml(document.getElementById('practice-reflect1').value).replace(/\n/g, '<br>') + '</p>';
+    html += '<h3>질문 2: 루브릭에서 가장 크게 바꾼 항목</h3><p>' + escapeHtml(document.getElementById('practice-reflect2').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '</body></html>';
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function preparePrintMirrors() {
+    document.querySelectorAll('textarea').forEach(t => {
+      if (!t.value.trim()) return;
+      let mirror = t.nextElementSibling;
+      if (!mirror || !mirror.classList.contains('print-mirror')) {
+        mirror = document.createElement('div');
+        mirror.className = 'print-mirror';
+        t.parentNode.insertBefore(mirror, t.nextSibling);
+      }
+      mirror.textContent = t.value;
+      t.classList.add('print-hide');
+    });
+    document.querySelectorAll('.collapsible').forEach(c => c.classList.add('open', 'was-closed-for-print'));
+  }
+  function teardownPrintMirrors() {
+    document.querySelectorAll('.print-mirror').forEach(d => d.remove());
+    document.querySelectorAll('.print-hide').forEach(t => t.classList.remove('print-hide'));
+    document.querySelectorAll('.collapsible.was-closed-for-print').forEach(c => {
+      c.classList.remove('open', 'was-closed-for-print');
+    });
+  }
+  window.addEventListener('beforeprint', preparePrintMirrors);
+  window.addEventListener('afterprint', teardownPrintMirrors);
+
+  function printPage() {
+    preparePrintMirrors();
+    setTimeout(() => window.print(), 50);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadAll();
+    updateCount();
+    updateProgress();
+
+    document.getElementById('studentName').addEventListener('change', autoSave);
+    document.getElementById('studentId').addEventListener('change', autoSave);
+    textareas.forEach(id => {
+      document.getElementById(id).addEventListener('input', autoSave);
+    });
+
+    document.querySelectorAll('.section-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateChecklist();
+        updateProgress();
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        const target = document.getElementById('sec-' + section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    const observerOptions = { threshold: 0.3 };
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const section = id.replace('sec-', '');
+          document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+          const activePill = document.querySelector('.nav-pill[data-section="' + section + '"]');
+          if (activePill) activePill.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => {
+      const elem = document.getElementById('sec-' + sec);
+      if (elem) observer.observe(elem);
+    });
+  });
+</script>
+
+</body>
+</html>
