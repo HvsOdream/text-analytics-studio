@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기말 프로젝트 — 내 사례를 소논문으로</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.22;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-label { font-size: 0.85rem; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+  .header h1 { font-size: 1.8rem; font-weight: 900; line-height: 1.3; margin-bottom: 0.3rem; }
+  .header p { font-size: 0.95rem; color: rgba(255,255,255,0.7); font-weight: 300; }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0.8rem 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .progress-bar-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 0.8rem; }
+  .progress-label { font-size: 0.78rem; color: var(--gray-600); font-weight: 500; white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--navy)); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+  .progress-text { font-size: 0.78rem; color: var(--navy); font-weight: 700; white-space: nowrap; }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills { max-width: 860px; margin: 1.2rem auto 0; padding: 0 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nav-pill { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--gray-200); background: var(--white); color: var(--gray-600); transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+  .nav-pill:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 0.8rem 1rem; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); }
+  .student-info-bar label { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+  .student-info-bar input { padding: 0.4rem 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 120px; transition: border-color 0.2s; }
+  .student-info-bar input:focus { outline: none; border-color: var(--navy); }
+
+  /* ===== SECTION ===== */
+  .section { margin-bottom: 2rem; }
+  .section-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid var(--gray-200); }
+  .section-number { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; color: var(--white); flex-shrink: 0; }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 { font-size: 1.2rem; font-weight: 900; }
+  .section-title-group p { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* ===== NOTICE BOXES ===== */
+  .intro-box { background: var(--navy); color: var(--white); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.8; }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .recovery-notice { background: linear-gradient(135deg, #FFF8E1 0%, #FFF4ED 100%); border: 1.5px dashed var(--gold); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .recovery-notice strong { color: var(--coral); }
+
+  .submit-notice { background: var(--coral-bg); border-left: 4px solid var(--coral); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .submit-notice strong { color: var(--coral); font-weight: 700; }
+
+  .flow-notice { background: var(--teal-bg); border-left: 4px solid var(--teal); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .flow-notice strong { color: var(--teal); font-weight: 700; }
+
+  /* ===== REVIEW BOX ===== */
+  .review-box { background: linear-gradient(135deg, #FFF8E1 0%, #FFF0EC 100%); border: 2px solid var(--gold); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+  .review-box h3 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+  .review-box p, .review-box li { font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .review-box ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+  .review-box li { margin-bottom: 0.3rem; }
+
+  /* ===== DECISION TREE ===== */
+  .decision-tree { background: var(--white); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; border: 1.5px solid var(--gray-200); }
+  .decision-tree h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.8rem; }
+  .dt-row { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-label { font-size: 0.82rem; font-weight: 700; min-width: 90px; padding: 0.2rem 0.6rem; border-radius: 6px; text-align: center; flex-shrink: 0; }
+  .dt-label.teal { background: var(--teal-bg); color: var(--teal); }
+  .dt-label.coral { background: var(--coral-bg); color: var(--coral); }
+  .dt-label.purple { background: var(--purple-bg); color: var(--purple); }
+  .dt-label.gold { background: var(--gold-bg); color: #B8860B; }
+  .dt-example { font-size: 0.84rem; color: var(--gray-600); line-height: 1.7; }
+  .dt-example strong { color: var(--gray-800); }
+
+  /* ===== CARD ===== */
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden; }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block { background: var(--gray-50); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; border-left: 4px solid var(--teal); }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block.gold-border { border-left-color: var(--gold); }
+  .concept-block h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--navy); }
+  .concept-block p, .concept-block li { font-size: 0.86rem; color: var(--gray-600); line-height: 1.8; }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== COMPARE TABLE ===== */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  .compare-table th { background: var(--navy); color: var(--white); padding: 0.6rem 0.8rem; text-align: left; font-weight: 500; }
+  .compare-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== RUBRIC GRID (4영역 카드) ===== */
+  .rubric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  .rubric-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.1rem; transition: all 0.2s; }
+  .rubric-card:hover { border-color: var(--purple); box-shadow: var(--shadow); }
+  .rubric-card .rubric-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .rubric-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .rubric-card p { font-size: 0.8rem; color: var(--gray-600); line-height: 1.65; }
+  .rubric-card .rubric-example { font-size: 0.78rem; color: var(--coral); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--gray-200); }
+  @media (max-width: 600px) { .rubric-grid { grid-template-columns: 1fr; } }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible { margin: 0.8rem 0; }
+  .collapsible-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.8rem 1rem; background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 0.88rem; font-weight: 500; color: var(--gray-800); transition: all 0.2s; }
+  .collapsible-trigger:hover { border-color: var(--purple); }
+  .collapsible-trigger .arrow { transition: transform 0.2s; font-size: 0.8rem; }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-content { padding: 1rem 0; }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template { background: var(--navy-deep); color: #E0E0E0; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; position: relative; }
+  .prompt-template pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.8; margin: 0; }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn { position: absolute; top: 0.6rem; right: 0.8rem; padding: 0.3rem 0.7rem; font-size: 0.72rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== SAMPLE BOX ===== */
+  .sample-box { background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 1rem 1.2rem; margin: 0.6rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .sample-box .sample-label { font-size: 0.74rem; font-weight: 700; color: var(--purple); margin-bottom: 0.4rem; }
+  .sample-box .sample-question { font-style: italic; color: var(--navy); margin-bottom: 0.5rem; }
+  .sample-box .sample-answer { color: var(--gray-800); white-space: pre-wrap; }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.8rem 1rem; border-radius: 10px; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .tip-callout.info { background: var(--teal-bg); }
+  .tip-callout.success { background: var(--gold-bg); }
+  .tip-callout.warning { background: var(--coral-bg); }
+  .tip-callout.purple { background: var(--purple-bg); }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-text { color: var(--gray-800); }
+
+  /* ===== BIAS BOX (AI 채점 편향 4종) ===== */
+  .bias-box { background: linear-gradient(135deg, #FFF0EC 0%, #FFF8E1 100%); border: 2px solid var(--coral); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1rem 0; }
+  .bias-box h4 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.6rem; }
+  .bias-box .bias-row { padding: 0.5rem 0; border-bottom: 1px dashed rgba(231,111,81,0.25); font-size: 0.86rem; line-height: 1.7; }
+  .bias-box .bias-row:last-child { border-bottom: none; }
+  .bias-box .bias-name { font-weight: 700; color: var(--navy); display: inline-block; min-width: 130px; }
+  .bias-box .bias-desc { color: var(--gray-600); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area { background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%); border: 2px solid #E8E0FF; border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+  .practice-area h4 { font-size: 0.95rem; font-weight: 700; color: var(--purple); margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+  .practice-area .guide-text { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 0.8rem; }
+  .practice-area textarea { width: 100%; min-height: 140px; padding: 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; transition: border-color 0.2s; background: var(--white); }
+  .practice-area textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .practice-area textarea::placeholder { color: var(--gray-400); }
+
+  .practice-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem; padding: 0 0.2rem; }
+  .char-count { font-size: 0.75rem; color: var(--gray-400); }
+  .save-indicator { font-size: 0.75rem; color: var(--teal); font-weight: 500; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist { margin-top: 0.8rem; padding: 0.8rem 1rem; background: rgba(255,255,255,0.5); border-radius: 8px; }
+  .checklist-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.82rem; color: var(--gray-600); cursor: pointer; transition: color 0.2s; }
+  .checklist-item.checked { color: var(--teal); text-decoration: line-through; }
+  .checklist-item input[type="checkbox"] { accent-color: var(--teal); width: 16px; height: 16px; }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box { border-radius: 10px; padding: 1rem 1.2rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; }
+  .example-box.bad { background: #FFF0EC; border: 1px solid #FECDC2; }
+  .example-box.good { background: #E6F7F5; border: 1px solid #B2DFDB; }
+  .example-box .label { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.3rem; display: block; }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.7; margin: 0; }
+
+  /* ===== ACTION FRAME ===== */
+  .action-frame { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0; }
+  .action-frame .af-row { display: flex; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.84rem; }
+  .action-frame .af-row:last-child { border-bottom: none; }
+  .action-frame .af-key { min-width: 110px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+  .action-frame .af-val { color: var(--gray-600); line-height: 1.7; }
+
+  /* ===== FINAL BOX ===== */
+  .final-box { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: var(--white); border-radius: var(--radius); padding: 2rem 1.5rem; margin-bottom: 1.5rem; }
+  .final-box h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .final-box p { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin-bottom: 1rem; }
+  .final-box textarea { width: 100%; min-height: 240px; padding: 1rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; background: rgba(255,255,255,0.08); color: var(--white); }
+  .final-box textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(233,196,106,0.2); }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.35); }
+
+  /* ===== REFLECTION ===== */
+  .reflection-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; }
+  .reflection-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .reflection-card textarea { width: 100%; min-height: 100px; padding: 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.86rem; line-height: 1.7; resize: vertical; }
+  .reflection-card textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(44,62,107,0.1); }
+
+  /* ===== EXPORT ===== */
+  .export-card { background: var(--gray-50); border-radius: var(--radius); padding: 1.5rem; text-align: center; }
+  .export-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+  .export-card .export-tip { font-size: 0.8rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.7; }
+  .btn-group { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-outline { background: var(--white); color: var(--navy); border: 1.5px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* ===== FOOTER ===== */
+  .footer { text-align: center; padding: 2rem; font-size: 0.78rem; color: var(--gray-400); }
+
+  /* ===== PRINT MIRROR ===== */
+  .print-mirror { display: none; }
+  @media print {
+    .progress-bar-container, .nav-pills, .student-info-bar, .copy-btn, .btn-group, .export-card, .footer, .submit-notice, .recovery-notice, .flow-notice { display: none !important; }
+    .collapsible-body { max-height: none !important; }
+    .collapsible.open .collapsible-body, .collapsible-body { max-height: none !important; overflow: visible !important; }
+    body { background: white; }
+    .main { padding: 0; }
+    .print-hide { display: none !important; }
+    .print-mirror {
+      display: block !important;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      padding: 0.8rem 1rem;
+      border: 1px solid #999;
+      border-radius: 8px;
+      background: white !important;
+      color: #222 !important;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      page-break-inside: auto;
+      min-height: 1.6em;
+    }
+    .final-box .print-mirror { color: #fff !important; background: rgba(0,0,0,0.5) !important; border-color: #888 !important; }
+    .section, .card, .practice-area, .reflection-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · Capstone (12–14주차)</div>
+    <h1>기말 프로젝트 — 내 사례를 소논문으로</h1>
+    <p>10주간 쓴 'AI 분석 저널'을 한 편의 작은 학술 사례 논문으로 묶기</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 7</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">&#10003; </span>시작</a>
+  <a class="nav-pill" href="#sec-gather" data-section="gather"><span class="pill-check">&#10003; </span>저널 모으기</a>
+  <a class="nav-pill" href="#sec-background" data-section="background"><span class="pill-check">&#10003; </span>서론</a>
+  <a class="nav-pill" href="#sec-method" data-section="method"><span class="pill-check">&#10003; </span>방법</a>
+  <a class="nav-pill" href="#sec-results" data-section="results"><span class="pill-check">&#10003; </span>결과</a>
+  <a class="nav-pill" href="#sec-discussion" data-section="discussion"><span class="pill-check">&#10003; </span>논의·결론</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">&#10003; </span>제목·초록·조립</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ===== SUBMIT NOTICE ===== -->
+  <div class="submit-notice">
+    <strong>&#x1F4DD; 제출 안내</strong> — 12~14주차에 걸쳐 한 칸씩 채워 나가고, 완성되면 페이지 하단의 <strong>"HTML로 내보내기"</strong>로 제출합니다. 입력은 자동 저장되니 여러 번 나눠 작성해도 됩니다.
+  </div>
+
+  <!-- ===== FLOW NOTICE ===== -->
+  <div class="flow-notice">
+    <strong>&#x1F558; 3주에 나눠서</strong> — <strong>12주차</strong>: 저널 모으기 + 연구질문 + 서론, <strong>13주차</strong>: 방법 + 결과, <strong>14주차</strong>: 논의·결론 + 제목·초록 완성, <strong>15주차</strong>: 최종 제출·발표. 한 주에 한두 칸씩만 채우면 됩니다.
+  </div>
+
+  <!-- ===== RECOVERY NOTICE ===== -->
+  <div class="recovery-notice">
+    <strong>&#x1F4A1; 새로 분석하지 않습니다</strong> — 이번 프로젝트는 새 데이터를 분석하는 게 아니라, <strong>이미 1~10주차에 한 분석을 '연구의 언어'로 다시 진술</strong>하는 일입니다. 빠진 주차가 있어도 괜찮아요. 가장 충실히 했던 2~3개 주차만으로도 한 편이 됩니다.
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>기말 프로젝트 안내</strong><br><br>
+      지난 10주간 매주 쓴 <strong>'AI 분석 저널'이 이미 여러분의 연구 데이터</strong>입니다. 이번 프로젝트는 그걸 버리지 않고 <strong>한 편의 작은 학술 사례 논문</strong>으로 묶는 일이에요.<br>
+      어렵지 않습니다. 그동안 매주 했던 <strong>"AI로 초안 → 검증(근거·누락·과장) → 교사의 손으로 손질"</strong>을, 이번엔 분석이 아니라 <strong>'논문 쓰기' 자체에 적용</strong>하면 됩니다. AI는 공동저자가 아니라, 초안을 빠르게 주는 조수입니다. 판단과 책임은 선생님에게 있어요.<br><br>
+      <div class="subtitle">12~14주차에 한 칸씩. 완성되면 그게 곧 기말 발표 자료이자 본인의 첫 실천 사례 논문이 됩니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 잡을 핵심 개념</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:24%">개념</th>
+              <th style="width:38%">핵심 아이디어</th>
+              <th>이 페이지에서</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>사례 소논문</strong></td>
+              <td>한 교사의 실제 실천을 연구의 언어로 진술한 짧은 논문. 거창하지 않아도 됨</td>
+              <td>본인 교실 1개 사례를 IMRaD로 정리</td>
+            </tr>
+            <tr>
+              <td><strong>내 저널 = 데이터</strong></td>
+              <td>1~10주차 산출물이 곧 분석 결과. 새로 분석하지 않고 다시 진술</td>
+              <td>저널을 펼쳐 가장 의미있던 발견을 추림</td>
+            </tr>
+            <tr>
+              <td><strong>IMRaD 구조</strong></td>
+              <td>서론(I)·방법(M)·결과(R)·논의(D). 논문의 보편 골격</td>
+              <td>섹션이 그대로 논문의 각 부분</td>
+            </tr>
+            <tr>
+              <td><strong>AI는 조수</strong></td>
+              <td>각 절을 AI로 초안 → 본인이 검증·손질. 배운 그대로</td>
+              <td>섹션마다 'AI 협업 프롬프트' 제공</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION R: 저널 모으기 + 연구질문 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-gather">
+    <div class="section-header">
+      <div class="section-number gold">R</div>
+      <div class="section-title-group">
+        <h2>저널 모으기 — 흩어진 10주를 한 줄로</h2>
+        <p>가장 의미있던 발견 하나를 '연구질문'으로</p>
+      </div>
+    </div>
+
+    <div class="review-box">
+      <h3>&#x1F4AC; 먼저 펼쳐놓기</h3>
+      <p>1~10주차에 제출한 산출물(텍스트 지도·분류·감성·키워드·요약·비교·채점·피드백)을 한자리에 모아 훑어보세요. 전부 쓰지 않아도 됩니다. <strong>가장 충실히 했고, 가장 '나다웠던' 2~3개 주차</strong>가 이 논문의 뼈대가 됩니다.</p>
+      <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--gray-600);">좋은 연구질문은 '예/아니오'로 끝나지 않고, 본인 교실의 구체가 들어갑니다. 예: "초등 글쓰기 서술형에서 <em>AI 채점은 어떤 편향을 보였고, 나는 그것을 어떻게 보정했는가?</em>"</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block gold-border">
+          <h4>연구질문 잡는 법 — 발견에서 질문으로</h4>
+          <p>매 주차 마지막에 적었던 '성찰'과 '다음 주차에 가져갈 것'을 다시 읽어보세요. 거기에 이미 질문의 씨앗이 있습니다. "AI가 ○○할 줄 알았는데 △△했다", "내 교실 데이터에서 □□가 보였다" 같은 <strong>놀라움·차이·패턴</strong>이 연구질문이 됩니다.</p>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 연구질문 후보 뽑기]
+나는 현직 교사이고, 아래는 내가 10주간 한 텍스트 분석 활동 요약이야.
+이 중에서 '작은 사례 논문'의 연구질문이 될 만한 후보를 3개 제안해줘.
+- 조건: 예/아니오로 끝나지 않을 것, 내 교실의 구체가 들어갈 것
+- 각 후보마다 '왜 이게 연구질문으로 좋은지' 한 줄
+
+[내 10주 활동 요약]
+(주차별로 무엇을, 어떤 데이터로 했는지 3~5줄)</pre>
+        </div>
+        <p class="tip-text">&#x26A0;&#xFE0F; AI가 준 3개 중 <strong>가장 본인 사례다운 1개</strong>를 고르세요. 남이 써도 될 질문은 버립니다.</p>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 작성: 내 연구질문 한 줄</h4>
+          <div class="guide-text">사용할 주차(2~3개)와, 그 안에서 뽑은 연구질문 한 줄을 적으세요.</div>
+          <textarea id="practice-gather" placeholder="[사용할 주차]&#10;예: 9주차(루브릭 채점) + 10주차(피드백) + 5주차(감성)&#10;&#10;[내 연구질문 한 줄]&#10;예: 초등 6학년 사회 서술형 채점에서 AI는 어떤 편향을 보였고, 나는 루브릭을 어떻게 보정해 일치도를 높였는가?&#10;&#10;[왜 이게 내 사례다운가]&#10;예: 우리 반 실제 답변으로 채점했고, AI 과잉 긍정을 직접 잡아 보정한 기록이 남아 있어서."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-gather-count">0자</span>
+            <span class="save-indicator" id="practice-gather-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="gather" data-index="0" class="section-check" />
+              <span>사용할 주차(2~3개)를 골랐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="gather" data-index="1" class="section-check" />
+              <span>연구질문이 예/아니오로 끝나지 않고 구체를 담았는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="gather" data-index="2" class="section-check" />
+              <span>이 질문이 '내 사례'여야 하는 이유를 적었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: 서론 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-background">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>서론 — 왜 이 사례를 쓰는가</h2>
+        <p>배경 · 문제 · 목적의 세 박자</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>좋은 서론의 3요소</h4>
+          <ul>
+            <li><strong>배경:</strong> 이 텍스트(서술형·피드백·성찰일지 등)가 교육 현장에서 왜 중요한가</li>
+            <li><strong>문제:</strong> 지금까지 그것을 어떻게 다뤄 왔고, 무엇이 부족했나 (수작업? 미활용? AI 무비판 수용?)</li>
+            <li><strong>목적:</strong> 이 사례로 무엇을 보이려는가 = 앞에서 잡은 연구질문</li>
+          </ul>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; 막연한 서론</span>
+          <pre>요즘 AI가 발전해서 교육에도 많이 쓰인다. 그래서 나도 한번 써봤다.</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">&#x2705; 배경·문제·목적이 보이는 서론</span>
+          <pre>학생 서술형 답변은 사고 과정을 담지만, 채점에 시간이 많이 들어 교사가
+충분히 피드백하기 어렵다(배경). 생성형 AI로 채점을 맡길 수 있으나,
+AI 채점의 편향이 검증되지 않은 채 쓰이는 경우가 많다(문제).
+본 사례는 6학년 사회 서술형을 대상으로 AI 채점의 편향을 점검하고
+루브릭을 보정한 과정을 기록한다(목적).</pre>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 서론 초안]
+아래 [연구질문]과 [내 맥락]을 보고, 작은 사례 논문의 서론을
+'배경 → 문제 → 목적' 3단으로 6~8문장 초안 써줘.
+- 과장 금지, 내 맥락의 구체를 살릴 것
+
+[연구질문] (R에서 정한 한 줄)
+[내 맥락] (학교급/교과/어떤 텍스트인지)</pre>
+        </div>
+        <p class="tip-text">&#x1F50D; AI 초안에 <strong>검증 3질문</strong>을 대세요 — 근거 없는 단정은? 내 맥락이 빠지진 않았나? 과장된 표현은?</p>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 작성: 내 서론 (배경·문제·목적)</h4>
+          <div class="guide-text">AI 초안을 받아 본인 맥락으로 손질한 서론을 적으세요. 5~8문장.</div>
+          <textarea id="practice-background" placeholder="[배경] 이 텍스트가 왜 중요한지&#10;&#10;[문제] 지금까지 어떻게 다뤘고 무엇이 부족했는지&#10;&#10;[목적] 이 사례로 무엇을 보이려는지 (= 연구질문)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-background-count">0자</span>
+            <span class="save-indicator" id="practice-background-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="background" data-index="0" class="section-check" />
+              <span>배경·문제·목적 세 박자가 모두 들어갔는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="background" data-index="1" class="section-check" />
+              <span>AI 초안을 검증 3질문으로 점검해 손질했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="background" data-index="2" class="section-check" />
+              <span>목적이 R의 연구질문과 일치하는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: 방법 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-method">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>방법 — 무엇을, 어떻게 분석했는가</h2>
+        <p>다른 교사가 따라 할 수 있을 만큼 구체적으로</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>방법에 꼭 들어갈 4가지</h4>
+          <ul>
+            <li><strong>데이터:</strong> 어떤 텍스트를, 몇 건, 언제 (예: 6학년 사회 서술형 답변 24건)</li>
+            <li><strong>분석 기법:</strong> 1~10주차에서 쓴 것 중 무엇 (분류/감성/키워드/요약/채점/피드백)</li>
+            <li><strong>도구·프롬프트:</strong> 어떤 AI를, 어떤 프롬프트로 (핵심 프롬프트는 인용)</li>
+            <li><strong>윤리:</strong> 학생 개인정보 익명화 등 처리 방법</li>
+          </ul>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>재현 가능성:</strong> 방법은 "다른 선생님이 이 글만 보고 똑같이 해볼 수 있는가?"가 기준입니다. 막연히 "AI로 분석했다"가 아니라, <strong>어떤 루브릭·어떤 프롬프트·몇 건</strong>인지 숫자와 함께 적습니다.</span>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 방법 절 정리]
+아래 내가 한 활동을 '방법(Method)' 절로 정리해줘.
+데이터 / 분석 기법 / 도구·프롬프트 / 윤리 순서로, 재현 가능하게.
+부풀리지 말고 내가 실제로 한 것만.
+
+[내가 한 것]
+(데이터 종류·건수, 사용한 분석, 쓴 AI와 프롬프트 요지, 익명화 여부)</pre>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 작성: 내 방법</h4>
+          <div class="guide-text">데이터·기법·도구·윤리 네 가지가 보이게 적으세요.</div>
+          <textarea id="practice-method" placeholder="[데이터] 어떤 텍스트, 몇 건&#10;[분석 기법] 사용한 주차 기법&#10;[도구·프롬프트] 어떤 AI, 핵심 프롬프트 요지&#10;[윤리] 익명화 등 처리"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-method-count">0자</span>
+            <span class="save-indicator" id="practice-method-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="method" data-index="0" class="section-check" />
+              <span>데이터의 종류와 건수가 구체적인가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="method" data-index="1" class="section-check" />
+              <span>사용한 분석 기법과 도구·프롬프트가 드러나는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="method" data-index="2" class="section-check" />
+              <span>학생 정보 익명화 등 윤리 처리를 적었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: 결과 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-results">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>결과 — 무엇이 보였는가</h2>
+        <p>해석은 미루고, 사실과 수치만</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>결과 절의 원칙</h4>
+          <ul>
+            <li><strong>발견 2~3개로 압축:</strong> 주차별 산출물에서 가장 의미있는 것만 (예: 채점 일치율, 감성 분포, 키워드 빈도)</li>
+            <li><strong>표·수치로:</strong> "AI와 내 채점이 6건 중 4건 일치(67%)" 처럼 셀 수 있게</li>
+            <li><strong>해석은 다음 절로:</strong> 여기선 '무엇이 보였나'만. '왜·그래서'는 논의에서</li>
+          </ul>
+        </div>
+
+        <div class="example-box good">
+          <span class="label">&#x2705; 사실·수치 중심 결과 (예)</span>
+          <pre>답변 6건을 AI와 본인이 각각 채점한 결과, 9개 영역 판정 중 6개가
+일치(67%)했다. 불일치 3개는 모두 '관점 표현' 영역이었고, 그중 2개는
+AI가 본인보다 후하게(우수↔보통) 매겼다. AI는 교과 핵심 단어가
+등장한 답변에 더 후한 경향을 보였다.</pre>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 결과 표로 요약]
+아래 내 산출물에서 '결과'로 보고할 발견을 2~3개만 골라
+표나 수치로 요약해줘. 해석·평가는 빼고 사실만. 과장 금지.
+
+[내 산출물]
+(채점표/감성 분포/키워드 빈도 등 붙여넣기)</pre>
+        </div>
+        <p class="tip-text">&#x26A0;&#xFE0F; AI가 결과를 부풀려 '의미'를 덧붙이면 잘라내세요. 결과 절은 건조할수록 신뢰됩니다.</p>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 작성: 내 결과 (발견 2~3개 + 수치)</h4>
+          <div class="guide-text">표나 수치로 정리하세요. 해석은 다음 섹션에서.</div>
+          <textarea id="practice-results" placeholder="[발견 1] 수치와 함께&#10;[발견 2] 수치와 함께&#10;[발견 3] (선택)&#10;&#10;예: | 영역 | 일치 | 불일치 | 메모 |  형태로 표를 써도 좋음"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-results-count">0자</span>
+            <span class="save-indicator" id="practice-results-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="results" data-index="0" class="section-check" />
+              <span>발견을 2~3개로 압축했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="results" data-index="1" class="section-check" />
+              <span>표나 수치로 셀 수 있게 적었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="results" data-index="2" class="section-check" />
+              <span>해석·평가를 빼고 사실만 남겼는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: 논의·결론 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-discussion">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>논의·결론 — 그래서 무엇을 배웠는가</h2>
+        <p>의미 · 한계 · 다음 행동</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>논의·결론에 담을 3가지</h4>
+          <ul>
+            <li><strong>의미(시사점):</strong> 결과가 내 수업·평가에 무엇을 말하는가</li>
+            <li><strong>한계:</strong> 솔직하게 — 표본이 적다, AI 편향이 남는다, 한 학급만 봤다 등</li>
+            <li><strong>다음 행동:</strong> 이 사례를 바탕으로 다음 학기에 무엇을 바꿀 것인가 (구체적으로 1~2개)</li>
+          </ul>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>한계를 적는 게 약점이 아닙니다.</strong> 한계를 정직하게 밝히는 글이 오히려 더 신뢰받습니다. "이 사례는 한 학급 24건에 한정되므로 일반화에 주의가 필요하다" 한 줄이면 충분해요.</span>
+        </div>
+
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 논의·결론 초안]
+아래 [결과]를 보고 논의·결론을 '의미 → 한계 → 다음 행동' 순으로
+6~8문장 써줘. 결과에 없는 내용을 새로 지어내지 말 것(누락·과장 점검).
+
+[결과] (3절에 정리한 발견)
+[내 수업 맥락] (학교급/교과)</pre>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 작성: 내 논의·결론</h4>
+          <div class="guide-text">의미·한계·다음 행동 세 가지가 보이게. 다음 행동은 구체적으로 1~2개.</div>
+          <textarea id="practice-discussion" placeholder="[의미] 결과가 내 수업·평가에 주는 시사점&#10;&#10;[한계] 솔직하게 (표본·편향·범위)&#10;&#10;[다음 행동] 다음 학기에 바꿀 것 1~2개 (구체적으로)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-discussion-count">0자</span>
+            <span class="save-indicator" id="practice-discussion-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="discussion" data-index="0" class="section-check" />
+              <span>결과의 교육적 의미(시사점)를 적었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="discussion" data-index="1" class="section-check" />
+              <span>한계를 솔직하게 한 줄 이상 밝혔는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="discussion" data-index="2" class="section-check" />
+              <span>다음 행동이 구체적으로 1~2개 적혔는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION FINAL: 제목·초록·전체 조립 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="section-header">
+      <div class="section-number gold">&#x2714;</div>
+      <div class="section-title-group">
+        <h2>제목·초록·전체 조립</h2>
+        <p>초록은 맨 마지막에 — 다 쓰고 나서 다섯 문장으로</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block gold-border">
+          <h4>제목과 초록, 이렇게</h4>
+          <ul>
+            <li><strong>제목:</strong> '무엇을·어떻게'가 보이게. 예: "AI 채점의 편향 점검을 통한 초등 사회 서술형 루브릭 보정 사례"</li>
+            <li><strong>초록 5문장 틀:</strong> ① 배경/문제 ② 목적 ③ 방법 ④ 결과 ⑤ 시사점. 앞 섹션에서 한 문장씩 가져오면 완성</li>
+            <li><strong>키워드 4~6개:</strong> 생성형 AI, 텍스트 어날리틱스, 루브릭, 피드백 등</li>
+          </ul>
+        </div>
+        <div class="prompt-template">
+          <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+          <pre>[AI 협업 프롬프트 — 초록·제목]
+아래 내 글(서론/방법/결과/논의)을 보고
+① 제목 후보 3개 ② 5문장 초록(배경·목적·방법·결과·시사점)
+③ 키워드 5개를 제안해줘. 내 글에 없는 내용은 넣지 말 것.
+
+[내 글]
+(앞 섹션 내용 붙여넣기)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="final-box">
+      <h3>&#x270F;&#xFE0F; 최종 조립 — 한 편으로 합치기</h3>
+      <p>제목·초록·키워드를 맨 위에 쓰고, 아래에 서론→방법→결과→논의·결론을 순서대로 붙여 한 편을 완성하세요. 분량은 2,000~4,000자 권장.</p>
+      <textarea id="practice-final" placeholder="[제목]&#10;&#10;[초록] (5문장: 배경·목적·방법·결과·시사점)&#10;&#10;[키워드] 4~6개&#10;&#10;[서론] (1번에서)&#10;&#10;[방법] (2번에서)&#10;&#10;[결과] (3번에서)&#10;&#10;[논의·결론] (4번에서)"></textarea>
+
+      <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem; margin-top: 1.5rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem;">최종 점검 체크리스트</h4>
+        <div class="checklist" style="background: transparent;">
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="0" class="section-check" />
+            <span>&#x2460; 제목에 '무엇을·어떻게'가 드러나는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="1" class="section-check" />
+            <span>&#x2461; 초록 5문장(배경·목적·방법·결과·시사점)이 다 있는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="2" class="section-check" />
+            <span>&#x2462; 서론·방법·결과·논의가 순서대로 붙었는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="3" class="section-check" />
+            <span>&#x2463; 결과(사실)와 논의(해석)가 섞이지 않았는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="4" class="section-check" />
+            <span>&#x2464; AI 초안을 검증·손질한 흔적(내 목소리)이 남았는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="5" class="section-check" />
+            <span>&#x2465; 학생 정보가 익명화됐는가?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 1</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">이 사례를 논문으로 정리하면서, AI 초안을 어느 부분에서 가장 많이 손질했나요? 그 손질이 글을 어떻게 바꿨는지 적어주세요.</p>
+      <textarea id="practice-reflect1" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect1-count">0자</span>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 2</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">'내 교실의 실천도 하나의 연구가 될 수 있다'고 느낀 지점이 있었나요? 10주간의 분석이 한 편의 글로 묶이며 달라진 생각을 적어주세요.</p>
+      <textarea id="practice-reflect2" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect2-count">0자</span>
+      </div>
+    </div>
+
+    <div class="export-card">
+      <h4>&#x1F4C4; 결과 내보내기</h4>
+      <p class="export-tip">
+        &#x2705; 권장: <strong>HTML로 내보내기</strong> — 답안 잘림 없이 안전하게 제출됩니다.<br>
+        &#x1F5A8;&#xFE0F; PDF가 필요하면 인쇄 미리보기에서 답안이 다 보이는지 확인해 주세요.
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="exportHTML()">&#x1F4C4; HTML로 내보내기</button>
+        <button class="btn btn-outline" onclick="printPage()">&#x1F5A8;&#xFE0F; 인쇄 / PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 기말 프로젝트 (내 사례를 소논문으로) · 김민철
+</div>
+
+<script>
+  const STORAGE_KEY = 'ta_capstone_';
+  const textareas = [
+    'practice-gather', 'practice-background', 'practice-method',
+    'practice-results', 'practice-discussion', 'practice-final',
+    'practice-reflect1', 'practice-reflect2'
+  ];
+  const sections = ['intro', 'gather', 'background', 'method', 'results', 'discussion', 'final'];
+
+  function getSectionCompletionRules() {
+    return {
+      gather: { textarea: 'practice-gather', checkboxCount: 3 },
+      background: { textarea: 'practice-background', checkboxCount: 3 },
+      method: { textarea: 'practice-method', checkboxCount: 3 },
+      results: { textarea: 'practice-results', checkboxCount: 3 },
+      discussion: { textarea: 'practice-discussion', checkboxCount: 3 },
+      final: { textarea: 'practice-final', checkboxCount: 6 }
+    };
+  }
+
+  function saveAll() {
+    localStorage.setItem(STORAGE_KEY + 'name', document.getElementById('studentName').value);
+    localStorage.setItem(STORAGE_KEY + 'id', document.getElementById('studentId').value);
+    textareas.forEach(id => {
+      localStorage.setItem(STORAGE_KEY + id, document.getElementById(id).value);
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      localStorage.setItem(STORAGE_KEY + 'cb_' + key, cb.checked);
+    });
+  }
+
+  function loadAll() {
+    const name = localStorage.getItem(STORAGE_KEY + 'name');
+    const id = localStorage.getItem(STORAGE_KEY + 'id');
+    if (name) document.getElementById('studentName').value = name;
+    if (id) document.getElementById('studentId').value = id;
+    textareas.forEach(id => {
+      const value = localStorage.getItem(STORAGE_KEY + id);
+      if (value) document.getElementById(id).value = value;
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      const saved = localStorage.getItem(STORAGE_KEY + 'cb_' + key);
+      if (saved === 'true') {
+        cb.checked = true;
+        cb.closest('.checklist-item').classList.add('checked');
+      }
+    });
+  }
+
+  function autoSave() {
+    saveAll();
+    updateCount();
+    updateProgress();
+  }
+
+  function updateCount() {
+    textareas.forEach(id => {
+      const elem = document.getElementById(id);
+      const count = elem.value.length;
+      const countElem = document.getElementById(id + '-count');
+      if (countElem) countElem.textContent = count + '자';
+    });
+  }
+
+  function updateProgress() {
+    const rules = getSectionCompletionRules();
+    let completedCount = 0;
+    sections.forEach(sec => {
+      const isComplete = isSectionComplete(sec, rules[sec]);
+      const pill = document.querySelector('.nav-pill[data-section="' + sec + '"]');
+      if (pill) {
+        if (isComplete) {
+          pill.classList.add('done');
+          completedCount++;
+        } else {
+          pill.classList.remove('done');
+        }
+      }
+    });
+    const total = sections.length;
+    const percent = (completedCount / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').textContent = completedCount + ' / ' + total;
+  }
+
+  function isSectionComplete(section, rule) {
+    if (section === 'intro') return true; // intro는 안내 섹션이라 자동 완료
+    if (!rule) return false;
+    const textareaValue = document.getElementById(rule.textarea).value.trim();
+    if (textareaValue.length < 10) return false;
+    const checkboxes = document.querySelectorAll('.section-check[data-section="' + section + '"]:checked');
+    return checkboxes.length >= rule.checkboxCount;
+  }
+
+  function updateChecklist() {
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      const item = cb.closest('.checklist-item');
+      if (cb.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  }
+
+  function toggleCollapsible(btn) {
+    const collapsible = btn.closest('.collapsible');
+    collapsible.classList.toggle('open');
+  }
+
+  function flashCopied(btn, msg) {
+    const original = btn.textContent;
+    btn.textContent = msg || '복사됨!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+  function fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); flashCopied(btn); }
+    catch (e) { flashCopied(btn, '복사 실패'); }
+    document.body.removeChild(ta);
+  }
+  function copyTemplate(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => flashCopied(btn))
+        .catch(() => fallbackCopy(text, btn));
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  function exportHTML() {
+    const name = document.getElementById('studentName').value || '이름미입력';
+    const studentId = document.getElementById('studentId').value || '';
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const filename = '기말프로젝트_사례소논문_' + name + '_' + dateStr + '.html';
+
+    let html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>기말 프로젝트 — 내 텍스트 어날리틱스 사례 소논문</title>';
+    html += '<style>body { font-family: "Noto Sans KR", sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f0e8; word-break: keep-all; overflow-wrap: anywhere; } h1 { color: #2C3E6B; } .section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; } .meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; } table { width: 100%; border-collapse: collapse; margin: 1rem 0; } th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; } th { background: #2C3E6B; color: white; }</style></head><body>';
+    html += '<h1>기말 프로젝트 — 내 텍스트 어날리틱스 사례 소논문</h1>';
+    html += '<p class="meta">이름: ' + escapeHtml(name) + ' | 학번: ' + escapeHtml(studentId) + ' | 작성일: ' + dateStr + '</p>';
+
+    html += '<div class="section"><h2>&#x1F4DA; 저널 모으기 · 연구질문</h2><p>' + escapeHtml(document.getElementById('practice-gather').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2460; 서론 (배경·문제·목적)</h2><p>' + escapeHtml(document.getElementById('practice-background').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2461; 방법 (데이터·기법·도구·윤리)</h2><p>' + escapeHtml(document.getElementById('practice-method').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2462; 결과 (발견·수치)</h2><p>' + escapeHtml(document.getElementById('practice-results').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2463; 논의·결론 (의미·한계·다음 행동)</h2><p>' + escapeHtml(document.getElementById('practice-discussion').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2714; 제목·초록·전체 조립</h2><p>' + escapeHtml(document.getElementById('practice-final').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x1F4DD; 성찰</h2>';
+    html += '<h3>질문 1: AI 초안을 가장 많이 손질한 부분</h3><p>' + escapeHtml(document.getElementById('practice-reflect1').value).replace(/\n/g, '<br>') + '</p>';
+    html += '<h3>질문 2: 내 교실의 실천이 연구가 될 수 있다고 느낀 지점</h3><p>' + escapeHtml(document.getElementById('practice-reflect2').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '</body></html>';
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function preparePrintMirrors() {
+    document.querySelectorAll('textarea').forEach(t => {
+      if (!t.value.trim()) return;
+      let mirror = t.nextElementSibling;
+      if (!mirror || !mirror.classList.contains('print-mirror')) {
+        mirror = document.createElement('div');
+        mirror.className = 'print-mirror';
+        t.parentNode.insertBefore(mirror, t.nextSibling);
+      }
+      mirror.textContent = t.value;
+      t.classList.add('print-hide');
+    });
+    document.querySelectorAll('.collapsible').forEach(c => c.classList.add('open', 'was-closed-for-print'));
+  }
+  function teardownPrintMirrors() {
+    document.querySelectorAll('.print-mirror').forEach(d => d.remove());
+    document.querySelectorAll('.print-hide').forEach(t => t.classList.remove('print-hide'));
+    document.querySelectorAll('.collapsible.was-closed-for-print').forEach(c => {
+      c.classList.remove('open', 'was-closed-for-print');
+    });
+  }
+  window.addEventListener('beforeprint', preparePrintMirrors);
+  window.addEventListener('afterprint', teardownPrintMirrors);
+
+  function printPage() {
+    preparePrintMirrors();
+    setTimeout(() => window.print(), 50);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadAll();
+    updateCount();
+    updateProgress();
+
+    document.getElementById('studentName').addEventListener('change', autoSave);
+    document.getElementById('studentId').addEventListener('change', autoSave);
+    textareas.forEach(id => {
+      document.getElementById(id).addEventListener('input', autoSave);
+    });
+
+    document.querySelectorAll('.section-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateChecklist();
+        updateProgress();
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        const target = document.getElementById('sec-' + section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    const observerOptions = { threshold: 0.3 };
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const section = id.replace('sec-', '');
+          document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+          const activePill = document.querySelector('.nav-pill[data-section="' + section + '"]');
+          if (activePill) activePill.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => {
+      const elem = document.getElementById('sec-' + sec);
+      if (elem) observer.observe(elem);
+    });
+  });
+</script>
+
+</body>
+</html>
