@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10주차 — 피드백 생성</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #2C3E6B;
+    --navy-deep: #1E2A4A;
+    --teal: #2A9D8F;
+    --teal-light: #3DB8A9;
+    --teal-bg: #E6F7F5;
+    --coral: #E76F51;
+    --coral-light: #F4845F;
+    --coral-bg: #FFF0EC;
+    --gold: #E9C46A;
+    --gold-bg: #FFF8E1;
+    --purple: #7C3AED;
+    --purple-bg: #F3EEFF;
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6DA;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F7F7F7;
+    --gray-200: #E8E8E8;
+    --gray-300: #D1D1D1;
+    --gray-400: #999999;
+    --gray-600: #666666;
+    --gray-800: #333333;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--cream);
+    color: var(--gray-800);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, #34507A 100%);
+    color: var(--white);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.22;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 80px;
+    width: 160px; height: 160px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.2;
+  }
+  .header-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-label { font-size: 0.85rem; color: var(--gold); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+  .header h1 { font-size: 1.8rem; font-weight: 900; line-height: 1.3; margin-bottom: 0.3rem; }
+  .header p { font-size: 0.95rem; color: rgba(255,255,255,0.7); font-weight: 300; }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-container { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0.8rem 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .progress-bar-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 0.8rem; }
+  .progress-label { font-size: 0.78rem; color: var(--gray-600); font-weight: 500; white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--navy)); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+  .progress-text { font-size: 0.78rem; color: var(--navy); font-weight: 700; white-space: nowrap; }
+
+  /* ===== NAV PILLS ===== */
+  .nav-pills { max-width: 860px; margin: 1.2rem auto 0; padding: 0 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nav-pill { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--gray-200); background: var(--white); color: var(--gray-600); transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 0.3rem; }
+  .nav-pill:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-pill.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-pill .pill-check { display: none; }
+  .nav-pill.done .pill-check { display: inline; }
+
+  /* ===== MAIN ===== */
+  .main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+  /* ===== STUDENT INFO ===== */
+  .student-info-bar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 0.8rem 1rem; background: var(--white); border-radius: 10px; box-shadow: var(--shadow); }
+  .student-info-bar label { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+  .student-info-bar input { padding: 0.4rem 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 8px; font-family: inherit; font-size: 0.85rem; width: 120px; transition: border-color 0.2s; }
+  .student-info-bar input:focus { outline: none; border-color: var(--navy); }
+
+  /* ===== SECTION ===== */
+  .section { margin-bottom: 2rem; }
+  .section-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid var(--gray-200); }
+  .section-number { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; color: var(--white); flex-shrink: 0; }
+  .section-number.teal { background: var(--teal); }
+  .section-number.coral { background: var(--coral); }
+  .section-number.purple { background: var(--purple); }
+  .section-number.navy { background: var(--navy); }
+  .section-number.gold { background: #D4A843; }
+  .section-title-group { flex: 1; }
+  .section-title-group h2 { font-size: 1.2rem; font-weight: 900; }
+  .section-title-group p { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* ===== NOTICE BOXES ===== */
+  .intro-box { background: var(--navy); color: var(--white); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.8; }
+  .intro-box strong { color: var(--gold); }
+  .intro-box .subtitle { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .recovery-notice { background: linear-gradient(135deg, #FFF8E1 0%, #FFF4ED 100%); border: 1.5px dashed var(--gold); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .recovery-notice strong { color: var(--coral); }
+
+  .submit-notice { background: var(--coral-bg); border-left: 4px solid var(--coral); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .submit-notice strong { color: var(--coral); font-weight: 700; }
+
+  .flow-notice { background: var(--teal-bg); border-left: 4px solid var(--teal); border-radius: 8px; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.84rem; color: var(--gray-800); line-height: 1.7; }
+  .flow-notice strong { color: var(--teal); font-weight: 700; }
+
+  /* ===== REVIEW BOX ===== */
+  .review-box { background: linear-gradient(135deg, #FFF8E1 0%, #FFF0EC 100%); border: 2px solid var(--gold); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+  .review-box h3 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+  .review-box p, .review-box li { font-size: 0.86rem; color: var(--gray-800); line-height: 1.8; }
+  .review-box ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+  .review-box li { margin-bottom: 0.3rem; }
+
+  /* ===== DECISION TREE ===== */
+  .decision-tree { background: var(--white); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; border: 1.5px solid var(--gray-200); }
+  .decision-tree h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.8rem; }
+  .dt-row { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.6rem 0; border-bottom: 1px solid var(--gray-100); }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-label { font-size: 0.82rem; font-weight: 700; min-width: 90px; padding: 0.2rem 0.6rem; border-radius: 6px; text-align: center; flex-shrink: 0; }
+  .dt-label.teal { background: var(--teal-bg); color: var(--teal); }
+  .dt-label.coral { background: var(--coral-bg); color: var(--coral); }
+  .dt-label.purple { background: var(--purple-bg); color: var(--purple); }
+  .dt-label.gold { background: var(--gold-bg); color: #B8860B; }
+  .dt-example { font-size: 0.84rem; color: var(--gray-600); line-height: 1.7; }
+  .dt-example strong { color: var(--gray-800); }
+
+  /* ===== CARD ===== */
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1rem; overflow: hidden; }
+  .card-body { padding: 1.5rem; }
+
+  /* ===== CONCEPT BLOCK ===== */
+  .concept-block { background: var(--gray-50); border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; border-left: 4px solid var(--teal); }
+  .concept-block.coral-border { border-left-color: var(--coral); }
+  .concept-block.purple-border { border-left-color: var(--purple); }
+  .concept-block.navy-border { border-left-color: var(--navy); }
+  .concept-block.gold-border { border-left-color: var(--gold); }
+  .concept-block h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--navy); }
+  .concept-block p, .concept-block li { font-size: 0.86rem; color: var(--gray-600); line-height: 1.8; }
+  .concept-block ul { padding-left: 1.2rem; }
+  .concept-block li { margin-bottom: 0.2rem; }
+
+  /* ===== COMPARE TABLE ===== */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  .compare-table th { background: var(--navy); color: var(--white); padding: 0.6rem 0.8rem; text-align: left; font-weight: 500; }
+  .compare-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* ===== RUBRIC GRID (4영역 카드) ===== */
+  .rubric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+  .rubric-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.1rem; transition: all 0.2s; }
+  .rubric-card:hover { border-color: var(--purple); box-shadow: var(--shadow); }
+  .rubric-card .rubric-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .rubric-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .rubric-card p { font-size: 0.8rem; color: var(--gray-600); line-height: 1.65; }
+  .rubric-card .rubric-example { font-size: 0.78rem; color: var(--coral); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--gray-200); }
+  @media (max-width: 600px) { .rubric-grid { grid-template-columns: 1fr; } }
+
+  /* ===== COLLAPSIBLE ===== */
+  .collapsible { margin: 0.8rem 0; }
+  .collapsible-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.8rem 1rem; background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 0.88rem; font-weight: 500; color: var(--gray-800); transition: all 0.2s; }
+  .collapsible-trigger:hover { border-color: var(--purple); }
+  .collapsible-trigger .arrow { transition: transform 0.2s; font-size: 0.8rem; }
+  .collapsible.open .collapsible-trigger .arrow { transform: rotate(180deg); }
+  .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-content { padding: 1rem 0; }
+
+  /* ===== PROMPT TEMPLATE ===== */
+  .prompt-template { background: var(--navy-deep); color: #E0E0E0; border-radius: 10px; padding: 1.2rem 1.5rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; position: relative; }
+  .prompt-template pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.8; margin: 0; }
+  .prompt-template .highlight { color: var(--gold); font-weight: 700; }
+  .prompt-template .placeholder { color: var(--teal-light); font-style: italic; }
+  .copy-btn { position: absolute; top: 0.6rem; right: 0.8rem; padding: 0.3rem 0.7rem; font-size: 0.72rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* ===== SAMPLE BOX ===== */
+  .sample-box { background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 1rem 1.2rem; margin: 0.6rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .sample-box .sample-label { font-size: 0.74rem; font-weight: 700; color: var(--purple); margin-bottom: 0.4rem; }
+  .sample-box .sample-question { font-style: italic; color: var(--navy); margin-bottom: 0.5rem; }
+  .sample-box .sample-answer { color: var(--gray-800); white-space: pre-wrap; }
+
+  /* ===== TIP CALLOUT ===== */
+  .tip-callout { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.8rem 1rem; border-radius: 10px; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.7; }
+  .tip-callout.info { background: var(--teal-bg); }
+  .tip-callout.success { background: var(--gold-bg); }
+  .tip-callout.warning { background: var(--coral-bg); }
+  .tip-callout.purple { background: var(--purple-bg); }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-text { color: var(--gray-800); }
+
+  /* ===== BIAS BOX (AI 채점 편향 4종) ===== */
+  .bias-box { background: linear-gradient(135deg, #FFF0EC 0%, #FFF8E1 100%); border: 2px solid var(--coral); border-radius: var(--radius); padding: 1.2rem 1.4rem; margin: 1rem 0; }
+  .bias-box h4 { font-size: 1rem; font-weight: 900; color: var(--coral); margin-bottom: 0.6rem; }
+  .bias-box .bias-row { padding: 0.5rem 0; border-bottom: 1px dashed rgba(231,111,81,0.25); font-size: 0.86rem; line-height: 1.7; }
+  .bias-box .bias-row:last-child { border-bottom: none; }
+  .bias-box .bias-name { font-weight: 700; color: var(--navy); display: inline-block; min-width: 130px; }
+  .bias-box .bias-desc { color: var(--gray-600); }
+
+  /* ===== PRACTICE AREA ===== */
+  .practice-area { background: linear-gradient(135deg, #F8F6FF 0%, #F0F7FF 100%); border: 2px solid #E8E0FF; border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+  .practice-area h4 { font-size: 0.95rem; font-weight: 700; color: var(--purple); margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+  .practice-area .guide-text { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 0.8rem; }
+  .practice-area textarea { width: 100%; min-height: 140px; padding: 1rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; transition: border-color 0.2s; background: var(--white); }
+  .practice-area textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+  .practice-area textarea::placeholder { color: var(--gray-400); }
+
+  .practice-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem; padding: 0 0.2rem; }
+  .char-count { font-size: 0.75rem; color: var(--gray-400); }
+  .save-indicator { font-size: 0.75rem; color: var(--teal); font-weight: 500; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist { margin-top: 0.8rem; padding: 0.8rem 1rem; background: rgba(255,255,255,0.5); border-radius: 8px; }
+  .checklist-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.82rem; color: var(--gray-600); cursor: pointer; transition: color 0.2s; }
+  .checklist-item.checked { color: var(--teal); text-decoration: line-through; }
+  .checklist-item input[type="checkbox"] { accent-color: var(--teal); width: 16px; height: 16px; }
+
+  /* ===== EXAMPLE BOX ===== */
+  .example-box { border-radius: 10px; padding: 1rem 1.2rem; margin: 0.8rem 0; font-size: 0.84rem; line-height: 1.8; }
+  .example-box.bad { background: #FFF0EC; border: 1px solid #FECDC2; }
+  .example-box.good { background: #E6F7F5; border: 1px solid #B2DFDB; }
+  .example-box .label { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.3rem; display: block; }
+  .example-box.bad .label { color: var(--coral); }
+  .example-box.good .label { color: var(--teal); }
+  .example-box pre { font-family: 'Noto Sans KR', monospace; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; font-size: 0.84rem; line-height: 1.7; margin: 0; }
+
+  /* ===== ACTION FRAME ===== */
+  .action-frame { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0; }
+  .action-frame .af-row { display: flex; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.84rem; }
+  .action-frame .af-row:last-child { border-bottom: none; }
+  .action-frame .af-key { min-width: 110px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+  .action-frame .af-val { color: var(--gray-600); line-height: 1.7; }
+
+  /* ===== FINAL BOX ===== */
+  .final-box { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: var(--white); border-radius: var(--radius); padding: 2rem 1.5rem; margin-bottom: 1.5rem; }
+  .final-box h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .final-box p { font-size: 0.88rem; color: rgba(255,255,255,0.8); margin-bottom: 1rem; }
+  .final-box textarea { width: 100%; min-height: 240px; padding: 1rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; font-family: inherit; font-size: 0.88rem; line-height: 1.7; resize: vertical; background: rgba(255,255,255,0.08); color: var(--white); }
+  .final-box textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(233,196,106,0.2); }
+  .final-box textarea::placeholder { color: rgba(255,255,255,0.35); }
+
+  /* ===== REFLECTION ===== */
+  .reflection-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; }
+  .reflection-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .reflection-card textarea { width: 100%; min-height: 100px; padding: 0.8rem; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 0.86rem; line-height: 1.7; resize: vertical; }
+  .reflection-card textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(44,62,107,0.1); }
+
+  /* ===== EXPORT ===== */
+  .export-card { background: var(--gray-50); border-radius: var(--radius); padding: 1.5rem; text-align: center; }
+  .export-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+  .export-card .export-tip { font-size: 0.8rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.7; }
+  .btn-group { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-outline { background: var(--white); color: var(--navy); border: 1.5px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* ===== FOOTER ===== */
+  .footer { text-align: center; padding: 2rem; font-size: 0.78rem; color: var(--gray-400); }
+
+  /* ===== PRINT MIRROR ===== */
+  .print-mirror { display: none; }
+  @media print {
+    .progress-bar-container, .nav-pills, .student-info-bar, .copy-btn, .btn-group, .export-card, .footer, .submit-notice, .recovery-notice, .flow-notice { display: none !important; }
+    .collapsible-body { max-height: none !important; }
+    .collapsible.open .collapsible-body, .collapsible-body { max-height: none !important; overflow: visible !important; }
+    body { background: white; }
+    .main { padding: 0; }
+    .print-hide { display: none !important; }
+    .print-mirror {
+      display: block !important;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      padding: 0.8rem 1rem;
+      border: 1px solid #999;
+      border-radius: 8px;
+      background: white !important;
+      color: #222 !important;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      page-break-inside: auto;
+      min-height: 1.6em;
+    }
+    .final-box .print-mirror { color: #fff !important; background: rgba(0,0,0,0.5) !important; border-color: #888 !important; }
+    .section, .card, .practice-area, .reflection-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">텍스트어날리틱스스튜디오 · Week 10</div>
+    <h1>피드백 생성</h1>
+    <p>채점에서 멈추지 않기 — AI로 학생 맞춤형 피드백을 쓰고, 교사의 손으로 다듬기</p>
+  </div>
+</div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar-container">
+  <div class="progress-bar-inner">
+    <span class="progress-label">진행률</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-text" id="progressText">0 / 7</span>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-pills" id="navPills">
+  <a class="nav-pill" href="#sec-intro" data-section="intro"><span class="pill-check">&#10003; </span>시작</a>
+  <a class="nav-pill" href="#sec-review" data-section="review"><span class="pill-check">&#10003; </span>9주차 복습</a>
+  <a class="nav-pill" href="#sec-principle" data-section="principle"><span class="pill-check">&#10003; </span>피드백 원리</a>
+  <a class="nav-pill" href="#sec-design" data-section="design"><span class="pill-check">&#10003; </span>맞춤 설계</a>
+  <a class="nav-pill" href="#sec-generate" data-section="generate"><span class="pill-check">&#10003; </span>AI 생성</a>
+  <a class="nav-pill" href="#sec-refine" data-section="refine"><span class="pill-check">&#10003; </span>검증 + 손질</a>
+  <a class="nav-pill" href="#sec-final" data-section="final"><span class="pill-check">&#10003; </span>최종 과제</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== STUDENT INFO ===== -->
+  <div class="student-info-bar">
+    <label>이름</label>
+    <input type="text" id="studentName" placeholder="이름 입력" />
+    <label>학번</label>
+    <input type="text" id="studentId" placeholder="학번 입력" />
+  </div>
+
+  <!-- ===== SUBMIT NOTICE ===== -->
+  <div class="submit-notice">
+    <strong>&#x1F4DD; 제출 안내</strong> — 페이지 하단의 <strong>"HTML로 내보내기"</strong>로 제출해 주세요. PDF가 필요한 경우, 이번 페이지는 인쇄 시 textarea 잘림을 자동 보정하도록 손봤습니다.
+  </div>
+
+  <!-- ===== RECOVERY NOTICE ===== -->
+  <div class="recovery-notice">
+    <strong>&#x1F4AA; 9주차를 못 했어도 괜찮아요</strong> — 이번 10주차는 9주차에서 만든 루브릭·채점 결과를 그대로 이어 쓰지만, 없어도 진행할 수 있도록 R 섹션과 3번에 <strong>가상 채점 결과·샘플 답변</strong>을 넣어두었어요. 빠진 분은 그걸로 따라오시면 됩니다. 한 줄이라도 채워서 보내주시면 충분합니다.
+  </div>
+
+  <!-- ===== FLOW NOTICE ===== -->
+  <div class="flow-notice">
+    <strong>&#x1F558; 수업 흐름</strong> — 강의 시간에는 <strong>R + 1번(피드백 원리)</strong>까지 함께 진행하고, <strong>2~4번은 본인 페이스로</strong> 작성해 주세요. 핵심은 4번(AI 피드백을 검증하고 교사의 손으로 손질하기)이라, 거기서 깊게 머무는 게 좋습니다.
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 0: INTRO -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-intro">
+    <div class="intro-box">
+      <strong>10주차 과제 안내</strong><br><br>
+      9주차에서 루브릭으로 <strong>학생 답변을 채점</strong>했다면, 이번 주에는 그 채점 결과를 <strong>학생에게 돌려줄 피드백</strong>으로 바꿉니다.<br>
+      점수를 아는 것과, 다음에 무엇을 어떻게 할지 아는 것은 다릅니다. <strong>채점이 "지금 어디에 서 있는가"라면, 피드백은 "어디로, 어떻게 갈 것인가"</strong>입니다.<br><br>
+      AI는 피드백을 빠르고 따뜻하게 써주지만, <strong>두루뭉술한 칭찬·과잉 긍정·교사 목소리의 상실</strong>이라는 함정이 있습니다. 그래서 이번 주의 진짜 질문은 <strong>"AI가 써준 피드백을, 학생을 실제로 움직이는 피드백으로 어떻게 손질할 것인가"</strong>입니다.<br><br>
+      <div class="subtitle">생성보다 손질이 핵심입니다. 강의 시간에 R + 1번을 익히고, 2~4번은 본인 학생·데이터로 깊게 작성하시면 됩니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.8rem;">오늘 배울 핵심 개념</h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:25%">개념</th>
+              <th style="width:35%">핵심 아이디어</th>
+              <th>교육 현장 예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>피드백 3질문</strong><br>(Feed Up·Back·Forward)</td>
+              <td>어디로 가는가(목표) / 지금 어디인가(현재) / 다음에 무엇을 하나(행동)의 3박자</td>
+              <td>"목표는 근거 2개 / 지금은 1개 인용 / 다음엔 연도·인물 중 1개만 더 넣기"</td>
+            </tr>
+            <tr>
+              <td><strong>맞춤형 피드백</strong><br>(Differentiated)</td>
+              <td>같은 과제라도 학생 수준·유형에 따라 '다음 행동'이 달라진다</td>
+              <td>우수: 한 단계 심화 도전 / 보통: 다음 한 칸 / 미흡: 가장 작은 첫걸음</td>
+            </tr>
+            <tr>
+              <td><strong>AI 톤 위험</strong><br>(Tone Trap)</td>
+              <td>AI는 길고 따뜻하지만 두루뭉술·과잉 긍정·교사 목소리 상실로 흐른다</td>
+              <td>"정말 잘했어요! 훌륭합니다!"처럼 학생을 못 움직이는 공허한 칭찬</td>
+            </tr>
+            <tr>
+              <td><strong>피드백 검증</strong><br>(Refinement)</td>
+              <td>구체적인가 · 실행 가능한가 · 근거에 닿아 있는가를 점검해 손질</td>
+              <td>추상 조언("더 노력하세요")을 행동 조언("○○ 자료 1개 추가")으로</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION R: 9주차 복습 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-review">
+    <div class="section-header">
+      <div class="section-number gold">R</div>
+      <div class="section-title-group">
+        <h2>9주차 복습: 채점은 피드백의 출발점이다</h2>
+        <p>루브릭으로 매긴 척도가, 학생에게 돌려줄 다음 행동으로 바뀐다</p>
+      </div>
+    </div>
+
+    <div class="review-box">
+      <h3>&#x1F4AC; 9주차에서 우리가 잡아낸 것</h3>
+      <p>지난주 한 분은 AI가 <strong>하위 영역은 '보통'을 주면서 총평만 "매우 좋은 답변"이라 과하게 칭찬</strong>한 모순을 잡아 톤을 낮췄습니다. 그 <strong>'과잉 긍정' 본능</strong>은 채점표 안에 머물 땐 점수만 흔들지만, <strong>피드백으로 나가면 학생이 직접 읽기 때문에 더 위험</strong>해집니다. "잘했다"는 말만 듣고 정작 무엇을 고쳐야 할지 모른 채 끝나니까요.</p>
+      <p style="margin-top:0.5rem; font-size:0.82rem; color:var(--gray-600);">그래서 9주차에서 기른 '과장 의심'을 이번 주 피드백 검증으로 그대로 가져옵니다. AI가 "훌륭합니다"라고 쓰면 — "근거 문장은? 놓친 미흡 영역은? 점수보다 톤이 센 건 아닌가?" 묻는 것.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block gold-border">
+          <h4>핵심 원리: "채점은 판정, 피드백은 안내"</h4>
+          <p>채점은 답변이 <strong>지금 어느 칸에 있는지</strong> 판정하는 일이고, 피드백은 <strong>다음에 어느 칸으로 어떻게 갈지</strong> 안내하는 일입니다. 그래서 9주차 루브릭에서 <strong>'미흡'·'보통'으로 나온 영역이 바로 피드백이 가장 집중해야 할 타깃</strong>이 됩니다. 채점 결과가 곧 피드백의 설계도예요.</p>
+        </div>
+
+        <div class="decision-tree">
+          <h4>&#x1F50D; 9주차 채점 결과를 피드백으로 옮기면</h4>
+
+          <div class="dt-row">
+            <span class="dt-label coral">미흡 영역</span>
+            <span class="dt-example">한꺼번에 다 고치라 하지 않고 <strong>가장 작은 첫걸음 1개</strong>만 제시<br>예: "근거 사용 미흡 → 다음엔 답변 어딘가에 '연도' 하나만 넣어보기"</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label teal">보통 영역</span>
+            <span class="dt-example">한 칸 올라갈 <strong>구체 행동 1개</strong>를 짚어줌<br>예: "근거 1개 인용함(보통) → 인물 이름 1개를 더하면 우수"</span>
+          </div>
+
+          <div class="dt-row">
+            <span class="dt-label purple">우수 영역</span>
+            <span class="dt-example">잘한 <strong>문장을 콕 집어 인정</strong> + 한 단계 심화 도전 1개<br>예: "모내기법까지 연결한 점 좋음 → 다음엔 그 변화가 누구에게 손해였는지도"</span>
+          </div>
+        </div>
+
+        <div class="tip-callout success">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>9주차→10주차 transfer:</strong> 채점(판정)에서 피드백(안내)으로 한 칸 넘어오면, 같은 루브릭이 두 번 일합니다. 9주차에 척도 정의를 다듬은 분은 이번 주 피드백의 '다음 행동'이 훨씬 선명하게 나올 거예요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 복습 실습: 채점 한 칸을 피드백 한 줄로</h4>
+          <div class="guide-text">아래 가상의 9주차 채점 결과 중 한 영역을 골라, 학생에게 돌려줄 <strong>피드백 한 줄</strong>로 바꿔보세요. '잘함/못함'이 아니라 '다음 행동 1개'가 들어가야 합니다.</div>
+          <div style="background:var(--white); border-radius:8px; padding:1rem; margin-bottom:0.8rem; font-size:0.84rem; line-height:1.8;">
+            <strong>가상의 9주차 채점 결과 (역사 서술형, 답변 A)</strong><br>
+            영역 1 사건 인과: <strong>보통</strong> (원인→결과 1단계만)<br>
+            영역 2 근거 사용: <strong>미흡</strong> (자료 인용 없음)<br>
+            영역 3 관점 표현: <strong>미흡</strong> (본인 입장 불명확)
+          </div>
+          <textarea id="practice-review" placeholder="예: '근거 사용'이 가장 약하니 여기부터. → 피드백 한 줄: '조선 후기 변화를 잘 짚었어요. 다음엔 그 근거로 연도나 인물 이름을 딱 1개만 넣어보면, 주장이 훨씬 단단해집니다.' (미흡 영역 1개 + 가장 작은 첫걸음 1개)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-review-count">0자</span>
+            <span class="save-indicator" id="practice-review-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="0" class="section-check" />
+              <span>채점 결과 중 어느 영역을 타깃으로 잡았는지 골랐는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="1" class="section-check" />
+              <span>'잘함/못함' 판정이 아니라 '다음 행동 1개'가 들어갔는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="review" data-index="2" class="section-check" />
+              <span>학생이 바로 읽고 따라 할 수 있는 한 줄로 적었는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: 피드백 원리 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-principle">
+    <div class="section-header">
+      <div class="section-number teal">1</div>
+      <div class="section-title-group">
+        <h2>피드백 원리 — 좋은 피드백은 무엇이 다른가</h2>
+        <p>칭찬의 양이 아니라 다음 행동의 선명함</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>왜 AI 시대에 피드백 '설계'가 더 중요해졌나</h4>
+          <p>AI에 "피드백 써줘"라고만 하면 길고 따뜻한 글이 쏟아집니다. 그런데 그 글을 읽은 학생이 정작 <strong>무엇을 다르게 할지 모른다면 피드백이 아니라 위로</strong>입니다. AI가 글의 분량과 온도를 채워주는 시대일수록, 교사의 일은 <strong>"이 학생이 다음에 할 단 하나의 행동"을 선명하게 남기는 설계</strong>로 옮겨갑니다.</p>
+        </div>
+
+        <div class="concept-block">
+          <h4>피드백 3질문 (Feed Up · Feed Back · Feed Forward)</h4>
+          <ul>
+            <li><strong>Feed Up — 어디로 가는가:</strong> 이 과제의 목표·기준(루브릭의 '우수')이 무엇인지</li>
+            <li><strong>Feed Back — 지금 어디인가:</strong> 학생의 현재 답변이 기준 대비 어디에 있는지, <strong>잘한 문장을 콕 집어</strong></li>
+            <li><strong>Feed Forward — 다음에 무엇을:</strong> 다음 칸으로 올라갈 <strong>구체 행동 1개</strong></li>
+          </ul>
+          <p style="margin-top:0.5rem; font-size:0.84rem; color:var(--gray-600);">세 박자가 다 있어야 학생이 움직입니다. 보통 교사 피드백은 'Feed Back(평가)'에만 머물고 'Feed Forward(다음 행동)'가 빠져요.</p>
+        </div>
+
+        <div class="concept-block navy-border">
+          <h4>좋은 피드백의 4요건</h4>
+          <ul>
+            <li><strong>구체성:</strong> 어느 영역·어느 문장인지 짚는다 ("세 번째 문장의 ~")</li>
+            <li><strong>근거:</strong> 답변의 실제 문장을 인용해 칭찬·지적의 출처를 보인다</li>
+            <li><strong>성장 지향:</strong> 능력("머리가 좋다")이 아니라 <strong>행동·전략</strong>("○○ 방법을 썼구나")을 짚는다</li>
+            <li><strong>실행 가능:</strong> 다음 한 걸음이 학생이 오늘 할 수 있는 크기다</li>
+          </ul>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; 공허한 피드백 (양만 있고 행동이 없음)</span>
+          <pre>정말 잘했어요! 글을 읽어보니 열심히 노력한 게 느껴집니다.
+앞으로도 지금처럼 꾸준히 하면 훌륭한 학생이 될 거예요. 화이팅!</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">&#x2705; 좋은 피드백 (구체 + 근거 + 다음 행동 1개)</span>
+          <pre>'모내기법 보급으로 부농이 생겼다'고 원인과 결과를 연결한 부분이 좋았어요.
+다음엔 '근거 사용'에서 연도나 인물 이름을 딱 1개만 더 넣어보면,
+지금의 '보통'이 '우수'로 올라갑니다.</pre>
+        </div>
+
+        <div class="tip-callout warning">
+          <span class="tip-icon">&#x26A0;&#xFE0F;</span>
+          <span class="tip-text"><strong>주의:</strong> "머리가 좋다 / 똑똑하다" 같은 <strong>능력 칭찬</strong>은 학생을 멈추게 합니다(다음에 못하면 머리가 나쁜 게 되니까). "~ 전략을 썼구나 / ~ 순서로 풀었네" 같은 <strong>과정·전략 피드백</strong>이 도전을 이어가게 해요.</span>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 1: 공허한 칭찬을 좋은 피드백으로 고쳐쓰기</h4>
+          <div class="guide-text">본인이 평소 쓰기 쉬운 '공허한 칭찬' 표현 1개를 적고, 그것을 <strong>구체 + 근거 + 다음 행동 1개</strong>가 든 피드백으로 고쳐써 보세요.</div>
+          <textarea id="practice-principle" placeholder="[평소 쓰기 쉬운 공허한 칭찬]&#10;예: '잘했어요. 다음에도 열심히 하세요.'&#10;&#10;[고쳐쓴 피드백 — 구체 + 근거 + 다음 행동 1개]&#10;예: '문제의 핵심을 한 문장으로 요약한 첫 줄이 좋았어요(구체+근거). 다음엔 그 요약 뒤에 근거를 1개만 붙여보면, 읽는 사람이 더 빨리 설득됩니다(다음 행동 1개).'&#10;&#10;[어느 요건을 새로 넣었나]&#10;예: 원래는 '성장 지향'도 '실행 가능'도 없었음 → 다음 행동 1개를 넣어 실행 가능하게 바꿈."></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-principle-count">0자</span>
+            <span class="save-indicator" id="practice-principle-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="principle" data-index="0" class="section-check" />
+              <span>고쳐쓴 피드백에 '잘한 부분'을 콕 집은 구체·근거가 있는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="principle" data-index="1" class="section-check" />
+              <span>능력 칭찬이 아니라 행동·전략을 짚었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="principle" data-index="2" class="section-check" />
+              <span>학생이 오늘 할 수 있는 '다음 행동 1개'가 들어갔는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: 맞춤 설계 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-design">
+    <div class="section-header">
+      <div class="section-number coral">2</div>
+      <div class="section-title-group">
+        <h2>맞춤 설계 — 수준 · 톤 · 다음 행동 1개</h2>
+        <p>같은 과제라도 학생마다 다음 한 걸음은 다르다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block coral-border">
+          <h4>맞춤형 피드백의 3축</h4>
+          <ul>
+            <li><strong>① 수준 분기:</strong> 우수/보통/미흡 각각 <strong>다음 행동이 다르다</strong>. 우수에게 "기초를 다지자"는 안 통하고, 미흡에게 "심화하자"는 부담만</li>
+            <li><strong>② 학교급 톤:</strong> 초등 = 따뜻하게·짧게·행동 1개 / 중등 = 구체적 전략 / 고등 = 메타인지·자기평가 유도</li>
+            <li><strong>③ 길이:</strong> 피드백은 <strong>짧을수록 읽힌다</strong>. 핵심 1~3문장. 길면 학생은 칭찬만 읽고 다음 행동을 놓침</li>
+          </ul>
+        </div>
+
+        <div class="concept-block navy-border">
+          <h4>수준별 '다음 행동' 사전</h4>
+          <p style="font-size:0.84rem;"><strong>미흡:</strong> 가장 작은 첫걸음 1개를 제시한다 (예: "연도 하나만 넣어보기")<br>
+          <strong>보통:</strong> 한 칸 올라갈 구체 행동 1개를 짚는다 (예: "근거를 1개 더 인용")<br>
+          <strong>우수:</strong> 잘한 문장을 인정하고 한 단계 심화 도전 1개를 던진다 (예: "반대 입장도 1개 다뤄보기")</p>
+        </div>
+
+        <div class="tip-callout purple">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>비결:</strong> 피드백 끝에 <strong>'다음 행동 1개'만</strong> 남기세요. 두세 개를 주면 학생은 압도되어 아무것도 안 합니다. 다음 시간에 또 1개. 그게 누적되면 한 학기에 10칸이 올라갑니다.</span>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; 맞춤 피드백 설계 틀 (수준 × 톤 × 다음 행동)</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>[과제/평가 종류] (예: 6학년 사회 서술형)
+[학교급·톤] (예: 초등 → 따뜻하게, 짧게, 행동 1개)
+
+| 수준 | 인정할 점(근거 문장) | 다음 행동 1개 |
+|------|---------------------|---------------|
+| 우수 | "모내기법까지 연결" | 반대 입장 1개 다뤄보기 |
+| 보통 | "원인 1개는 명확"   | 근거에 연도/인물 1개 추가 |
+| 미흡 | "변화가 있었다는 건 포착" | 답변에 '왜'를 한 번 적어보기 |
+
+[공통 톤 규칙]
+- 능력 칭찬 금지 → 과정·전략 칭찬
+- 피드백 1~3문장
+- 다음 행동은 정확히 1개</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 2: 본인 학생 3유형 맞춤 설계</h4>
+          <div class="guide-text">본인 반/교과의 우수·보통·미흡 학생을 떠올려, 각 유형에게 줄 <strong>'인정할 점 + 다음 행동 1개'</strong>와 톤을 설계하세요.</div>
+          <textarea id="practice-design" placeholder="[과제 종류 + 학교급·톤]&#10;예: 중2 과학 탐구 보고서 / 톤: 구체적 전략, 2~3문장&#10;&#10;[수준별 맞춤 설계]&#10;| 수준 | 인정할 점(근거) | 다음 행동 1개 |&#10;| 우수 | 변인 통제까지 설계함 | 결과의 한계도 1줄 적어보기 |&#10;| 보통 | 가설은 명확함 | 통제변인을 1개만 더 명시 |&#10;| 미흡 | 실험을 끝까지 함 | '왜 그렇게 됐는지' 한 문장 적기 |&#10;&#10;[톤 규칙 점검]&#10;- 능력 칭찬 대신 과정·전략 칭찬을 썼는가? Yes/No&#10;- 각 피드백이 다음 행동 정확히 1개로 끝나는가? Yes/No"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-design-count">0자</span>
+            <span class="save-indicator" id="practice-design-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="0" class="section-check" />
+              <span>우수·보통·미흡 3유형이 각각 다른 다음 행동을 가졌는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="1" class="section-check" />
+              <span>학교급에 맞는 톤·길이를 정했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="design" data-index="2" class="section-check" />
+              <span>각 유형 피드백이 '다음 행동 1개'로 끝나는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 3: AI 생성 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-generate">
+    <div class="section-header">
+      <div class="section-number purple">3</div>
+      <div class="section-title-group">
+        <h2>AI 생성 — 프롬프트로 피드백 초안 쓰기</h2>
+        <p>9주차 채점 결과를 입력으로, 맞춤 피드백 초안을 받는다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block purple-border">
+          <h4>AI 피드백 프롬프트의 4요건</h4>
+          <ul>
+            <li><strong>채점 결과 입력:</strong> 9주차 루브릭 + 채점 결과(영역별 척도)를 그대로 붙여넣기 — 그래야 피드백이 근거를 가짐</li>
+            <li><strong>3질문 구조 명시:</strong> "Feed Up(목표) / Feed Back(현재, 잘한 문장 인용) / Feed Forward(다음 행동 1개)" 순서로 쓰라고 지정</li>
+            <li><strong>톤·길이·학교급 지정:</strong> "초등학생이 읽을, 2~3문장, 따뜻하지만 행동이 분명한 톤"</li>
+            <li><strong>금지·강제 규칙:</strong> "능력 칭찬 금지, 과정·전략 중심, 다음 행동은 정확히 1개로 끝낼 것"</li>
+          </ul>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DD; AI 피드백 프롬프트 템플릿 2종</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <h4 style="font-size:0.88rem; color:var(--purple); margin-top:0.5rem; margin-bottom:0.4rem;">① 단일 학생 정밀 피드백</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 한국 초·중등 교육에 경험이 많은 담임 교사야.
+아래 [루브릭]과 [채점 결과]와 [학생 답변]을 보고,
+학생 본인이 읽을 피드백을 써줘.
+
+[피드백 규칙]
+- 구조: ① 목표(이 과제가 무엇을 보려는지) ② 잘한 점(답변의 문장을 1개 인용) ③ 다음 행동(딱 1개)
+- 능력 칭찬("머리가 좋다") 금지. 과정·전략을 칭찬할 것
+- 길이: 2~3문장. 학교급: (초등/중등/고등 중 택1)
+- 다음 행동은 학생이 오늘 할 수 있는 가장 작은 크기로, 정확히 1개
+
+[루브릭]
+(9주차 루브릭을 붙여넣기)
+
+[채점 결과]
+(영역별 척도: 예 — 사건 인과 보통 / 근거 사용 미흡 / 관점 표현 미흡)
+
+[학생 답변]
+(피드백할 답변을 붙여넣기)</pre>
+              </div>
+
+              <h4 style="font-size:0.88rem; color:var(--coral); margin-top:1.5rem; margin-bottom:0.4rem;">② 다중 학생 일괄 피드백 (수준 분기)</h4>
+              <div class="prompt-template">
+                <button class="copy-btn" onclick="copyTemplate(this)">복사</button>
+                <pre>너는 한국 초·중등 교육에 경험이 많은 담임 교사야.
+아래 [루브릭]을 기준으로 [채점 결과 모음] N명에게
+각각 맞춤 피드백을 써줘.
+
+[피드백 규칙]
+- 학생마다: 잘한 문장 1개 인용 + 다음 행동 1개
+- 수준 분기: 우수=심화 도전 / 보통=다음 한 칸 / 미흡=가장 작은 첫걸음
+- 능력 칭찬 금지, 과정·전략 중심, 각 피드백 2~3문장
+- 마지막에 '우리 반 공통 다음 행동 1개' 한 줄
+
+[출력 형식]
+| 학생 | 인정(인용) | 다음 행동 1개 |
++ 반 공통 다음 행동 1줄
+
+[루브릭]
+(9주차 루브릭)
+
+[채점 결과 모음]
+1) ...
+2) ...
+3) ...</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapsible">
+          <button class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <span>&#x1F4DA; 9주차 샘플 답변 재사용 — 본인 데이터가 없으면 이걸로</span>
+            <span class="arrow">&#x25BC;</span>
+          </button>
+          <div class="collapsible-body">
+            <div class="collapsible-content">
+              <p style="font-size:0.84rem; color:var(--gray-600); margin-bottom:0.8rem;">9주차에서 채점했던 답변 3종을 그대로 가져와 피드백을 생성하면, 채점→피드백이 한 흐름으로 이어집니다(누적 학습). 9주차를 안 했다면 아래 가상 채점 결과로 바로 시작하세요.</p>
+              <div class="sample-box">
+                <div class="sample-label">샘플 1 — 6학년 사회 서술형 (역사)</div>
+                <div class="sample-question">문제: 조선 후기 사회 변화의 원인을 두 가지 이상 들어 설명하시오.</div>
+                <div class="sample-answer">답변 A (가상 채점: 사건 인과 보통 / 근거 사용 미흡 / 관점 표현 미흡): 조선 후기에 변화가 많았다. 사람들이 잘살게 되었다. 신분도 변했다.
+
+답변 B (가상 채점: 모든 영역 우수): 모내기법 보급으로 부농이 생겼고, 이들이 공명첩을 사 신분 상승을 했다. 상업 발달로 상인도 부를 쌓아 신분 질서에 균열이 생겼다. 두 변화 모두 신분제 동요로 이어졌다.</div>
+              </div>
+              <div class="sample-box">
+                <div class="sample-label">샘플 2 — 중2 과학 탐구 보고서</div>
+                <div class="sample-question">문제: 물의 끓는점에 영향을 주는 요인을 가설로 세우고 실험으로 확인하시오.</div>
+                <div class="sample-answer">답변 A (가상 채점: 가설 보통 / 실험 설계 미흡 / 결론 해석 미흡): 소금을 넣으면 물이 더 빨리 끓을 것이다. 비커 두 개에 소금을 다르게 넣고 끓여봤다. 소금 넣은 쪽이 먼저 끓었다.</div>
+              </div>
+              <div class="sample-box">
+                <div class="sample-label">샘플 3 — 고1 국어 논설문</div>
+                <div class="sample-question">문제: '학교에서 스마트폰 사용을 제한해야 하는가'에 대한 주장을 근거와 함께 쓰시오.</div>
+                <div class="sample-answer">답변 A (가상 채점: 주장 명확성 미흡 / 예시·근거 미흡 / 독자 의식 미흡): 스마트폰은 좋기도 하고 나쁘기도 하다. 제한해야 할 것 같기도 하다. 친구들이랑 연락도 해야 하니까.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 3: AI 피드백 초안 생성 (학생 3명분)</h4>
+          <div class="guide-text">본인 채점 결과(또는 위 샘플)로 AI 피드백을 생성하고, 결과를 그대로 붙여넣으세요. 최소 3명분 권장. 아직 손질하지 말고 <strong>AI가 준 초안 그대로</strong> 두세요 — 다음 4번에서 손질합니다.</div>
+          <textarea id="practice-generate" placeholder="[사용한 프롬프트] 단일/일괄 중 무엇, 학교급·톤 지정&#10;예: 일괄 피드백 템플릿, 초등, 따뜻하고 짧게&#10;&#10;[AI 피드백 초안 — 학생별]&#10;학생 A: (AI가 써준 그대로 붙여넣기)&#10;학생 B: (그대로)&#10;학생 C: (그대로)&#10;&#10;[반 공통 다음 행동] (AI가 준 한 줄)"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-generate-count">0자</span>
+            <span class="save-indicator" id="practice-generate-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="generate" data-index="0" class="section-check" />
+              <span>채점 결과(또는 샘플)를 입력으로 넣어 생성했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="generate" data-index="1" class="section-check" />
+              <span>학생 3명분 이상의 피드백 초안을 받았는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="generate" data-index="2" class="section-check" />
+              <span>초안을 손질하지 않고 AI 원본 그대로 기록했는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION 4: 검증 + 손질 (핵심) -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-refine">
+    <div class="section-header">
+      <div class="section-number navy">4</div>
+      <div class="section-title-group">
+        <h2>검증 + 손질 — AI 초안을 교사의 피드백으로</h2>
+        <p>이번 주차의 핵심. AI 피드백은 초안이지 완성이 아니다</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="concept-block navy-border">
+          <h4>"AI 피드백은 초안이지 완성이 아니다"</h4>
+          <p>채점 결과는 교사만 보지만, 피드백은 <strong>학생이 직접 읽습니다.</strong> 그래서 교사의 손질이 채점 때보다 더 중요해요. AI 초안은 보통 길고 따뜻하지만, 그 안에 <strong>학생을 멈추게 하는 함정</strong>이 숨어 있습니다. 그걸 골라내 다듬는 게 이번 주의 진짜 일입니다.</p>
+        </div>
+
+        <div class="bias-box">
+          <h4>&#x1F50D; AI 피드백의 4가지 함정</h4>
+          <div class="bias-row">
+            <span class="bias-name">① 두루뭉술 칭찬</span>
+            <span class="bias-desc">"전반적으로 잘했어요"처럼 어느 문장이 왜 좋은지 안 짚음. 학생은 무엇을 유지할지 모름.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">② 과잉 긍정</span>
+            <span class="bias-desc">미흡한 답변에도 "훌륭합니다"를 붙임. 9주차에서 본 그 본능. 학생이 고칠 게 없다고 착각.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">③ 교사 목소리 상실</span>
+            <span class="bias-desc">"~하는 능력이 돋보입니다" 같은 번역체·정형구. 'AI 냄새'가 나면 학생이 진심으로 안 읽음.</span>
+          </div>
+          <div class="bias-row">
+            <span class="bias-name">④ 실행 불가능 조언</span>
+            <span class="bias-desc">"더 깊이 사고해 보세요" 같은 추상 조언. 무엇을 어떻게 할지 없어 행동으로 안 옮겨짐.</span>
+          </div>
+        </div>
+
+        <div class="tip-callout info">
+          <span class="tip-icon">&#x1F4A1;</span>
+          <span class="tip-text"><strong>7주차 검증 3질문, 피드백판:</strong> <strong>근거</strong> — 이 칭찬의 근거 문장이 답변에 실제로 있나? <strong>누락</strong> — AI가 못 짚은 미흡 영역이 있나? <strong>과장</strong> — 채점 점수보다 피드백 톤이 센가? 채점에서 쓰던 그 눈을 피드백에 그대로 댑니다.</span>
+        </div>
+
+        <div class="concept-block coral-border">
+          <h4>&#x1F527; 피드백 손질 4행위</h4>
+          <p>AI 초안을 1턴으로 다음과 같이 손질합니다. 막연한 "다듬기"가 아니라 <strong>4가지 중 어떤 행위인지 명시</strong>하면 손질이 빨라집니다.</p>
+          <div class="action-frame" style="margin-top:0.8rem;">
+            <div class="af-row"><span class="af-key">① 구체화</span><span class="af-val">두루뭉술한 칭찬을 답변의 실제 문장 인용으로 교체</span></div>
+            <div class="af-row"><span class="af-key">② 톤 보정</span><span class="af-val">미흡한데 과한 긍정이면 톤다운. 인정은 하되 다음 행동을 분명히</span></div>
+            <div class="af-row"><span class="af-key">③ 목소리 교체</span><span class="af-val">"~능력이 돋보입니다" 같은 AI 정형구를 본인 말투로</span></div>
+            <div class="af-row"><span class="af-key">④ 행동 압축</span><span class="af-val">추상 조언·여러 개 조언을 '다음 행동 1개'로 압축</span></div>
+          </div>
+        </div>
+
+        <div class="example-box bad">
+          <span class="label">&#x274C; AI 초안 (길고 두루뭉술 + 과잉 긍정 + 추상 조언)</span>
+          <pre>정말 훌륭한 답변이에요! 조선 후기 사회에 대한 이해가 매우 뛰어나고
+사고력이 돋보입니다. 앞으로 더 깊이 있게 사고하는 능력을 기른다면
+훨씬 더 좋은 글을 쓸 수 있을 거예요. 계속 노력해 주세요!</pre>
+        </div>
+        <div class="example-box good">
+          <span class="label">&#x2705; 교사 손질본 (구체화 + 톤 보정 + 행동 압축)</span>
+          <pre>'신분이 변했다'고 변화를 포착한 건 좋아요(① 구체화).
+다만 아직 '왜' 변했는지가 빠져서 근거가 약해요(② 톤 보정).
+다음엔 답변 어딘가에 '왜냐하면 ~' 한 문장만 넣어보자(④ 행동 압축).</pre>
+        </div>
+
+        <div class="practice-area">
+          <h4>&#x270F;&#xFE0F; 실습 4: AI 피드백 검증 + 손질 1턴</h4>
+          <div class="guide-text">실습 3에서 받은 AI 초안 중 1개를 골라, <strong>4가지 함정 중 어디에 해당하는지</strong> 짚고, <strong>손질 4행위 중 무엇으로 다듬을지</strong> 명시한 뒤 손질본을 적으세요.</div>
+          <textarea id="practice-refine" placeholder="[AI 초안 (실습 3에서 가져오기)]&#10;예: '정말 훌륭한 답변이에요! 이해가 뛰어나고 사고력이 돋보입니다. 더 깊이 사고하면 좋겠어요.'&#10;&#10;[함정 진단 — 4가지 중]&#10;예: ② 과잉 긍정(미흡인데 '훌륭') + ④ 실행 불가능('깊이 사고하라'는 추상)&#10;&#10;[손질 행위 — 4가지 중]&#10;예: ② 톤 보정으로 '훌륭' 빼고 인정+보강, ④ 행동 압축으로 '왜냐하면 한 문장 넣기'로 구체화&#10;&#10;[교사 손질본]&#10;예: '변화가 있었다는 건 잘 포착했어요. 다만 왜 변했는지가 빠졌어요. 다음엔 답변에 「왜냐하면 ~」 한 문장만 넣어보자.'"></textarea>
+          <div class="practice-meta">
+            <span class="char-count" id="practice-refine-count">0자</span>
+            <span class="save-indicator" id="practice-refine-save">저장됨</span>
+          </div>
+          <div class="checklist">
+            <label class="checklist-item">
+              <input type="checkbox" data-section="refine" data-index="0" class="section-check" />
+              <span>AI 초안의 함정을 4가지 중에서 짚었는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="refine" data-index="1" class="section-check" />
+              <span>손질 4행위 중 어떤 행위로 다듬을지 명시했는가?</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" data-section="refine" data-index="2" class="section-check" />
+              <span>손질본이 더 짧고 구체적이며 다음 행동 1개로 끝나는가?</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SECTION FINAL: 최종 통합 보고서 -->
+  <!-- ========================================== -->
+  <div class="section" id="sec-final">
+    <div class="section-header">
+      <div class="section-number gold">&#x2714;</div>
+      <div class="section-title-group">
+        <h2>최종 과제 — 통합 보고서</h2>
+        <p>피드백 원리 → 맞춤 설계 → AI 생성 → 검증·손질의 1턴을 한 편으로</p>
+      </div>
+    </div>
+
+    <div class="final-box">
+      <h3>&#x270F;&#xFE0F; 최종 과제 작성</h3>
+      <p>오늘 익힌 흐름 전체를 한 페이지로 통합합니다. 분량은 1,000~1,500자 권장. 시간이 충분하다면 길어져도 좋습니다.</p>
+      <textarea id="practice-final" placeholder="[1] 피드백 대상 + 9주차 채점 결과 요약&#10;예: 6학년 사회 서술형, 학생 3명 / 미흡이 많은 영역: 근거 사용·관점 표현&#10;&#10;[2] 맞춤 설계 요약 (수준 × 톤 × 다음 행동)&#10;우수=심화 도전 / 보통=다음 한 칸 / 미흡=가장 작은 첫걸음, 톤: 초등 따뜻·짧게&#10;&#10;[3] AI 피드백 생성 결과&#10;학생 3명분 초안 — 가장 흔히 나온 톤은? (예: 과잉 긍정)&#10;&#10;[4] 검증 + 손질 1턴 — 4가지 함정 / 4가지 손질 행위&#10;가장 자주 보인 함정: ___ / 사용한 손질 행위: ___&#10;&#10;[5] 9주차 → 10주차 학습의 누적 효과&#10;채점(판정)에서 피드백(안내)으로 옮겨오니 ___이 보였다.&#10;&#10;[6] 다음 주차(수업 개선)에 가져갈 것&#10;반 전체에서 미흡이 몰린 ___ 영역을, 다음 수업에서 ___로 보완하고 싶다."></textarea>
+
+      <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 1.2rem; margin-top: 1.5rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.8rem;">최종 과제 체크리스트</h4>
+        <div class="checklist" style="background: transparent;">
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="0" class="section-check" />
+            <span>&#x2460; 피드백 대상 + 9주차 채점 결과가 요약됐는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="1" class="section-check" />
+            <span>&#x2461; 수준 × 톤 × 다음 행동의 맞춤 설계가 들어갔는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="2" class="section-check" />
+            <span>&#x2462; AI 피드백 생성 결과 + 가장 흔한 톤이 적혔는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="3" class="section-check" />
+            <span>&#x2463; 4가지 함정 / 4가지 손질 행위 중 무엇을 썼는지 명시했는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="4" class="section-check" />
+            <span>&#x2464; 9주차→10주차 학습의 누적 효과를 한 문장 이상 적었는가?</span>
+          </label>
+          <label class="checklist-item" style="color: rgba(255,255,255,0.8);">
+            <input type="checkbox" data-section="final" data-index="5" class="section-check" />
+            <span>&#x2465; 다음 주차(수업 개선)에 가져갈 것이 구체적으로 적혔는가?</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 1</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">AI 피드백 초안에서 가장 자주 보인 함정은 4가지 중 무엇이었나요? 그리고 본인은 그것을 어떤 손질 행위로 다듬었는지 구체적인 사례로 적어주세요.</p>
+      <textarea id="practice-reflect1" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect1-count">0자</span>
+      </div>
+    </div>
+
+    <div class="reflection-card">
+      <h4>&#x1F914; 성찰 질문 2</h4>
+      <p style="margin-bottom: 0.8rem; font-size: 0.86rem; color: var(--gray-600);">9주차의 '채점'에서 10주차의 '피드백'으로 이어지면서, 학생을 바라보는 본인의 눈이 어떻게 달라졌나요? 채점만 할 때와 피드백까지 설계할 때의 차이를 적어주세요.</p>
+      <textarea id="practice-reflect2" placeholder="(자유롭게 작성하세요)"></textarea>
+      <div class="practice-meta">
+        <span class="char-count" id="practice-reflect2-count">0자</span>
+      </div>
+    </div>
+
+    <div class="export-card">
+      <h4>&#x1F4C4; 결과 내보내기</h4>
+      <p class="export-tip">
+        &#x2705; 권장: <strong>HTML로 내보내기</strong> — 답안 잘림 없이 안전하게 제출됩니다.<br>
+        &#x1F5A8;&#xFE0F; PDF가 필요하면 인쇄 미리보기에서 답안이 다 보이는지 확인해 주세요.
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="exportHTML()">&#x1F4C4; HTML로 내보내기</button>
+        <button class="btn btn-outline" onclick="printPage()">&#x1F5A8;&#xFE0F; 인쇄 / PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  텍스트어날리틱스스튜디오 · 10주차 피드백 생성 · 김민철
+</div>
+
+<script>
+  const STORAGE_KEY = 'ta_week10_';
+  const textareas = [
+    'practice-review', 'practice-principle', 'practice-design',
+    'practice-generate', 'practice-refine', 'practice-final',
+    'practice-reflect1', 'practice-reflect2'
+  ];
+  const sections = ['intro', 'review', 'principle', 'design', 'generate', 'refine', 'final'];
+
+  function getSectionCompletionRules() {
+    return {
+      review: { textarea: 'practice-review', checkboxCount: 3 },
+      principle: { textarea: 'practice-principle', checkboxCount: 3 },
+      design: { textarea: 'practice-design', checkboxCount: 3 },
+      generate: { textarea: 'practice-generate', checkboxCount: 3 },
+      refine: { textarea: 'practice-refine', checkboxCount: 3 },
+      final: { textarea: 'practice-final', checkboxCount: 6 }
+    };
+  }
+
+  function saveAll() {
+    localStorage.setItem(STORAGE_KEY + 'name', document.getElementById('studentName').value);
+    localStorage.setItem(STORAGE_KEY + 'id', document.getElementById('studentId').value);
+    textareas.forEach(id => {
+      localStorage.setItem(STORAGE_KEY + id, document.getElementById(id).value);
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      localStorage.setItem(STORAGE_KEY + 'cb_' + key, cb.checked);
+    });
+  }
+
+  function loadAll() {
+    const name = localStorage.getItem(STORAGE_KEY + 'name');
+    const id = localStorage.getItem(STORAGE_KEY + 'id');
+    if (name) document.getElementById('studentName').value = name;
+    if (id) document.getElementById('studentId').value = id;
+    textareas.forEach(id => {
+      const value = localStorage.getItem(STORAGE_KEY + id);
+      if (value) document.getElementById(id).value = value;
+    });
+    document.querySelectorAll('.section-check').forEach(cb => {
+      const key = cb.getAttribute('data-section') + '_' + cb.getAttribute('data-index');
+      const saved = localStorage.getItem(STORAGE_KEY + 'cb_' + key);
+      if (saved === 'true') {
+        cb.checked = true;
+        cb.closest('.checklist-item').classList.add('checked');
+      }
+    });
+  }
+
+  function autoSave() {
+    saveAll();
+    updateCount();
+    updateProgress();
+  }
+
+  function updateCount() {
+    textareas.forEach(id => {
+      const elem = document.getElementById(id);
+      const count = elem.value.length;
+      const countElem = document.getElementById(id + '-count');
+      if (countElem) countElem.textContent = count + '자';
+    });
+  }
+
+  function updateProgress() {
+    const rules = getSectionCompletionRules();
+    let completedCount = 0;
+    sections.forEach(sec => {
+      const isComplete = isSectionComplete(sec, rules[sec]);
+      const pill = document.querySelector('.nav-pill[data-section="' + sec + '"]');
+      if (pill) {
+        if (isComplete) {
+          pill.classList.add('done');
+          completedCount++;
+        } else {
+          pill.classList.remove('done');
+        }
+      }
+    });
+    const total = sections.length;
+    const percent = (completedCount / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').textContent = completedCount + ' / ' + total;
+  }
+
+  function isSectionComplete(section, rule) {
+    if (section === 'intro') return true; // intro는 안내 섹션이라 자동 완료
+    if (!rule) return false;
+    const textareaValue = document.getElementById(rule.textarea).value.trim();
+    if (textareaValue.length < 10) return false;
+    const checkboxes = document.querySelectorAll('.section-check[data-section="' + section + '"]:checked');
+    return checkboxes.length >= rule.checkboxCount;
+  }
+
+  function updateChecklist() {
+    document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+      const item = cb.closest('.checklist-item');
+      if (cb.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  }
+
+  function toggleCollapsible(btn) {
+    const collapsible = btn.closest('.collapsible');
+    collapsible.classList.toggle('open');
+  }
+
+  function flashCopied(btn, msg) {
+    const original = btn.textContent;
+    btn.textContent = msg || '복사됨!';
+    setTimeout(() => { btn.textContent = original; }, 1500);
+  }
+  function fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); flashCopied(btn); }
+    catch (e) { flashCopied(btn, '복사 실패'); }
+    document.body.removeChild(ta);
+  }
+  function copyTemplate(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => flashCopied(btn))
+        .catch(() => fallbackCopy(text, btn));
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  function exportHTML() {
+    const name = document.getElementById('studentName').value || '이름미입력';
+    const studentId = document.getElementById('studentId').value || '';
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const filename = '10주차_피드백생성_' + name + '_' + dateStr + '.html';
+
+    let html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>10주차 과제 — 피드백 생성</title>';
+    html += '<style>body { font-family: "Noto Sans KR", sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f0e8; word-break: keep-all; overflow-wrap: anywhere; } h1 { color: #2C3E6B; } .section { margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 10px; } .meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; } table { width: 100%; border-collapse: collapse; margin: 1rem 0; } th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; } th { background: #2C3E6B; color: white; }</style></head><body>';
+    html += '<h1>10주차 피드백 생성 과제</h1>';
+    html += '<p class="meta">이름: ' + escapeHtml(name) + ' | 학번: ' + escapeHtml(studentId) + ' | 작성일: ' + dateStr + '</p>';
+
+    html += '<div class="section"><h2>&#x1F504; 9주차 복습: 채점을 피드백으로</h2><p>' + escapeHtml(document.getElementById('practice-review').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2460; 피드백 원리 — 좋은 피드백 고쳐쓰기</h2><p>' + escapeHtml(document.getElementById('practice-principle').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2461; 맞춤 설계 (수준 × 톤 × 다음 행동)</h2><p>' + escapeHtml(document.getElementById('practice-design').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2462; AI 피드백 생성 결과</h2><p>' + escapeHtml(document.getElementById('practice-generate').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2463; AI 피드백 검증 + 손질</h2><p>' + escapeHtml(document.getElementById('practice-refine').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x2464; 최종 통합 보고서</h2><p>' + escapeHtml(document.getElementById('practice-final').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '<div class="section"><h2>&#x1F4DD; 성찰</h2>';
+    html += '<h3>질문 1: AI 피드백에서 가장 자주 본 함정과 손질</h3><p>' + escapeHtml(document.getElementById('practice-reflect1').value).replace(/\n/g, '<br>') + '</p>';
+    html += '<h3>질문 2: 채점에서 피드백으로 — 학생을 보는 눈의 변화</h3><p>' + escapeHtml(document.getElementById('practice-reflect2').value).replace(/\n/g, '<br>') + '</p></div>';
+    html += '</body></html>';
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function preparePrintMirrors() {
+    document.querySelectorAll('textarea').forEach(t => {
+      if (!t.value.trim()) return;
+      let mirror = t.nextElementSibling;
+      if (!mirror || !mirror.classList.contains('print-mirror')) {
+        mirror = document.createElement('div');
+        mirror.className = 'print-mirror';
+        t.parentNode.insertBefore(mirror, t.nextSibling);
+      }
+      mirror.textContent = t.value;
+      t.classList.add('print-hide');
+    });
+    document.querySelectorAll('.collapsible').forEach(c => c.classList.add('open', 'was-closed-for-print'));
+  }
+  function teardownPrintMirrors() {
+    document.querySelectorAll('.print-mirror').forEach(d => d.remove());
+    document.querySelectorAll('.print-hide').forEach(t => t.classList.remove('print-hide'));
+    document.querySelectorAll('.collapsible.was-closed-for-print').forEach(c => {
+      c.classList.remove('open', 'was-closed-for-print');
+    });
+  }
+  window.addEventListener('beforeprint', preparePrintMirrors);
+  window.addEventListener('afterprint', teardownPrintMirrors);
+
+  function printPage() {
+    preparePrintMirrors();
+    setTimeout(() => window.print(), 50);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadAll();
+    updateCount();
+    updateProgress();
+
+    document.getElementById('studentName').addEventListener('change', autoSave);
+    document.getElementById('studentId').addEventListener('change', autoSave);
+    textareas.forEach(id => {
+      document.getElementById(id).addEventListener('input', autoSave);
+    });
+
+    document.querySelectorAll('.section-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateChecklist();
+        updateProgress();
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        const target = document.getElementById('sec-' + section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    const observerOptions = { threshold: 0.3 };
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const section = id.replace('sec-', '');
+          document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+          const activePill = document.querySelector('.nav-pill[data-section="' + section + '"]');
+          if (activePill) activePill.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(sec => {
+      const elem = document.getElementById('sec-' + sec);
+      if (elem) observer.observe(elem);
+    });
+  });
+</script>
+
+</body>
+</html>
